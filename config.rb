@@ -2,10 +2,10 @@
 project_type = :stand_alone
 
 # Publishing paths
-http_path = "/geekerprobe/"
-http_images_path = "/geekerprobe/images"
-http_fonts_path = "/geekerprobe/fonts"
-css_dir = "public/geekerprobe/stylesheets"
+http_path = "/"
+http_images_path = "/images"
+http_fonts_path = "/fonts"
+css_dir = "public/stylesheets"
 
 # Local development paths
 sass_dir = "sass"
