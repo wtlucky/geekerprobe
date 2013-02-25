@@ -4,6 +4,7 @@ title: "Create blog use Octopress and GitHub"
 date: 2013-02-24 23:02
 comments: true
 categories: Octopress
+tags: GitHub ruby git Octopress
 ---
 
 ###介绍###
