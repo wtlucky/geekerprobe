@@ -1,2 +1,26 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
+
+html {
+    background: url('http://wtlucky.github.com/geekerprobe/images/back.jpg');
+}
+
+body > header {
+      background-image:url('http://wtlucky.github.com/geekerprobe/images/header.jpg');
+      @media only screen and (min-width: 432px) {
+              top:.32em;
+      }
+      @media only screen and (min-width: 768px) {
+              left:.75em;
+      }
+}
+
+@media only screen and (min-width: 1040px) {
+  body > nav {
+    @include border-top-radius(.4em);
+  }
+
+  body > footer {
+    @include border-bottom-radius(.4em);
+  }
+}

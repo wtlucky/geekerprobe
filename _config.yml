@@ -124,3 +124,6 @@ bShare_enable: true
 
 # tag-cloud
 tag_dir: tags
+
+# category-list
+category_dir: /blog/categories

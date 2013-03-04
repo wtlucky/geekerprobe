@@ -9,7 +9,7 @@ tags: GitHub ruby git Octopress
 
 ###介绍###
 
-现下大概每一个搞技术的人都会有一个技术博客，而[GitHub](http://github.com)又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明只用的，鉴于此我们可以将自己blog放置上去，代码交交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。[Octopress](http://octopress.org)就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样`A blogging framework for hackers.`，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。
+现下大概每一个搞技术的人都会有一个技术博客，而[GitHub](http://github.com)又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明只用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。[Octopress](http://octopress.org)就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样`A blogging framework for hackers.`，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。
 
 这两者一结合就有了我现在的这个blog了，用它来记录和分享我的学习之路上点点滴滴。网络上有很多介绍安装与配置方法的文章，官网的[Documentation](http://octopress.org/docs)写的也很好，推荐E文好的直接去官网。我在安装与配置中也遇到了各种问题，不过在[Google][]的帮助下都一一解决了，你需要懂一些`ruby(jekyll)`，并且会使用`git`命令，还要使用`markdown`来书写博文，这会让你觉得是在写代码而不是在写博文。不多说了现在记录下我自己安装与配置过程，供新手与日后自己需要时参考。<!-- More -->
 
@@ -48,7 +48,7 @@ Permission denied (publickey).
 git clone git://github.com/imathis/octopress.git geekerprobe      # 从GitHub上clone Octopress到本地 geekerprobe可以随便填，Octopress会被clone到当前目录的geekerprobe目录下
 cd geekerprobe    # 进入该目录，如果你是用的是RVM的话，会寻问你是否信任.rvmrc文件 当然是yes
 gem install bundler   # 下载bundler，有可能提示gem命令未找到，请自行google解决方法
-bundler install    #安装bundler
+bundle install    #安装bundle
 rake install   #安装Octopress默认主题
 {% endcodeblock %}
 到此Octopress在本地已经安装完毕，但是还都是默认配置，而且没有发表博文。但是你可以通过一下命令来生成并预览一下原始的界面：
