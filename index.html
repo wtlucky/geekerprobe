@@ -1,1 +1,523 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>GeekerProbe</title>
+  <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
+
+  
+  <meta name="description" content="Xcode不得不说，很好用的一款IDE，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
+在Xcode 3.2版本的时候，还可以找到appledoc插件，很方便的生成注释。但是到了Xcode 4. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wtlucky.github.com/geekerprobe/">
+  <link href="/geekerprobe/favicon.png" rel="icon">
+  <link href="/geekerprobe/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/geekerprobe/javascripts/modernizr-2.0.js"></script>
+  <script src="/geekerprobe/javascripts/ender.js"></script>
+  <script src="/geekerprobe/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/geekerprobe/atom.xml" rel="alternate" title="GeekerProbe" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38777768-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/geekerprobe/">GeekerProbe</a></h1>
+  
+    <h2>水滴石穿 Keeping faith.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- wtlucky's Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/geekerprobe/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:wtlucky.github.com/geekerprobe" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/geekerprobe/">Blog</a></li>
+  <li><a href="/geekerprobe/blog/archives">Archives</a></li>
+  <li><a href="/geekerprobe/blog/categories">Categories & Tags</a></li>
+  <li><a href="/geekerprobe/blog/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-04T13:05:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>Xcode</code>不得不说，很好用的一款<code>IDE</code>，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
+在<code>Xcode 3.2</code>版本的时候，还可以找到<code>appledoc</code>插件，很方便的生成注释。但是到了<code>Xcode 4.0</code>以上的版本就找不到这个功能，虽然<code>appledoc</code>仍然可以用，但是需要使用命令行，而且生成的是<code>html</code>文件。就没有再仔细研究，继续寻找更简便的方法。
+最终找到一位大神写的一段<code>ruby</code>脚本，使用它为系统添加了一项服务，使用此可以很方便为指定的方法生成指定格式的注释。
+不过，测试发现这段<code>ruby</code>脚本还是有一点点问题的，在生成注释后会把当前生成注释的方法的声明删掉。我只好凭着多年的编程经验对这段脚本进行了一点修改（第一次接触到<code>ruby</code>代码。o(╯□╰)o），现在已经很好使用了，基本上没有啥问题了。分享给大家。</p>
+
+<p>先展示个效果：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> *   &lt;#Description#&gt;</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> *   @param  application     &lt;#application description#&gt;</span>
+</span><span class='line'><span class="cm"> *   @param  launchOptions   &lt;#launchOptions description#&gt;</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> *   @return &lt;#return value description#&gt;</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span>
+</span><span class='line'><span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/02/27/apns-ssl-error/">APNS服务器搭建ssl错误问题解决方案</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/02/27/apns-ssl-error/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近再做一个推送项目，需要搭建<code>APNS</code>服务器，再将PHP代码部署到<code>Server</code>上时遇到了如下错误：</p>
+
+<figure class='code'><figcaption><span>APNS ssl error </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: Unable to set local cert chain file `ck.pem'; Check that your cafile/capath settings include details of your certificate and its issuer in D:\AppServ\www\push1\push.php on line 24
+</span><span class='line'>
+</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: failed to create an SSL handle in D:\AppServ\www\push1\push.php on line 24
+</span><span class='line'>
+</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: Failed to enable crypto in D:\AppServ\www\push1\push.php on line 24
+</span><span class='line'>
+</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: unable to connect to ssl://gateway.sandbox.push.apple.com:2195 (Unknown error) in D:\AppServ\www\push1\push.php on line 24
+</span><span class='line'>Failed to connect: 0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上网Google之，发现很多人遇到此问题，给出的解决方案照做后错误依然存在。
+最终还是自己解决，从问题本身出发吧，自己当初调试时<code>Server</code>是部署在<code>Mac os</code>上的，而现在却要部署在<code>Windows Server 2008</code>上。所以很可能是两边的配置出了问题，而代码的第24行为：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="nv">$fp</span> <span class="o">=</span> <span class="nx">stream_socket_client</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;ssl://gateway.sandbox.push.apple.com:2195&#39;</span><span class="p">,</span> <span class="nv">$err</span><span class="p">,</span>
+</span><span class='line'>        <span class="nv">$errstr</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="nx">STREAM_CLIENT_CONNECT</span><span class="o">|</span><span class="nx">STREAM_CLIENT_PERSISTENT</span><span class="p">,</span> <span class="nv">$ctx</span><span class="p">);</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>PHP</code>给出的错误大概是说，没有找到证书，无法建立ssl连接。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/02/27/apns-ssl-error/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/">Create Blog Use Octopress and GitHub</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>介绍</h3>
+
+<p>现下大概每一个搞技术的人都会有一个技术博客，而<a href="http://github.com">GitHub</a>又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明只用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。<a href="http://octopress.org">Octopress</a>就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样<code>A blogging framework for hackers.</code>，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。</p>
+
+<p>这两者一结合就有了我现在的这个blog了，用它来记录和分享我的学习之路上点点滴滴。网络上有很多介绍安装与配置方法的文章，官网的<a href="http://octopress.org/docs">Documentation</a>写的也很好，推荐E文好的直接去官网。我在安装与配置中也遇到了各种问题，不过在<a href="http://google.cn">Google</a>的帮助下都一一解决了，你需要懂一些<code>ruby(jekyll)</code>，并且会使用<code>git</code>命令，还要使用<code>markdown</code>来书写博文，这会让你觉得是在写代码而不是在写博文。不多说了现在记录下我自己安装与配置过程，供新手与日后自己需要时参考。</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/02/23/my-first-blog/">My First Blog</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-23T09:01:00+08:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/02/23/my-first-blog/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Hello octopress!</h2>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/geekerprobe/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>Hi, I&#8217;m Wang Tao from CangZhou, China. I usually use the name of wtlucky.<br /><br />
+     An iOS developer and passionate about Internet Technologies.</p>
+  <p>This blog used to note and share what I have learn.</p>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/02/27/apns-ssl-error/">APNS服务器搭建ssl错误问题解决方案</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/">Create blog use Octopress and GitHub</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/02/23/my-first-blog/">My First Blog</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>新浪微博</h1>
+  <ul id="weibo">
+    <li>
+      <iframe 
+        width="100%" 
+        height="120" 
+        class="share_self" 
+        frameborder="0" 
+        scrolling="no" 
+        src="http://widget.weibo.com/weiboshow/index.php?width=0&height=550&ptype=1&speed=0&skin=&isTitle=0&noborder=1&isWeibo=0&isFans=&uid=2381129390&verifier=4d52a72a">
+      </iframe>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cz_wtlucky", 2, false);
+    });
+  </script>
+  <script src="/geekerprobe/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cz_wtlucky" class="twitter-follow-button" data-show-count="false">Follow @cz_wtlucky</a>
+  
+</section>
+
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/wtlucky">@wtlucky</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wtlucky',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/geekerprobe/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/chinawtlucky@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+<a style="font-size: NaN%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: NaN%" href="/geekerprobe/tags/xcode/">Xcode</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - wtlucky <chinawtlucky@gmail.com> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span><br/>
+  <a title="Web Analytics" href="http://clicky.com/100584144"><img alt="Web Analytics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+<script type="text/javascript">
+var clicky_site_ids = clicky_site_ids || [];
+clicky_site_ids.push(100584144);
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = '//static.getclicky.com/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100584144ns.gif" /></p></noscript>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
