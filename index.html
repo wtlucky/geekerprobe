@@ -9,8 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="Xcode不得不说，很好用的一款IDE，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
-在Xcode 3.2版本的时候，还可以找到appledoc插件，很方便的生成注释。但是到了Xcode 4. &hellip;">
+  <meta name="description" content="本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做iOS开发，所以基本上这23种设计模式我都通过objective-C来实现了。此系列文章的类图都是来自《设计模式之禅》，有兴趣的同学可以去买这本书看 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +78,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/03/19/singleton/">23种设计模式——单例模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-19T19:35:00+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/03/19/singleton/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做<code>iOS</code>开发，所以基本上这23种设计模式我都通过<code>objective-C</code>来实现了。此系列文章的类图都是来自<a href="http://book.douban.com/subject/4260618/">《设计模式之禅》</a>，有兴趣的同学可以去买这本书看。</p>
+
+<p>话说，在编码编到一定的程度以后，由于代码体系的庞大，结构的复杂，自然就会上升到设计模式高度，而现在的软件设计又基本都是面向对象的，所以有了设计模式作支持，可以使软件更加的稳定安全，也更易于维护与拓展。</p>
+
+<p>首先来介绍最常用最简单的单例模式（Singleton），在以后的文章中再依次介绍其他的模式。</p>
+
+<h4>单例模式定义</h4>
+
+<p><code>Ensure a class has only one instance, and provide a global point of access to it. (确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。)</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/03/19/singleton/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -342,11 +393,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (1)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/19/singleton/">23种设计模式——单例模式</a>
+      </li>
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a>
@@ -443,15 +498,17 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: NaN%" href="/geekerprobe/tags/apache/">Apache</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/github/">GitHub</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/php/">PHP</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/apns/">APNS</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/xcode/">Xcode</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/git/">git</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/ruby/">ruby</a>
-<a style="font-size: NaN%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
 
   </ul>
 </section>
