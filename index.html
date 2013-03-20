@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做iOS开发，所以基本上这23种设计模式我都通过objective-C来实现了。此系列文章的类图都是来自《设计模式之禅》，有兴趣的同学可以去买这本书看 &hellip;">
+  <meta name="description" content="这次来介绍一下观察者模式，这种模式可以说使用的是最多的，也最常见。我们现在使用的智能手机的应用在本质上也都是观察者模式的一种体现，这些手机应用都是事件驱动机制，只要有事件发生，就会做出一系列的响应处理，在没有事件的时候，什么也不会发生。这就是观察者模式，观察者模式需要一个被观察者， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/03/20/observer/">23种设计模式——观察者模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-20T21:04:00+08:00" pubdate data-updated="true">Mar 20<span>th</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/03/20/observer/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这次来介绍一下观察者模式，这种模式可以说使用的是最多的，也最常见。我们现在使用的智能手机的应用在本质上也都是观察者模式的一种体现，这些手机应用都是事件驱动机制，只要有事件发生，就会做出一系列的响应处理，在没有事件的时候，什么也不会发生。这就是观察者模式，观察者模式需要一个被观察者，和一个或者多个观察者。当被观察者的状态发生改变时，观察者会做出相应的处理。</p>
+
+<h4>观察者模式定义</h4>
+
+<p>观察者模式（Observer Pattern）也叫做发布订阅模式（Publish/subscribe）。
+<code>Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.(定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于他的对象都会得到通知并被自动更新。)</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/03/20/observer/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -393,11 +442,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (1)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (2)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/20/observer/">23种设计模式——观察者模式</a>
+      </li>
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/19/singleton/">23种设计模式——单例模式</a>
@@ -413,10 +466,6 @@
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/">Create blog use Octopress and GitHub</a>
-      </li>
-    
-      <li class="post">
-        <a href="/geekerprobe/blog/2013/02/23/my-first-blog/">My First Blog</a>
       </li>
     
   </ul>
@@ -498,17 +547,17 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
-<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
 
   </ul>
 </section>
