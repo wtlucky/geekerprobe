@@ -22,11 +22,15 @@
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/19/singleton/</loc>
-        <lastmod>2013-03-19T21:29:53+08:00</lastmod>
+        <lastmod>2013-03-23T14:16:05+08:00</lastmod>
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/20/observer/</loc>
-        <lastmod>2013-03-20T22:12:15+08:00</lastmod>
+        <lastmod>2013-03-23T14:16:05+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/</loc>
+        <lastmod>2013-03-23T15:21:15+08:00</lastmod>
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/404.html</loc>
@@ -42,7 +46,7 @@
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/blog/archives/</loc>
-        <lastmod>2013-03-20T22:12:15+08:00</lastmod>
+        <lastmod>2013-03-23T15:21:15+08:00</lastmod>
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/blog/categories/</loc>
@@ -50,7 +54,7 @@
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/</loc>
-        <lastmod>2013-03-20T22:12:15+08:00</lastmod>
+        <lastmod>2013-03-23T15:21:15+08:00</lastmod>
     </url>
     <url>
         <loc>http://wtlucky.github.com/geekerprobe/robots.txt</loc>

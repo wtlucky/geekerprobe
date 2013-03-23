@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>23种设计模式——适配器模式 - GeekerProbe</title>
+  <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
+
+  
+  <meta name="description" content="今天要介绍的是适配器模式（Adapter Pattern），适配器模式又叫做变压器模式，也叫做包装模式（Wrapper），但是包装模式却不止一个，装饰模式也是包装模式，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/">
+  <link href="/geekerprobe/favicon.png" rel="icon">
+  <link href="/geekerprobe/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/geekerprobe/javascripts/modernizr-2.0.js"></script>
+  <script src="/geekerprobe/javascripts/ender.js"></script>
+  <script src="/geekerprobe/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/geekerprobe/atom.xml" rel="alternate" title="GeekerProbe" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38777768-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/geekerprobe/">GeekerProbe</a></h1>
+  
+    <h2>水滴石穿 Keeping faith.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- wtlucky's Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/geekerprobe/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:wtlucky.github.com/geekerprobe" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/geekerprobe/">Blog</a></li>
+  <li><a href="/geekerprobe/blog/archives">Archives</a></li>
+  <li><a href="/geekerprobe/blog/categories">Categories & Tags</a></li>
+  <li><a href="/geekerprobe/blog/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">23种设计模式——适配器模式</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-23T14:13:00+08:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+        
+        
+      | <a href="#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>今天要介绍的是<code>适配器模式（Adapter Pattern）</code>，适配器模式又叫做<code>变压器模式</code>，也叫做<code>包装模式（Wrapper）</code>，但是<code>包装模式</code>却不止一个，<code>装饰模式</code>也是<code>包装模式</code>，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时，不管之前的可行性分析、需求分析、系统设计处理的多么完美，总会在关键时候、关键场合出现一些“意外”。这些“意外”，该来的还是要来，躲是躲不过的，而这时就是我们的<code>适配器模式</code>的用武之地。<code>适配器模式</code>最好在设计阶段不要考虑它，它不是为了解决还处在开发阶段的问题，而是解决正在服役的项目问题，没有一个系统分析师会再做详细设计时考虑使用<code>适配器模式</code>。</p>
+
+<p><code>适配器模式</code>包含两种，一种是<code>类适配器</code>，另一种是<code>对象适配器</code>。<code>类适配器</code>是通过类的继承实现的适配，而<code>对象适配器</code>是通过对象间的关联关系，组合关系实现的适配。二者在实际项目中都会经常用到，由于<code>对象适配器</code>是通过类间的关联关系进行耦合的，因此在设计时就可以做到比较灵活，而<code>类适配器</code>就只能通过覆写源角色的方法进行拓展，在实际项目中，<code>对象适配器</code>使用到的场景相对较多。在<code>iOS</code>开发中也推荐多使用组合关系，而尽量减少继承关系，这是一种很好的编程习惯，因此我在这里只介绍<code>对象适配器</code>，想了解更多的关于<code>类适配器</code>的话，请自行<code>Google</code>之。</p>
+
+<h4>适配器模式定义</h4>
+
+<p><code>Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.(将一个类的接口变成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。)</code></p>
+
+<!-- More -->
+
+
+<h4>适配器模式类图</h4>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2013/03/Adapter.jpg"></p>
+
+<h4>适配器模式说明</h4>
+
+<ul>
+<li>Target目标角色
+该角色定义把其他类转换为何种接口，也就是我们的期望接口。</li>
+<li>Adaptee源角色
+你想把“谁”转换成目标角色，这个“谁”就是源角色，它是已经存在的、运行良好的类或对象。</li>
+<li>Adapter适配器角色
+适配器模式的核心角色，其他两个角色都是已经存在的角色，而适配器角色是需要新建立的，他的职责非常简单：把源角色转换为目标角色。</li>
+</ul>
+
+
+<h4>适配器模式优点</h4>
+
+<ol>
+<li>适配器模式可以让两个没有任何关系的类在一起运行，只要适配器这个角色能够搞定他们就成。</li>
+<li>增加了类的透明性。我们访问的是目标角色，但是实现却在源角色里。</li>
+<li>提高了类的复用度。源角色在原有系统中还是可以正常使用的。</li>
+<li>灵活性非常好。不想要适配器时，删掉这个适配器就好了，其他代码不用改。</li>
+</ol>
+
+
+<h4>适配器模式的objective-C实现</h4>
+
+<figure class='code'><figcaption><span>Target  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@protocol</span> <span class="nc">Target</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">userExpectInterface</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Adaptee  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Adaptee</span> : <span class="nc">NSObject</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doSometing</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Adaptee</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doSometing</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;adaptee doing something!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Adapter  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &quot;Target.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Adaptee.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Adapter</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">Adaptee</span> <span class="o">*</span><span class="n">adaptee</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithAdaptee:</span><span class="p">(</span><span class="n">Adaptee</span> <span class="o">*</span><span class="p">)</span><span class="nv">adaptee</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Adapter</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@synthesize</span> <span class="n">adaptee</span> <span class="o">=</span> <span class="n">_adaptee</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithAdaptee:</span><span class="p">(</span><span class="n">Adaptee</span> <span class="o">*</span><span class="p">)</span><span class="nv">adaptee</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">_adaptee</span> <span class="o">=</span> <span class="n">adaptee</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">userExpectInterface</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">adaptee</span> <span class="n">doSometing</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>main  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'><span class="cp">#import &quot;Adapter.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Adaptee.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Target.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Adaptee</span> <span class="o">*</span><span class="n">adaptee</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adaptee</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="kt">id</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span> <span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adapter</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithAdaptee:</span><span class="n">adaptee</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">object</span> <span class="n">userExpectInterface</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">wtlucky <chinawtlucky@gmail.com></span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-23T14:13:00+08:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/geekerprobe//blog/categories/design-pattern/'>Design Pattern</a>
+  
+</span>
+
+
+      
+
+<span class="tags">
+  
+    <a class='tag' href='/geekerprobe/tags/design/'>Design</a>, <a class='tag' href='/geekerprobe/tags/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+	
+	<div class="bshare-custom icon-medium" style="float: left;width: 270px;">
+		<div class="bsPromo bsPromo1"></div>
+	<a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+	<a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a>
+	<a title="分享到百度空间" class="bshare-baiduhi"></a><a title="分享到豆瓣" class="bshare-douban"></a>
+	<a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/button.js#style=-1&amp;uuid=8a9d6a89-3205-46e4-bb74-e9bcea7e61f7&amp;pophcol=2&amp;lang=zh"></script>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+	
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/" data-via="cz_wtlucky" data-counturl="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/" >Tweet</a>
+  
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+<hr style="border-bottom:1px dotted #bdbabd;height:1px;border-top:0px;border-left:0px;border-right:0px;" />
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/geekerprobe/blog/2013/03/20/observer/" title="Previous Post: 23种设计模式——观察者模式">&laquo; 23种设计模式——观察者模式</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"shuidishichuan"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (3)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+</section>
+<section>
+<h1>Recent Comments</h1>
+<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-time="0" data-show-title="0" data-show-admin="0" data-excerpt-length="18"></ul>
+
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/23/adapter/">23种设计模式——适配器模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/20/observer/">23种设计模式——观察者模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/19/singleton/">23种设计模式——单例模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/02/27/apns-ssl-error/">APNS服务器搭建ssl错误问题解决方案</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>新浪微博</h1>
+  <ul id="weibo">
+    <li>
+      <iframe 
+        width="100%" 
+        height="120" 
+        class="share_self" 
+        frameborder="0" 
+        scrolling="no" 
+        src="http://widget.weibo.com/weiboshow/index.php?width=0&height=550&ptype=1&speed=0&skin=&isTitle=0&noborder=1&isWeibo=0&isFans=&uid=2381129390&verifier=4d52a72a">
+      </iframe>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cz_wtlucky", 2, false);
+    });
+  </script>
+  <script src="/geekerprobe/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cz_wtlucky" class="twitter-follow-button" data-show-count="false">Follow @cz_wtlucky</a>
+  
+</section>
+
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wtlucky">@wtlucky</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wtlucky',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/geekerprobe/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/chinawtlucky@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: 144%" href="/geekerprobe/tags/design/">Design</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - wtlucky <chinawtlucky@gmail.com> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>&nbsp;&nbsp;&nbsp;&nbsp;<img src = "http://wtlucky.github.com/geekerprobe/images/wt_s_r.png" style="float:right" /><br/>
+  <a title="Web Analytics" href="http://clicky.com/100584144"><img alt="Web Analytics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+<script type="text/javascript">
+var clicky_site_ids = clicky_site_ids || [];
+clicky_site_ids.push(100584144);
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = '//static.getclicky.com/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100584144ns.gif" /></p></noscript>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

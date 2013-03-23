@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="这次来介绍一下观察者模式，这种模式可以说使用的是最多的，也最常见。我们现在使用的智能手机的应用在本质上也都是观察者模式的一种体现，这些手机应用都是事件驱动机制，只要有事件发生，就会做出一系列的响应处理，在没有事件的时候，什么也不会发生。这就是观察者模式，观察者模式需要一个被观察者， &hellip;">
+  <meta name="description" content="今天要介绍的是适配器模式（Adapter Pattern），适配器模式又叫做变压器模式，也叫做包装模式（Wrapper），但是包装模式却不止一个，装饰模式也是包装模式，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/03/23/adapter/">23种设计模式——适配器模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-23T14:13:00+08:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/03/23/adapter/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天要介绍的是<code>适配器模式（Adapter Pattern）</code>，适配器模式又叫做<code>变压器模式</code>，也叫做<code>包装模式（Wrapper）</code>，但是<code>包装模式</code>却不止一个，<code>装饰模式</code>也是<code>包装模式</code>，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时，不管之前的可行性分析、需求分析、系统设计处理的多么完美，总会在关键时候、关键场合出现一些“意外”。这些“意外”，该来的还是要来，躲是躲不过的，而这时就是我们的<code>适配器模式</code>的用武之地。<code>适配器模式</code>最好在设计阶段不要考虑它，它不是为了解决还处在开发阶段的问题，而是解决正在服役的项目问题，没有一个系统分析师会再做详细设计时考虑使用<code>适配器模式</code>。</p>
+
+<p><code>适配器模式</code>包含两种，一种是<code>类适配器</code>，另一种是<code>对象适配器</code>。<code>类适配器</code>是通过类的继承实现的适配，而<code>对象适配器</code>是通过对象间的关联关系，组合关系实现的适配。二者在实际项目中都会经常用到，由于<code>对象适配器</code>是通过类间的关联关系进行耦合的，因此在设计时就可以做到比较灵活，而<code>类适配器</code>就只能通过覆写源角色的方法进行拓展，在实际项目中，<code>对象适配器</code>使用到的场景相对较多。在<code>iOS</code>开发中也推荐多使用组合关系，而尽量减少继承关系，这是一种很好的编程习惯，因此我在这里只介绍<code>对象适配器</code>，想了解更多的关于<code>类适配器</code>的话，请自行<code>Google</code>之。</p>
+
+<h4>适配器模式定义</h4>
+
+<p><code>Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.(将一个类的接口变成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。)</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/03/23/adapter/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -442,11 +492,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (2)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (3)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/23/adapter/">23种设计模式——适配器模式</a>
+      </li>
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/20/observer/">23种设计模式——观察者模式</a>
@@ -462,10 +516,6 @@
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/02/27/apns-ssl-error/">APNS服务器搭建ssl错误问题解决方案</a>
-      </li>
-    
-      <li class="post">
-        <a href="/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/">Create blog use Octopress and GitHub</a>
       </li>
     
   </ul>
@@ -547,17 +597,18 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
-<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 144%" href="/geekerprobe/tags/design/">Design</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
 
   </ul>
 </section>
