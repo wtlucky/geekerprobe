@@ -15,5 +15,7 @@ footer: true
 ##Tags##
 
 <section>
- {% tag_cloud font-size: 200-325%, limit: 0, sort: rand, style: para %}
+ {% tag_cloud font-size: 150-225%, limit: 0, sort: rand, style: para %}
 </section>
+
+<br /><br /><br /><br /><br /><br /><br />
