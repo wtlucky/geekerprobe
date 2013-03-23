@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="今天要介绍的是适配器模式（Adapter Pattern），适配器模式又叫做变压器模式，也叫做包装模式（Wrapper），但是包装模式却不止一个，装饰模式也是包装模式，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时， &hellip;">
+  <meta name="description" content="UDID之前在iOS开发中广泛使用的一串字符串，用来标示唯一的设备，它本身并不包含用户信息，但是广告商却可以利用他获取到个人信息，从而发送广告，因为他涉及到隐私问题，所以苹果早在2011年就提出了将不再使用它。然而就在前天，苹果的开发者网站，发出新闻： Starting May 1, the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/">苹果禁止使用UDID的解决方案</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-23T16:42:00+08:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>UDID</code>之前在<code>iOS</code>开发中广泛使用的一串字符串，用来标示唯一的设备，它本身并不包含用户信息，但是广告商却可以利用他获取到个人信息，从而发送广告，因为他涉及到隐私问题，所以苹果早在2011年就提出了将不再使用它。然而就在前天，苹果的开发者网站，发出新闻：</p>
+
+<blockquote><p>Starting May 1, the App Store will no longer accept new apps or app updates that access UDIDs. Please update your apps and servers to associate users with the Vendor or Advertising identifiers introduced in iOS 6. You can find more details in the <a href="https://developer.apple.com/library/ios/#documentation/uikit/reference/UIDevice_Class/DeprecationAppendix/AppendixADeprecatedAPI.html">UIDevice Class Reference</a>.</p></blockquote>
+
+<p>“自5月1日起，App Store将不再接受任何使用UDID的app，苹果建议开发者转用iOS 6 引进的Vendor 或者 Adverstising Identifier（‘广告标识符’）”
+这次苹果打出了强制通知，再使用<code>UDID</code>的话，那么应用将不会审核通过，也就无法发布。</p>
+
+<p>不过俗话说的好“上有政策，下有对策”。虽然苹果自己也给出了替代的方法，但他们都不是最好的，<code>UUID</code>每次获取都不同，所以使用时必须要把他们存文件，存数据库或者存<code>UserDefault</code>。当应用被删除重装，那么这个<code>UUID</code>也就不同了。<code>Vendor</code>更是同一个设备上的同一个开发商的应用的<code>id</code>都是相同的，也没有办法使用。<code>Advertising identifier</code>也并不是固定的。那要如何才能达到我们的需求呢，既能方便获取又能保证唯一呢？</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -492,11 +543,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (3)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (2)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (3)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (3)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/">苹果禁止使用UDID的解决方案</a>
+      </li>
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/23/adapter/">23种设计模式——适配器模式</a>
@@ -512,10 +567,6 @@
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a>
-      </li>
-    
-      <li class="post">
-        <a href="/geekerprobe/blog/2013/02/27/apns-ssl-error/">APNS服务器搭建ssl错误问题解决方案</a>
       </li>
     
   </ul>
@@ -597,18 +648,18 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 144%" href="/geekerprobe/tags/design/">Design</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 138%" href="/geekerprobe/tags/design/">Design</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
 <a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
 
   </ul>
 </section>
