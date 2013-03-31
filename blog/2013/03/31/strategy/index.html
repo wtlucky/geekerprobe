@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>23种设计模式——适配器模式 - GeekerProbe</title>
+  <title>23种设计模式——策略模式 - GeekerProbe</title>
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="今天要介绍的是适配器模式（Adapter Pattern），适配器模式又叫做变压器模式，也叫做包装模式（Wrapper），但是包装模式却不止一个，装饰模式也是包装模式，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时， &hellip;">
+  <meta name="description" content="这次介绍一下策略模式（Strategy Pattern），相比之下是一种比较简单的模式。它也叫政策模式（Policy Pattern）。
+策略模式使用的就是面向对象的继承和多态机制，其他的没有什么玄机。策略模式适合使用在：
+1. 多个类只有在算法或行为上稍有不同的场景。
+2. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/">
+  <link rel="canonical" href="http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy/">
   <link href="/geekerprobe/favicon.png" rel="icon">
   <link href="/geekerprobe/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/geekerprobe/javascripts/modernizr-2.0.js"></script>
@@ -81,7 +84,7 @@
   
   <header>
     
-      <h1 class="entry-title">23种设计模式——适配器模式</h1>
+      <h1 class="entry-title">23种设计模式——策略模式</h1>
     
     
       <p class="meta">
@@ -97,7 +100,7 @@
   
 
 
-<time datetime="2013-03-23T14:13:00+08:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+<time datetime="2013-03-31T20:46:00+08:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
         
         
       | <a href="#comments">Comments</a>
@@ -107,46 +110,60 @@
   </header>
 
 
-<div class="entry-content"><p>今天要介绍的是<code>适配器模式（Adapter Pattern）</code>，适配器模式又叫做<code>变压器模式</code>，也叫做<code>包装模式（Wrapper）</code>，但是<code>包装模式</code>却不止一个，<code>装饰模式</code>也是<code>包装模式</code>，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时，不管之前的可行性分析、需求分析、系统设计处理的多么完美，总会在关键时候、关键场合出现一些“意外”。这些“意外”，该来的还是要来，躲是躲不过的，而这时就是我们的<code>适配器模式</code>的用武之地。<code>适配器模式</code>最好在设计阶段不要考虑它，它不是为了解决还处在开发阶段的问题，而是解决正在服役的项目问题，没有一个系统分析师会再做详细设计时考虑使用<code>适配器模式</code>。</p>
+<div class="entry-content"><p>这次介绍一下<code>策略模式（Strategy Pattern）</code>，相比之下是一种比较简单的模式。它也叫<code>政策模式（Policy Pattern）</code>。
+<code>策略模式</code>使用的就是面向对象的<code>继承</code>和<code>多态</code>机制，其他的没有什么玄机。<code>策略模式</code>适合使用在：
+1. 多个类只有在算法或行为上稍有不同的场景。
+2. 算法需要自由切换的场景。
+3. 需要屏蔽算法规则的场景。
+使用<code>策略模式</code>当然也有需要注意的地方，那么就是策略类不要太多，如果一个策略家族的具体策略数量超过4个，则需要考虑<code>混合模式</code>，解决策略类膨胀和对外暴露问题。在实际项目中，我们一般通过<code>工厂方法模式</code>来实现策略类的声明。</p>
 
-<p><code>适配器模式</code>包含两种，一种是<code>类适配器</code>，另一种是<code>对象适配器</code>。<code>类适配器</code>是通过类的继承实现的适配，而<code>对象适配器</code>是通过对象间的关联关系，组合关系实现的适配。二者在实际项目中都会经常用到，由于<code>对象适配器</code>是通过类间的关联关系进行耦合的，因此在设计时就可以做到比较灵活，而<code>类适配器</code>就只能通过覆写源角色的方法进行拓展，在实际项目中，<code>对象适配器</code>使用到的场景相对较多。在<code>iOS</code>开发中也推荐多使用组合关系，而尽量减少继承关系，这是一种很好的编程习惯，因此我在这里只介绍<code>对象适配器</code>，想了解更多的关于<code>类适配器</code>的话，请自行<code>Google</code>之。</p>
+<p>下面我们就来具体讲解一下<code>策略模式</code>。</p>
 
-<h4>适配器模式定义</h4>
+<h4>策略模式定义</h4>
 
-<p><code>Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.(将一个类的接口变成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。)</code></p>
+<p><code>Define a family of algorithms, encapsulate each one, and make them interchangeable.(定义一组算法，将每个算法都封装起来，并且是它们之间可以互换。)</code></p>
 
 <!-- More -->
 
 
-<h4>适配器模式类图</h4>
+<h4>策略模式类图</h4>
 
-<p><img src="http://picturemapstore.bcs.duapp.com/2013/03/Adapter.jpg"></p>
+<p><img src="http://picturemapstore.bcs.duapp.com/2013/03/Strategy.jpg"></p>
 
-<h4>适配器模式说明</h4>
+<h4>策略模式说明</h4>
 
 <ul>
-<li>Target目标角色
-该角色定义把其他类转换为何种接口，也就是我们的期望接口。</li>
-<li>Adaptee源角色
-你想把“谁”转换成目标角色，这个“谁”就是源角色，它是已经存在的、运行良好的类或对象。</li>
-<li>Adapter适配器角色
-适配器模式的核心角色，其他两个角色都是已经存在的角色，而适配器角色是需要新建立的，他的职责非常简单：把源角色转换为目标角色。</li>
+<li>Context封装角色
+它也叫做上下文角色，起承上启下封装作用，屏蔽高层模块对策略、算法的直接访问，封装可能存在变化。</li>
+<li>Strategy抽象策略角色
+策略、算法家族的抽象，通常为接口，定义每个策略或算法必须具有的方法和属性。</li>
+<li>ConcreteStrategy具体策略角色
+实现抽象策略中的操作，该类含有具体的算法。</li>
 </ul>
 
 
-<h4>适配器模式优点</h4>
+<h4>策略模式优点</h4>
 
 <ol>
-<li>适配器模式可以让两个没有任何关系的类在一起运行，只要适配器这个角色能够搞定他们就成。</li>
-<li>增加了类的透明性。我们访问的是目标角色，但是实现却在源角色里。</li>
-<li>提高了类的复用度。源角色在原有系统中还是可以正常使用的。</li>
-<li>灵活性非常好。不想要适配器时，删掉这个适配器就好了，其他代码不用改。</li>
+<li>算法可以自由切换。</li>
+<li>避免使用多重条件判断。</li>
+<li>扩展性良好。</li>
 </ol>
 
 
-<h4>适配器模式的objective-C实现</h4>
+<h4>策略模式缺点</h4>
 
-<figure class='code'><figcaption><span>Target  </span></figcaption>
+<ol>
+<li>策略类数量增多
+每一个策略都是一个类，复用的可能性很小，类数量增多。</li>
+<li>所有的策略类都需要对外暴露
+上层模块必须知道有哪些策略，然后才能决定使用哪一个策略，这与<code>迪米特法则</code>是相违背的。</li>
+</ol>
+
+
+<h4>策略模式的objective-C实现</h4>
+
+<figure class='code'><figcaption><span>Strategy  </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -155,48 +172,10 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'><span class="c1">//定义接口</span>
+</span><span class='line'><span class="k">@protocol</span> <span class="nc">TransportStrategy</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">@protocol</span> <span class="nc">Target</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">userExpectInterface</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>Adaptee  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Adaptee</span> : <span class="nc">NSObject</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doSometing</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Adaptee</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">doSometing</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;adaptee doing something!&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">travelling</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -204,7 +183,7 @@
 
 
 
-<figure class='code'><figcaption><span>Adapter  </span></figcaption>
+<figure class='code'><figcaption><span>ConcreteStrategy  </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -235,33 +214,95 @@
 <span class='line-number'>28</span>
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &quot;Target.h&quot;</span>
-</span><span class='line'><span class="cp">#import &quot;Adaptee.h&quot;</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'><span class="cp">#import &quot;TransportStrategy.h&quot;</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Adapter</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">Adaptee</span> <span class="o">*</span><span class="n">adaptee</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithAdaptee:</span><span class="p">(</span><span class="n">Adaptee</span> <span class="o">*</span><span class="p">)</span><span class="nv">adaptee</span><span class="p">;</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Car</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">TransportStrategy</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Adapter</span>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Car</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">@synthesize</span> <span class="n">adaptee</span> <span class="o">=</span> <span class="n">_adaptee</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithAdaptee:</span><span class="p">(</span><span class="n">Adaptee</span> <span class="o">*</span><span class="p">)</span><span class="nv">adaptee</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">travelling</span>
 </span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">_adaptee</span> <span class="o">=</span> <span class="n">adaptee</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;travelling by car.&quot;</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">userExpectInterface</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Bicycle</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">TransportStrategy</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Bicycle</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">travelling</span>
 </span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">adaptee</span> <span class="n">doSometing</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;travelling by bicycle.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Train</span> : <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">TransportStrategy</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Train</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">travelling</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;travelling by train.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Context  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+</span><span class='line'><span class="cp">#import &quot;TransportStrategy.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">travel:</span><span class="p">(</span><span class="kt">id</span><span class="o">&lt;</span><span class="n">TransportStrategy</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">transport</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">travel:</span><span class="p">(</span><span class="kt">id</span><span class="o">&lt;</span><span class="n">TransportStrategy</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">transport</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">transport</span> <span class="n">travelling</span><span class="p">];</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
@@ -289,20 +330,32 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
-</span><span class='line'><span class="cp">#import &quot;Adapter.h&quot;</span>
-</span><span class='line'><span class="cp">#import &quot;Adaptee.h&quot;</span>
-</span><span class='line'><span class="cp">#import &quot;Target.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Car.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Bicycle.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Train.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;Person.h&quot;</span>
 </span><span class='line'>
 </span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="n">Adaptee</span> <span class="o">*</span><span class="n">adaptee</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adaptee</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="kt">id</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span> <span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adapter</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithAdaptee:</span><span class="n">adaptee</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="o">*</span><span class="n">car</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Car</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Bicycle</span> <span class="o">*</span><span class="n">bicycle</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Bicycle</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Train</span> <span class="o">*</span><span class="n">train</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Train</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="o">*</span><span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="n">object</span> <span class="n">userExpectInterface</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel:</span><span class="n">car</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel:</span><span class="n">bicycle</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel:</span><span class="n">train</span><span class="p">];</span>
+</span><span class='line'>
 </span><span class='line'>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -333,7 +386,7 @@
   
 
 
-<time datetime="2013-03-23T14:13:00+08:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+<time datetime="2013-03-31T20:46:00+08:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
       
 
 <span class="categories">
@@ -367,7 +420,7 @@
 	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
 	
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/" data-via="cz_wtlucky" data-counturl="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy/" data-via="cz_wtlucky" data-counturl="http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy/" >Tweet</a>
   
   
   
@@ -382,10 +435,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/geekerprobe/blog/2013/03/20/observer/" title="Previous Post: 23种设计模式——观察者模式">&laquo; 23种设计模式——观察者模式</a>
+        <a class="basic-alignment left" href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/" title="Previous Post: 苹果禁止使用UDID的解决方案">&laquo; 苹果禁止使用UDID的解决方案</a>
       
-      
-        <a class="basic-alignment right" href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/" title="Next Post: 苹果禁止使用UDID的解决方案">苹果禁止使用UDID的解决方案 &raquo;</a>
       
     </p>
   </footer>
@@ -525,18 +576,18 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 143%" href="/geekerprobe/tags/design/">Design</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 143%" href="/geekerprobe/tags/design/">Design</a>
 <a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
 
   </ul>
 </section>

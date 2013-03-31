@@ -9,7 +9,10 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="UDID之前在iOS开发中广泛使用的一串字符串，用来标示唯一的设备，它本身并不包含用户信息，但是广告商却可以利用他获取到个人信息，从而发送广告，因为他涉及到隐私问题，所以苹果早在2011年就提出了将不再使用它。然而就在前天，苹果的开发者网站，发出新闻： Starting May 1, the &hellip;">
+  <meta name="description" content="这次介绍一下策略模式（Strategy Pattern），相比之下是一种比较简单的模式。它也叫政策模式（Policy Pattern）。
+策略模式使用的就是面向对象的继承和多态机制，其他的没有什么玄机。策略模式适合使用在：
+1. 多个类只有在算法或行为上稍有不同的场景。
+2. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +81,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/03/31/strategy/">23种设计模式——策略模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-31T20:46:00+08:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/03/31/strategy/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这次介绍一下<code>策略模式（Strategy Pattern）</code>，相比之下是一种比较简单的模式。它也叫<code>政策模式（Policy Pattern）</code>。
+<code>策略模式</code>使用的就是面向对象的<code>继承</code>和<code>多态</code>机制，其他的没有什么玄机。<code>策略模式</code>适合使用在：
+1. 多个类只有在算法或行为上稍有不同的场景。
+2. 算法需要自由切换的场景。
+3. 需要屏蔽算法规则的场景。
+使用<code>策略模式</code>当然也有需要注意的地方，那么就是策略类不要太多，如果一个策略家族的具体策略数量超过4个，则需要考虑<code>混合模式</code>，解决策略类膨胀和对外暴露问题。在实际项目中，我们一般通过<code>工厂方法模式</code>来实现策略类的声明。</p>
+
+<p>下面我们就来具体讲解一下<code>策略模式</code>。</p>
+
+<h4>策略模式定义</h4>
+
+<p><code>Define a family of algorithms, encapsulate each one, and make them interchangeable.(定义一组算法，将每个算法都封装起来，并且是它们之间可以互换。)</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/03/31/strategy/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -543,11 +601,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (3)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (3)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (3)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/31/strategy/">23种设计模式——策略模式</a>
+      </li>
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/">苹果禁止使用UDID的解决方案</a>
@@ -563,10 +625,6 @@
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/19/singleton/">23种设计模式——单例模式</a>
-      </li>
-    
-      <li class="post">
-        <a href="/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a>
       </li>
     
   </ul>
@@ -648,18 +706,18 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
-<a style="font-size: 138%" href="/geekerprobe/tags/design/">Design</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
-<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 143%" href="/geekerprobe/tags/design/">Design</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
 
   </ul>
 </section>
