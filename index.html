@@ -9,10 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="这次介绍一下策略模式（Strategy Pattern），相比之下是一种比较简单的模式。它也叫政策模式（Policy Pattern）。
-策略模式使用的就是面向对象的继承和多态机制，其他的没有什么玄机。策略模式适合使用在：
-1. 多个类只有在算法或行为上稍有不同的场景。
-2. &hellip;">
+  <meta name="description" content="在进行批量的操作，或者繁琐的操作时，可以使用shell编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。 首先说一下自己遇到的问题，今年去参加了CocoaChina开发者大会，会上的PPT很好， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +78,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/geekerprobe/blog/2013/05/02/start-write-shell/">入门bash Shell脚本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T15:15:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+        
+      | <a href="/geekerprobe/blog/2013/05/02/start-write-shell/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在进行批量的操作，或者繁琐的操作时，可以使用<code>shell</code>编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。</p>
+
+<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于&#8221;CocoaChina2013开发者大会-……&#8221;，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
+
+<p>从来没有编写过<code>shell</code>脚本，向来都是使用<code>shell</code>命令的我，先从学习编写<code>shell</code>脚本文件开始吧！</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/geekerprobe/blog/2013/05/02/start-write-shell/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -601,11 +646,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (3)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (3)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/05/02/start-write-shell/">入门bash shell脚本</a>
+      </li>
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/31/strategy/">23种设计模式——策略模式</a>
@@ -621,10 +670,6 @@
     
       <li class="post">
         <a href="/geekerprobe/blog/2013/03/20/observer/">23种设计模式——观察者模式</a>
-      </li>
-    
-      <li class="post">
-        <a href="/geekerprobe/blog/2013/03/19/singleton/">23种设计模式——单例模式</a>
       </li>
     
   </ul>
@@ -706,18 +751,19 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
-<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
-<a style="font-size: 143%" href="/geekerprobe/tags/design/">Design</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 143%" href="/geekerprobe/tags/design/">Design</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/shell/">shell</a>
 
   </ul>
 </section>

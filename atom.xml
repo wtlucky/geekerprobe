@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://wtlucky.github.com/geekerprobe/atom.xml" rel="self"/>
   <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2013-03-31T21:24:03+08:00</updated>
+  <updated>2013-05-02T16:40:35+08:00</updated>
   <id>http://wtlucky.github.com/geekerprobe/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,236 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[入门bash shell脚本]]></title>
+    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/05/02/start-write-shell/"/>
+    <updated>2013-05-02T15:15:00+08:00</updated>
+    <id>http://wtlucky.github.com/geekerprobe/blog/2013/05/02/start-write-shell</id>
+    <content type="html"><![CDATA[<p>在进行批量的操作，或者繁琐的操作时，可以使用<code>shell</code>编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。</p>
+
+<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于&#8221;CocoaChina2013开发者大会-……&#8221;，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
+
+<p>从来没有编写过<code>shell</code>脚本，向来都是使用<code>shell</code>命令的我，先从学习编写<code>shell</code>脚本文件开始吧！</p>
+
+<!-- More -->
+
+
+<p>在文本编辑器中第一行（必须是第一行）首先键入<code>#!/bin/sh</code>，符号<code>#!</code>用来告诉系统它后面的参数是用来执行该文件的程序。</p>
+
+<h4>注释</h4>
+
+<p>在<code>shell</code>中<code>#</code>代表注释，直到这一行结束。</p>
+
+<h4>变量</h4>
+
+<p>在<code>shell</code>中，变量都由字符串组成，变量名无需提前声明，写了就可以直接赋值，<code>变量名=值</code>(这里等号两边一定不能有空格)。
+取变量时要使用<code>$</code>符号。有时在一长串字符串中包含变量，可以对变量名加上<code>{}</code>来区分。例如有一个变量<code>num=2</code>
+<code>echo "this is the $numnd"</code>，这样会有问题，我们要写成<code>echo "this is the ${num}nd"</code>。</p>
+
+<h4>流程控制</h4>
+
+<p>只写一下本次用到的<code>for</code>循环，其他的流程控制以后用到时在学习。
+for-loop表达式查看一个字符串列表 (字符串用空格分隔) 然后将其赋给一个变量：
+for var in &#8230;.; do
+　 &#8230;.
+done
+在下面的例子中，将分别打印ABC到屏幕上：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="k">for </span>var in A B C ; <span class="k">do</span>
+</span><span class='line'>　 <span class="nb">echo</span> <span class="s2">&quot;var is $var&quot;</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里参考的文章是<a href="http://blog.csdn.net/fpmystar/article/details/4183678">Linux shell脚本编写基础</a></p>
+
+<p>在我写的<code>shell</code>脚本中则是使用循环输出当前文件夹下文件的名字：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="k">for </span>aFile in *; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nv">tmpFile</span><span class="o">=</span><span class="sb">`</span>basename <span class="nv">$aFile</span><span class="sb">`</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接下来就是对获取到的每一个文件名的字符串进行截取，删掉不需要的部分：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="k">for </span>aFile in *; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nv">tmpFile</span><span class="o">=</span><span class="sb">`</span>basename <span class="nv">$aFile</span><span class="sb">`</span>
+</span><span class='line'>    <span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C*-</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里学习了一下<code>shell</code>字符串的操作知识，<code>:</code>选取子串 <code>#</code>正向截取子串 <code>%</code>逆向截取子串 <code>##</code>正向最长匹配 <code>%%</code>逆向最长匹配。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">str</span><span class="o">=</span><span class="s2">&quot;abcdef&quot;</span>
+</span><span class='line'>expr substr <span class="s2">&quot;$str&quot;</span> 1 3  <span class="c"># 从第一个位置开始取3个字符， abc</span>
+</span><span class='line'>expr substr <span class="s2">&quot;$str&quot;</span> 2 5  <span class="c"># 从第二个位置开始取5个字符， bcdef </span>
+</span><span class='line'>expr substr <span class="s2">&quot;$str&quot;</span> 4 5  <span class="c"># 从第四个位置开始取5个字符， def</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:</span><span class="nv">2</span><span class="k">}</span>           <span class="c"># 从第二个位置开始提取字符串， bcdef</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:</span><span class="nv">2</span><span class="p">:</span><span class="nv">3</span><span class="k">}</span>         <span class="c"># 从第二个位置开始提取3个字符, bcd</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:(-2)</span><span class="k">}</span>        <span class="c"># 从倒数第二个位置向左提取字符串, abcde</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:(-2):</span><span class="nv">3</span><span class="k">}</span>      <span class="c"># 从倒数第二个位置向左提取3个字符, cde</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">str</span><span class="o">=</span><span class="s2">&quot;abbc,def,ghi,abcjkl&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#a*c</span><span class="k">}</span>         <span class="c"># ,def,ghi,abcjkl  一个井号(#) 表示从左边截取掉最短的匹配 (这里把abbc字串去掉）</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">##a*c</span><span class="k">}</span>        <span class="c"># jkl，             两个井号(##) 表示从左边截取掉最长的匹配 (这里把abbc,def,ghi,abc字串去掉)</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#</span><span class="s2">&quot;a*c&quot;</span><span class="k">}</span>       <span class="c"># 空,因为str中没有子串&quot;a*c&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$[</span>str##<span class="s2">&quot;a*c&quot;</span><span class="o">}</span>      <span class="c"># 空,同理</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#d*f)         # abbc,def,ghi,abcjkl, </span>
+</span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">#*d*f</span><span class="k">}</span><span class="p">        # ,ghi,abcjkl   </span>
+</span><span class='line'>
+</span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">%a*l</span><span class="k">}</span><span class="p">         # abbc,def,ghi  一个百分号(%)表示从右边截取最短的匹配 </span>
+</span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">%%b*l</span><span class="k">}</span><span class="p">        # a             两个百分号表示(%%)表示从右边截取最长的匹配</span>
+</span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">%a*c</span><span class="k">}</span><span class="p">         # abbc,def,ghi,abcjkl  </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里参考的文章<a href="http://my.oschina.net/aiguozhe/blog/41557">Bash Shell字符串操作小结</a></p>
+
+<p>最后就是将文件重命名了：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="k">for </span>aFile in *; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nv">tmpFile</span><span class="o">=</span><span class="sb">`</span>basename <span class="nv">$aFile</span><span class="sb">`</span>
+</span><span class='line'>    <span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C*-</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
+</span><span class='line'>    mv <span class="nv">$tmpFile</span> <span class="nv">$newName</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行时发现只有部分文件被成功重命名了，其余的都不成功，而这些不成功的文件名中都包含空格，空格是很大一个问题，在获取原文件名时文件名就被空格截断了，导致文件名不全。因而重命名也是失败的，找不到源文件。
+参考这篇文章<a href="http://www.cnblogs.com/cocowool/archive/2013/01/15/2861904.html">SHELL技巧：处理文件名中的那些空格</a>
+找到了解决方法，对变量添加<code>""</code>使空格被正确处理，这不是最好的方法，但是在我这个小小的脚本中完全可以了。</p>
+
+<p>文章中还介绍了一种终极解决方法就是设置<code>IFS(the Internal Field Separator)</code>，但是在设置之前先保存当前的<code>IFS</code>，操作完成之后在设置回去。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="nv">SAVEIFS</span><span class="o">=</span><span class="nv">$IFS</span>
+</span><span class='line'><span class="nv">IFS</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> -en <span class="s2">&quot;\n\b&quot;</span><span class="k">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#进行操作</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">IFS</span><span class="o">=</span><span class="nv">$SAVEIFS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是我这样使用之后经过测试发现，并不能解决问题，文件名被读取成其他怪异的形式了，空格是被正常读取了但是<code>-</code>也被读取成空格了，我不知道这是为什么，有知道的欢迎告诉我。</p>
+
+<p>最后附上自己写的完整的<code>shell</code>脚本，虽然很短，但这是第一次写，也算是个入门吧。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#===============将文件名的前缀部分去掉=============</span>
+</span><span class='line'><span class="c">#====处理文件名中带空格的问题，先保存$IFS变量，经测试这么做还是会有问题部分字符会丢失</span>
+</span><span class='line'><span class="c">#SAVEIFS=$IFS</span>
+</span><span class='line'><span class="c">#IFS=$(echo -en &quot;\n\b&quot;)</span>
+</span><span class='line'><span class="k">for </span>aFile in *; <span class="k">do</span>
+</span><span class='line'>    <span class="c">#对变量加上双引号会避免文件名中有空格的问题</span>
+</span><span class='line'>    <span class="nv">tmpFile</span><span class="o">=</span><span class="sb">`</span>basename <span class="s2">&quot;$aFile&quot;</span><span class="sb">`</span>
+</span><span class='line'>    <span class="c">#截取文件名字符串中的前一部分</span>
+</span><span class='line'>    <span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C*-</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
+</span><span class='line'>    <span class="c">#对文件进行重命名</span>
+</span><span class='line'>    mv <span class="s2">&quot;$tmpFile&quot;</span> <span class="s2">&quot;$newName&quot;</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'><span class="c">#=====将$IFS恢复为原来的状态</span>
+</span><span class='line'><span class="c">#IFS=$SAVEIFS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>总结一下需要注意的地方</h3>
+
+<ol>
+<li>在写<code>shell</code>脚本时不能延续写其他代码乱加空格的习惯，空格在<code>shell</code>中很重要，随便加空格会导致<code>shell</code>脚本执行失败。</li>
+<li>还是空格问题，使用<code>basename</code>命令时，获取到的文件名如果有空格的话将不会获取之后部分，可以对变量添加<code>""</code>解决问题。</li>
+<li><code>cp</code> <code>mv</code>等命令要求文件命中同样不能有空格，也可以在脚本中对变量添加<code>""</code>解决。</li>
+<li>刚开始写<code>shell</code>脚本时最好写一句测试一句，要严谨不能想当然。</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——策略模式]]></title>
