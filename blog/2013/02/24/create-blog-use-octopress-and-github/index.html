@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="介绍 现下大概每一个搞技术的人都会有一个技术博客，而GitHub又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明只用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管， &hellip;">
+  <meta name="description" content="介绍 现下大概每一个搞技术的人都会有一个技术博客，而GitHub又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明之用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -109,7 +109,7 @@
 
 <div class="entry-content"><h3>介绍</h3>
 
-<p>现下大概每一个搞技术的人都会有一个技术博客，而<a href="http://github.com">GitHub</a>又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明只用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。<a href="http://octopress.org">Octopress</a>就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样<code>A blogging framework for hackers.</code>，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。</p>
+<p>现下大概每一个搞技术的人都会有一个技术博客，而<a href="http://github.com">GitHub</a>又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明之用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。<a href="http://octopress.org">Octopress</a>就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样<code>A blogging framework for hackers.</code>，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。</p>
 
 <p>这两者一结合就有了我现在的这个blog了，用它来记录和分享我的学习之路上点点滴滴。网络上有很多介绍安装与配置方法的文章，官网的<a href="http://octopress.org/docs">Documentation</a>写的也很好，推荐E文好的直接去官网。我在安装与配置中也遇到了各种问题，不过在<a href="http://google.cn">Google</a>的帮助下都一一解决了，你需要懂一些<code>ruby(jekyll)</code>，并且会使用<code>git</code>命令，还要使用<code>markdown</code>来书写博文，这会让你觉得是在写代码而不是在写博文。不多说了现在记录下我自己安装与配置过程，供新手与日后自己需要时参考。<!-- More --></p>
 
@@ -145,7 +145,7 @@
 
 <h3>安装Octopress</h3>
 
-<p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入一下命令：</p>
+<p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入以下命令：</p>
 
 <figure class='code'><figcaption><span>install Octopress  </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -248,7 +248,7 @@
 
 <ul>
 <li>先到GitHub上创建名为<code>geekerprobe</code>的repo。</li>
-<li>因为使用第二种方法我们要将blog放在<code>username.github.com</code>的子集目录所以我们要在本地将目录也设置为子集目录，不让会出现<em>“Sorry！I can not find /”</em>的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。</li>
+<li>因为使用第二种方法我们要将blog放在<code>username.github.com</code>的子集目录所以我们要在本地将目录也设置为子集目录，不然会出现<em>“Sorry！I can not find /”</em>的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。</li>
 </ul>
 
 
@@ -274,7 +274,7 @@
 <p>会提示你输入一个形如<code>git@github.com:username/geekerprobe.git</code>的地址，那么就按照这种形式输入你自己的repo的地址，这个地址可以在GitHub上你的repo的SSH文本框中得到，粘贴过来就好。
 <img src="/geekerprobe/images/2013-2-24/repo-ssh.jpg">
 回车确定，等待片刻提示成功就可以了。
-这时查看目录会发现多了一个_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的<code>gh-pages</code>分支。同时你的repo的<code>gh-pages</code>分支在GitHub上也已被创建按。</p>
+这时查看目录会发现多了一个_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的<code>gh-pages</code>分支。同时你的repo的<code>gh-pages</code>分支在GitHub上也已被创建了。</p>
 
 <ul>
 <li>接下来生成并push博文到GitHub上</li>
@@ -311,7 +311,7 @@
 
 <p>此处使用的都是<code>git</code>命令，对<code>git</code>命令不熟悉的请看<a href="http://rogerdudler.github.com/git-guide/index.zh.html">这</a>。</p>
 
-<p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录被被排除在<code>git</code>库外的文件以及目录。
+<p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录下被排除在<code>git</code>库外的文件以及目录。
 这些我们在<code>clone</code>之前就已经由作者做好了。我们需要做的是：</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -350,7 +350,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这是引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来</p>
+<p>这些引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git push origin site   <span class="c">#将HEAD push到remote段</span>
@@ -581,19 +581,19 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
 <a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
 <a style="font-size: 143%" href="/geekerprobe/tags/design/">Design</a>
-<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/shell/">shell</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
 <a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
 
   </ul>
 </section>
