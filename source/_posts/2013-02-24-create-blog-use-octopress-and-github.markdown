@@ -9,7 +9,7 @@ tags: GitHub ruby git Octopress
 
 ###介绍###
 
-现下大概每一个搞技术的人都会有一个技术博客，而[GitHub](http://github.com)又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明只用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。[Octopress](http://octopress.org)就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样`A blogging framework for hackers.`，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。
+现下大概每一个搞技术的人都会有一个技术博客，而[GitHub](http://github.com)又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明之用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。[Octopress](http://octopress.org)就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样`A blogging framework for hackers.`，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。
 
 这两者一结合就有了我现在的这个blog了，用它来记录和分享我的学习之路上点点滴滴。网络上有很多介绍安装与配置方法的文章，官网的[Documentation](http://octopress.org/docs)写的也很好，推荐E文好的直接去官网。我在安装与配置中也遇到了各种问题，不过在[Google][]的帮助下都一一解决了，你需要懂一些`ruby(jekyll)`，并且会使用`git`命令，还要使用`markdown`来书写博文，这会让你觉得是在写代码而不是在写博文。不多说了现在记录下我自己安装与配置过程，供新手与日后自己需要时参考。<!-- More -->
 
@@ -43,7 +43,7 @@ Permission denied (publickey).
 
 ###安装Octopress###
 
-在`terminal`下进入Octopress所要安装目录的上一级目录，敲入一下命令：
+在`terminal`下进入Octopress所要安装目录的上一级目录，敲入以下命令：
 {% codeblock install Octopress lang:bash %}
 git clone git://github.com/imathis/octopress.git geekerprobe      # 从GitHub上clone Octopress到本地 geekerprobe可以随便填，Octopress会被clone到当前目录的geekerprobe目录下
 cd geekerprobe    # 进入该目录，如果你是用的是RVM的话，会寻问你是否信任.rvmrc文件 当然是yes
@@ -106,7 +106,7 @@ categories:
 步骤：
 
 + 先到GitHub上创建名为`geekerprobe`的repo。
-+ 因为使用第二种方法我们要将blog放在`username.github.com`的子集目录所以我们要在本地将目录也设置为子集目录，不让会出现*“Sorry！I can not find /”*的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。
++ 因为使用第二种方法我们要将blog放在`username.github.com`的子集目录所以我们要在本地将目录也设置为子集目录，不然会出现*“Sorry！I can not find /”*的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。
 {% codeblock lang:bash %}
 rake set_root_dir[/geekerprobe]   #将路径设置为/geekerprobe
 rake set_root_dir[/]   #如果你想恢复到初始目录，则键入此命令
@@ -120,7 +120,7 @@ rake setup_github_pages   #将Octopress部署到GitHub上
 会提示你输入一个形如`git@github.com:username/geekerprobe.git`的地址，那么就按照这种形式输入你自己的repo的地址，这个地址可以在GitHub上你的repo的SSH文本框中得到，粘贴过来就好。
 {% img /images/2013-2-24/repo-ssh.jpg %}
 回车确定，等待片刻提示成功就可以了。
-这时查看目录会发现多了一个\_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的`gh-pages`分支。同时你的repo的`gh-pages`分支在GitHub上也已被创建按。
+这时查看目录会发现多了一个\_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的`gh-pages`分支。同时你的repo的`gh-pages`分支在GitHub上也已被创建了。
 
 + 接下来生成并push博文到GitHub上
 {% codeblock lang:bash %}
@@ -146,7 +146,7 @@ rake deploy       #无误后，push到GitHub上
 
 此处使用的都是`git`命令，对`git`命令不熟悉的请看[这](http://rogerdudler.github.com/git-guide/index.zh.html)。
 
-首先/geekerprobe这个目录我们是从Octopress的GitHub上`clone`下来的，所以他本是就是一个`git`库，可以通过`cat .gitignore`查看该目录被被排除在`git`库外的文件以及目录。
+首先/geekerprobe这个目录我们是从Octopress的GitHub上`clone`下来的，所以他本是就是一个`git`库，可以通过`cat .gitignore`查看该目录下被排除在`git`库外的文件以及目录。
 这些我们在`clone`之前就已经由作者做好了。我们需要做的是：
 {% codeblock lang:bash %}
 git remote add origin git@github.com:username/geekerprobe.git   #在远端添加源，origin可以随便写，建议用origin这是默认，后面的路径还是那个
@@ -171,7 +171,7 @@ git add .
 {% codeblock lang:bash %}
 git commit -m "something to say"
 {% endcodeblock %}
-这是引号中的文字就是类似于`svn`中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来
+这些引号中的文字就是类似于`svn`中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来
 {% codeblock lang:bash %}
 git push origin site   #将HEAD push到remote段
 {% endcodeblock %}
