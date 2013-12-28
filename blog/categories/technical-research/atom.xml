@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Technical Research | GeekerProbe]]></title>
+  <link href="http://wtlucky.github.com/geekerprobe//blog/categories/technical-research/atom.xml" rel="self"/>
+  <link href="http://wtlucky.github.com/geekerprobe/"/>
+  <updated>2013-12-28T20:47:57+08:00</updated>
+  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <author>
+    <name><![CDATA[wtlucky ]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Wax Lua—使用lua编写原生ios程序的框架实现原理]]></title>
+    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua/"/>
+    <updated>2013-12-28T20:13:00+08:00</updated>
+    <id>http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua</id>
+    <content type="html"><![CDATA[<h3>Wax Lua是什么？</h3>
+
+<p><code>Lua</code>我就不介绍了，我们都在使用的脚本语言，游戏开发的神器。
+而<code>Wax</code>就是使用<code>Lua</code>脚本语言来编写<code>ios原生应用</code>的一个框架，它把Lua脚本语言和原生<code>Objective-C</code>应用编程接口(API)结合起来。这意味着，你可以从Lua里面，使用任何和全部的<code>Objective-C</code>类及框架。</p>
+
+<h3>为什么要使用Wax Lua？</h3>
+
+<p>苹果在2010年9月就修改条款允许开发者使用脚本语言，不再是只限定开发者只能使用<code>Objective-C</code>和<code>javascript</code>两种语言，这也就导致了<code>Wax Lua</code>的出现。</p>
+
+<pre><code>Wax Lua的优势：
+1.  开源、免费，遵循MIT协议。项目地址：[Wax Lua](https://github.com/probablycorey/wax)
+2.  可以使用原生API，可以访问所有ios的框架。
+3.  Lua类型和OC类型自动转化。
+4.  自动内存管理。
+5.  便捷的Lua模块，使得HTTP请求和JSON解析容易且快速。
+6.  简洁的代码，不再有头文件，数组和字典等语句。
+7.  Lua支持闭包，相当强大的功能。
+</code></pre>
+
+<!-- More -->
+
+
+<p>当年风靡一时的《Angry Birds》就是使用<code>Wax Lua</code>开发的，不过一个不幸的消息就是<code>Wax Lua</code>框架在2011年，即两年前原作者就不在对它进行维护了，所以不能确定在如今<code>XCode5</code>，<code>iOS7</code>时代它是否依然可以用。我觉得作者不再维护它是有原因的，现在来看他的优势已不再有这么多了，iOS4有了block，就有了Lua的闭包的功能，iOS5有了ARC，也可以自动管理内存，iOS6简化了OC代码，使代码脚本化，再也不用长长的数组与字典语句了，iOS5自带的NSJSONSerialization和强大<a href="https://github.com/AFNetworking/AFNetworking/">AFNetworking</a>也使HTTP请求和JSON解析相当便捷。如此看来<code>Wax Lua</code>的优势也所剩无几了。</p>
+
+<h3>Wax Lua 使用方法</h3>
+
+<p>说一下<code>Wax</code>的特点，它支持你在脚本里使用任何<code>OC</code>的类，同样也支持你创建一个类。</p>
+
+<p>使用一个类时你会这样使用：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">NSString</span> <span class="c1">-- Returns the NSString class</span>
+</span><span class='line'><span class="n">UIView</span> <span class="c1">-- Returns the UIView class</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+这样调用其实一个语法糖，实际上他调用的是wax.class["UIView "]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
+
+<p>当定义一个类的时候会是这样：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span> <span class="n">NSObject</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+遵循协议的类：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span><span class="n">NSObject</span><span class="p">,</span><span class="n">protocols</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">UITableViewDelegate&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="s">UITableViewDataSource&quot;</span><span class="p">}}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+在你定义这个类的脚本文件里缩写的其他function都将作为这个类的实例方法。且这个方法的第一个参数必须是<code>self</code>，这就是Wax模仿Objective-C的面向对象的关键所在。
+因此在Wax中调用方法要使用冒号，类似这样：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">:</span><span class="n">sharedApplication</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+其实他就等同于这样：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">(</span><span class="n">UIApplication</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>在调用含有多个参数的方法时候，使用<code>_</code>来代替OC中的:,例如：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">UIAlertView</span> <span class="nl">initWithTitle:</span><span class="s">@&quot;title&quot;</span> <span class="nl">message:</span><span class="s">@&quot;message&quot;</span> <span class="nl">delegate:</span><span class="nb">nil</span><span class="p">];</span>  <span class="c1">//OC方式</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIAlertView</span><span class="p">:</span><span class="n">initWithTitle_message_delegate</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">title&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">message&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>    <span class="c1">--Wax 方式</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>使用<code>Wax</code>创建对象不需要你<code>alloc</code>，因为他会帮你实现内存管理，它是怎么实现的稍后再说。</p>
+
+<p><code>Wax</code>不支持属性Property，因此你不能使用OC中的点语法，<code>Wax</code>要求Lua与OC的通信必须通过方法来完成，就是如果你要访问一个Property的话就只能使用它的<code>setter</code>和<code>getter</code>方法。
+如果你在脚本中使用了点语法，那么你将为这个对象创建一个实例变量，但这只是在Lua层面的，在OC层面它并不知道你创建了这样一个实例变量。</p>
+
+<p><code>Wax</code>会强制的把OC的对象转换成Lua的对象，同时他也支持反向转化，比如一个方法需要<code>NSString</code>类型的参数，你可以直接传递Lua的字符串进去。
+有时你不想让OC对象被强制转化成Lua的，它也提供了相应变回OC对象的方法。</p>
+
+<p><code>Wax</code>对枚举和结构的支持并不是很好，就是它需要把你需要用到的枚举和结构都按照他定义好的格式添加到<code>APP_ROOT/wax/stdlib/enums.lua和APP_ROOT/wax/wax-scripts/structs.lua</code>中，只有这样你才能正常的使用它们。</p>
+
+<p><code>Wax</code>对协议的支持也不是很好，有的协议在<code>Wax</code>中可以正常使用，有的则不可以，你在源文件中会看到ProtocolLoader.h这样一个文件，他需要把不支持的协议预先加载到runtime中，作者自己也不知道这是为什么，也许是一个他不知道的runtime method。</p>
+
+<p><code>Wax</code>也是不支持分类的，不过这个使用的比较少，不支持也没有什么。</p>
+
+<h3>Wax Lua 实现原理</h3>
+
+<p>我们知道OC是一门动态语言，他的<code>runtime</code>很强大，强大到你可以在运行时动态的创建一个类，而<code>Wax</code>真是借助于OC的<code>runtime</code>实现了它一系列的功能。
+目前我们在使用的<code>CCLuaObjcBridge</code>，这个类也是实现了Lua调用OC的方法，他借助的也是<code>runtime</code>，但是跟<code>Wax</code>比起来，他就简单了很多，从他的限制就能看出来，它只支持类的静态方法，方法只能有一个参数，不能创建对象，不能调用实例方法。它的实现是这样的：通过类名找到类对象，通过预先定义好的只能包含一个参数或没有参数的方法名生成<code>selector</code>，再根据类对象和<code>selector</code>生成<code>NSMethodSignature</code>，进而由NSMethodSignature生成NSInvocation，进行方法调用，再加上参数和返回值的Lua与OC的类型转换，就完成了一次OC方法的调用。</p>
+
+<p>下面再说一下<code>Wax</code>。<code>Wax</code>的源码中有这样一个文件<code>wax_helpers.h/wax_helpers.m</code>，它提供了一系列的工具方法包括lua与OC的类型之间相互转化，lua中使用_的方法名转化为OC中:的selector，根据lua传递过来的方法名找到对应的<code>selector</code>等方法，有兴趣的同学可以去看看代码。</p>
+
+<p><code>Wax</code>主要是维护了这样的一个结构，基本上所有与对象有关的操作都是在这个基础上完成的：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_wax_instance_userdata</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">id</span> <span class="n">instance</span><span class="p">;</span>
+</span><span class='line'><span class="n">BOOL</span> <span class="n">isClass</span><span class="p">;</span>
+</span><span class='line'><span class="n">Class</span> <span class="n">isSuper</span><span class="p">;</span> <span class="c1">// isSuper not only stores whether the class is a super, but it also contains the value of the next superClass.</span>
+</span><span class='line'><span class="n">BOOL</span> <span class="n">actAsSuper</span><span class="p">;</span> <span class="c1">// It only acts like a super once, when it is called for the first time.</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="n">wax_instance_userdata</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+第一个<code>instance</code>就是OC对象的一个指针，<code>isClass</code>标识这是不是一个类对象，<code>isSuper</code>用来标识他的父对象，类似以OC中的<code>isa</code>指针，这么做是为了在方法调用时子类如果找不到的话就会由此去父类查找，<code>actAsSuper</code>用来标识这个对象是不是被当做父类来使用，<code>Wax</code>中一个对象智能被当做父类一次。</p>
+
+<p><code>Wax</code>中还维护了两个表，一个<code>UserDataTable</code>一个<code>StrongUserDataTable</code>。这两个表中都存储的是<code>Wax_instance_userdata-&gt;instance</code>为<code>key</code>，<code>Wax_instance_userdata</code>为值的键值对。 <code>UserDataTable</code>是一个值为wake的弱表，他用来存储所有创建的对象，是一个弱引用，他其中就存储了通过lua创建的OC对象，因为是弱表，所以当不在使用时会调用<code>__gc</code>这个元方法，进而将该OC对象销毁。<code>StrongUserDataTable</code>是一个强引用表他保存的是所有通过<code>Wax</code>创建的对象，他不是一个弱表所以需要手动管理内存。也就是说使用<code>Wax</code>创建的对象除了会在<code>UserDataTable</code>中保存一份以外还会在<code>StrongUserDataTable</code>保存一份。</p>
+
+<p>说到这里就在说一下<code>Wax</code>的内存管理，<code>Wax</code>的内存管理也是基于引用计数的，而且他没有使用<code>AutoReleasePool</code>。所有引用计数的操作都在框架里为你实现好了，所以在lua里你不能调用<code>alloc</code>方法，而要直接使用<code>init</code>方法，因为他会判断你的方法是不是<code>init</code>初始化方法，如果是的话<code>Wax</code>会帮你调用<code>alloc</code>方法。对象的<code>release</code>有两种一种是<code>UserDataTable</code>中的对象会在<code>__gc</code>元方法中<code>release</code>，另外一种就是在<code>Wax</code>运行的时候有一个定时器timer，不停地轮询<code>StrongUserDataTable</code>中的对象的引用计数如果小于2，那么就会<code>release</code>。</p>
+
+<p><code>Wax</code>创建类和对象以及方法调用都是通过元方法来实现的。
+先来说创建类，就是通过定义的类名以及父类，在运行时通过字符串以及运行时的API创建一个类，通过<code>class_addMethod（）</code>函数给创建的这个类注册方法，而这个方法的实现就是一个IMP（函数指针），Wax中IMP是这样的一类方法，方法包括lua中用户自己写的function，在OC的层面又对这个function的参数和返回值进行了OC与lua的互转，这两部分组合起来构成一个方法。也就是当调用一个用lua写的方法的时候会首先把参数转化为lua类型然后由<code>lua_pcall（）</code>调用lua中的方法，完成后再把返回值转换成OC类型的。</p>
+
+<p>最后说一下<code>Wax</code>的方法调用，无论是OC自己的方法还是用户自己写的方法最终都是去调用这个IMP（函数指针），所以在这之前无论是调用OC原生的方法和用户自己定义的方法，处理的方式都是一样的。在元方法<code>__index</code>里将方法的调用作为一个closure push到lua中，在元方法<code>__newindex</code>中进行方法的override。在closure中的方法调用就和<code>CCLuaObjcBridge</code>一样了，都是先获取到<code>selector</code>，生成<code>NSMethodSignature</code>，然后生成<code>NSInvocation</code>，然后调用。与<code>CCLuaObjcBridge</code>不同的地方就是由于这个对象是<code>wax_instance_userdata</code>中的<code>instance</code>，而不是由类名生成的类对象，所以他可以调用实例方法。</p>
+
+<p>以上仅是个人一些理解，自身对Lua的C API和OC的runtime的API不是很熟悉，<code>Wax</code>中使用了大量的这些API，所以有不对的地方还请指出来。</p>
+]]></content>
+  </entry>
+  
+</feed>
