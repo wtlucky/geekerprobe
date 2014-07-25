@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Swift Hexadecimal conversion - GeekerProbe</title>
+  <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
+
+  
+  <meta name="description" content="自己的Blog好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的Blog增添新的血液了。APPLE在WWDC 2014上公布了一门新的编程语言Swift，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/">
+  <link href="/geekerprobe/favicon.png" rel="icon">
+  <link href="/geekerprobe/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/geekerprobe/javascripts/modernizr-2.0.js"></script>
+  <script src="/geekerprobe/javascripts/ender.js"></script>
+  <script src="/geekerprobe/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/geekerprobe/atom.xml" rel="alternate" title="GeekerProbe" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38777768-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/geekerprobe/">GeekerProbe</a></h1>
+  
+    <h2>水滴石穿 Keeping faith.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- wtlucky's Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/geekerprobe/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:wtlucky.github.com/geekerprobe" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/geekerprobe/">Blog</a></li>
+  <li><a href="/geekerprobe/blog/archives">Archives</a></li>
+  <li><a href="/geekerprobe/blog/categories">Categories & Tags</a></li>
+  <li><a href="/geekerprobe/blog/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Swift Hexadecimal Conversion</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-25T15:11:00+08:00" pubdate data-updated="true">Jul 25<span>th</span>, 2014</time>
+        
+        
+      | <a href="#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>自己的<code>Blog</code>好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的<code>Blog</code>增添新的血液了。<code>APPLE</code>在<code>WWDC 2014</code>上公布了一门新的编程语言<a href="https://developer.apple.com/swift/">Swift</a>，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进，这是一个集合了N多语言优秀特性于一身的全新语言，它将成为开发<code>iOS</code>和<code>MAC</code>的新的选择。并且据说他将会取代<code>Objective-C</code>，但是我觉得并不是这样，不过这也仅仅是一家之谈，至于会不会这样，我们走着瞧。<!-- More --></p>
+
+<p>既然苹果放出了这样一个利器，身为<code>iOS开发者</code>的我也不能落下，<code>APPLE</code>为我们提供了两个文档<a href="https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/index.html">The Swift Programming Language</a>和<a href="https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/index.html">Using Swift with Cocoa and Objective-C</a>。他们一个是纯语言角度的介绍<code>Swift</code>，包括各种细节语法，另一个则是介绍怎么它怎么与<code>Cocoa</code>交互，如何使用它开发<code>iOS</code>和<code>MAC</code>应用，以及如何与现有的程序兼容。学习这样一门全新的技术我还是建议读第一手资料的，虽然现在网络上有好多中文版的资料了吧，但是苹果的文档写的很是通俗易懂，读起来也没有什么困难。而起自己之前有过脚本语言的经验，所以看起来也是很快。</p>
+
+<p>读完两个文档，就做一些实战的内容，先从小程序开始，之前自己写过一个<code>进制转换器</code>，没啥功能，就是提供一个十进制和十六进制互相转换的功能，主要还是为了方便自己在写一些颜色值的时候使用。之前的版本是用<code>Objective-C</code>写的，那么这次就用<code>Swift</code>重写一遍。</p>
+
+<p>这个程序最主要的部分也就是两个进制相互转换的算法了，用<code>Objective-C</code>实现起来很简单，通过一下字符<code>char</code>的运算就能搞定。代码如下：</p>
+
+<figure class='code'><figcaption><span>Hexdecimal To Decimal  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">decimalConvertedFromHexdecimal:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">hexdecimal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">hexdecimal</span> <span class="nl">characterAtIndex:</span><span class="n">i</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">&#39;A&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;F&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;A&#39;</span> <span class="o">+</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">&#39;a&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;f&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;a&#39;</span> <span class="o">+</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">&#39;0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;0&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">UIAlertView</span> <span class="o">*</span><span class="n">alert</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIAlertView</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithTitle:</span><span class="s">@&quot;错误&quot;</span>
+</span><span class='line'>      <span class="nl">message:</span><span class="s">@&quot;你提供了非法字符&quot;</span> <span class="nl">delegate:</span><span class="nb">nil</span>
+</span><span class='line'>      <span class="nl">cancelButtonTitle:</span><span class="s">@&quot;知道了&quot;</span>
+</span><span class='line'>      <span class="nl">otherButtonTitles:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>      <span class="p">[</span><span class="n">alert</span> <span class="n">show</span><span class="p">];</span>
+</span><span class='line'>      <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@&quot;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span> <span class="n">becomeFirstResponder</span><span class="p">];</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sum</span> <span class="o">+=</span> <span class="n">num</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Decimal To Hexdecimal  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">hexdecimalConvertedFromDecimal:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">decimal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="n">decimal</span> <span class="n">intValue</span><span class="p">];</span>
+</span><span class='line'>  <span class="n">NSMutableString</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithCapacity:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">16</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="sc">&#39;0&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">c</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">-</span> <span class="mi">10</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">c</span> <span class="o">=</span> <span class="sc">&#39;0&#39;</span> <span class="o">+</span> <span class="n">tmp</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">character</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%c&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">result</span> <span class="nl">insertString:</span><span class="n">character</span> <span class="nl">atIndex:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">num</span> <span class="o">/=</span> <span class="mi">16</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是当我使用<code>Swift</code>重写的时候，我进入到了一个很深的坑里，发现这项任务是如此的难做，我定义了这样两个方法，注意方法的参数和返回值：</p>
+
+<figure class='code'><figcaption><span>Swift Code  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">func</span> <span class="n">decimalConvertedFromHexdecimal</span><span class="p">(</span><span class="nl">hexdecimal:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">func</span> <span class="n">hexdecimalConvertedFromDecimal</span><span class="p">(</span><span class="nl">decimal:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我使用的是Swift提供的<code>String</code>类型，它是由一系列的<code>Character</code>类型的字符组成的，但是这种<code>Character</code>并不是<code>char</code>，他们在处理进制转换这个问题上让我无从下手，也有可能是我还不够熟悉，不知道正确的用法，如果有人知道欢迎告诉我。下面来说一说我遇到的问题，首先在<code>Swift</code>中是没有<code>‘A’</code>这种字符表示方法的，更不用说用它去进行运算了，其次<code>Character</code>不能进行大小比较，只能进行想等或者不等的比较，这样一来在判断一个字符所在的区间上就遇到了很大的问题。</p>
+
+<p><code>Swift</code>的<code>String</code>提供了<code>uft8</code>和<code>uft16</code>方法，返回值为<code>UTF8View</code>或者<code>UFT16View</code>，这是一个<code>Array</code>，使用<code>for-in</code>遍历他们可以输出他们的数字值，但是这个值也仅仅是能进行输出使用，他们不是<code>Int</code>也不能进行加减运算。不能进行运算在转换上就无能为力。单单从这里看来，<code>Swift</code>确实蛋疼，连这么一个小小的问题都不能搞定。</p>
+
+<p>不过还好，<code>Swift</code>对<code>Cocoa</code>做了兼容使得<code>String</code>与<code>NSString</code>可以无缝转化，在使用了<code>NSString</code>后，问题的处理就变得简单多了，在<code>Swift</code>中<code>NSString</code>使用一系列的<code>unichar</code>组成的，查看声明可以看到他其实就是<code>UInt</code>，那么他就可以进行运算，所以把<code>String</code>改成<code>NSString</code>完成这两个方法。即使这样，<code>Swift</code>不支持<code>‘A’</code>这种字符的特性，也使得我们必须自己把字符转化为数值来运算，使得程序的可读性很差，还就是<code>Swift</code>的内置类型不支持隐式转换，所以在类型不一致的地方都需要强制转换一下。</p>
+
+<p>这两个方法的实现在文末的代码中有，这个代码虽然完成了功能，但是还有很多需要改进和优化的地方，其次在代码风格上也需要改一下，<a href="https://github.com/raywenderlich/swift-style-guide">Raywenderlich</a>的<code>Swift</code>的代码风格就很不错，非常值得套用。</p>
+
+<p>最后说一下，在<code>iOS8</code>中<code>UIAlertView</code>和<code>UIActionSheet</code>被废除了，而引入的是<code>UIAlertController</code>，通过<code>preferredStyle</code>来确定类型，通过<code>UIAlertAction</code>来增加事件，然后通过<code>presentViewController</code>来显示出来，在使用上做到了统一，还是蛮方便的。</p>
+
+<p>下面附上完全的代码，</p>
+
+<figure class='code'><figcaption><span> (HexConverterViewController.m)</span> <a href='/geekerprobe/downloads/code/swift/HexConverterViewController.m'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//</span>
+</span><span class='line'><span class="c1">//  ViewController.swift</span>
+</span><span class='line'><span class="c1">//  HexConverter_swift</span>
+</span><span class='line'><span class="c1">//</span>
+</span><span class='line'><span class="c1">//  Created by taowang on 7/24/14.</span>
+</span><span class='line'><span class="c1">//  Copyright (c) 2014 Meilishuo. All rights reserved.</span>
+</span><span class='line'><span class="c1">//</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">import</span> <span class="n">UIKit</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">class</span> <span class="nl">ViewController:</span> <span class="n">UIViewController</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">@</span><span class="kt">IBOutlet</span> <span class="n">var</span> <span class="nl">beforeConvertTextField:</span> <span class="n">UITextField</span>
+</span><span class='line'>    <span class="err">@</span><span class="kt">IBOutlet</span> <span class="n">var</span> <span class="nl">afterConvertTextField:</span> <span class="n">UITextField</span>
+</span><span class='line'>    <span class="err">@</span><span class="kt">IBOutlet</span> <span class="n">var</span> <span class="nl">segmentControl:</span> <span class="n">UISegmentedControl</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">override</span> <span class="n">func</span> <span class="n">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">super</span><span class="p">.</span><span class="n">viewDidLoad</span><span class="p">()</span>
+</span><span class='line'>        <span class="c1">// Do any additional setup after loading the view, typically from a nib.</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">segmentControl</span><span class="p">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="nl">action:</span> <span class="n">Selector</span><span class="p">(</span><span class="s">&quot;setTextFieldKeyboardType&quot;</span><span class="p">),</span> <span class="nl">forControlEvents:</span> <span class="n">UIControlEvents</span><span class="p">.</span><span class="n">ValueChanged</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">override</span> <span class="n">func</span> <span class="n">didReceiveMemoryWarning</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">super</span><span class="p">.</span><span class="n">didReceiveMemoryWarning</span><span class="p">()</span>
+</span><span class='line'>        <span class="c1">// Dispose of any resources that can be recreated.</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">func</span> <span class="n">decimalConvertedFromHexdecimal</span><span class="p">(</span><span class="nl">hexdecimal:</span> <span class="n">NSString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NSString</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">var</span> <span class="nl">sum:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="nl">i:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">var</span> <span class="nl">c:</span> <span class="n">unichar</span> <span class="o">=</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">characterAtIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">var</span> <span class="nl">num:</span> <span class="n">unichar</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">65</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">70</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">55</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">97</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">102</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">87</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">48</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">57</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">48</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">let</span> <span class="n">alert</span> <span class="o">=</span> <span class="n">UIAlertController</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;错误&quot;</span><span class="p">,</span> <span class="nl">message:</span> <span class="s">&quot;你提供了非法字符&quot;</span><span class="p">,</span> <span class="nl">preferredStyle:</span> <span class="p">.</span><span class="n">Alert</span><span class="p">)</span>
+</span><span class='line'>                <span class="n">alert</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">UIAlertAction</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;知道了&quot;</span><span class="p">,</span> <span class="nl">style:</span> <span class="p">.</span><span class="n">Cancel</span><span class="p">,</span> <span class="nl">handler:</span> <span class="nb">nil</span><span class="p">))</span>
+</span><span class='line'>                <span class="n">self</span><span class="p">.</span><span class="n">presentViewController</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nl">animated:</span> <span class="n">true</span><span class="p">,</span> <span class="nl">completion:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>                <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">becomeFirstResponder</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">return</span> <span class="nb">nil</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">let</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">CDouble</span><span class="p">(</span><span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">Int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">*</span> <span class="n">tmp</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">NSString</span><span class="p">(</span><span class="nl">format:</span> <span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">func</span> <span class="n">hexdecimalConvertedFromDecimal</span><span class="p">(</span><span class="nl">decimal:</span> <span class="n">NSString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NSString</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">var</span> <span class="nl">num:</span> <span class="n">Int</span> <span class="o">=</span> <span class="n">decimal</span><span class="p">.</span><span class="n">integerValue</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">var</span> <span class="nl">result:</span> <span class="n">NSMutableString</span> <span class="o">=</span> <span class="n">NSMutableString</span><span class="p">(</span><span class="nl">capacity:</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">var</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">16</span><span class="p">;</span>
+</span><span class='line'>            <span class="n">var</span> <span class="nl">c:</span> <span class="n">unichar</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">c</span> <span class="o">=</span> <span class="mi">97</span> <span class="o">+</span> <span class="n">unichar</span><span class="p">(</span><span class="n">tmp</span> <span class="o">-</span> <span class="mi">10</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">c</span> <span class="o">=</span> <span class="mi">48</span> <span class="o">+</span> <span class="n">unichar</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="n">let</span> <span class="nl">character:</span> <span class="n">NSString</span> <span class="o">=</span> <span class="n">NSString</span><span class="p">(</span><span class="nl">format:</span><span class="s">&quot;%c&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">result</span><span class="p">.</span><span class="n">insertString</span><span class="p">(</span><span class="n">character</span><span class="p">,</span> <span class="nl">atIndex:</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">num</span> <span class="o">/=</span> <span class="mi">16</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">func</span> <span class="n">setTextFieldKeyboardType</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">resignFirstResponder</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">segmentControl</span><span class="p">.</span><span class="n">selectedSegmentIndex</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">keyboardType</span> <span class="o">=</span> <span class="p">.</span><span class="n">ASCIICapable</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">keyboardType</span> <span class="o">=</span> <span class="p">.</span><span class="n">NumberPad</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">becomeFirstResponder</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">@</span><span class="kt">IBAction</span> <span class="n">func</span> <span class="n">endEditing</span><span class="p">(</span><span class="nl">sender:</span> <span class="n">AnyObject</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">endEditing</span><span class="p">(</span><span class="n">true</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="err">@</span><span class="kt">IBAction</span> <span class="n">func</span> <span class="n">convertButtonPressed</span><span class="p">(</span><span class="nl">sender:</span> <span class="n">AnyObject</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="s">&quot;&quot;</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>  <span class="p">{</span>
+</span><span class='line'>            <span class="n">var</span> <span class="n">alert</span> <span class="o">=</span> <span class="n">UIAlertController</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;提示&quot;</span><span class="p">,</span> <span class="nl">message:</span> <span class="s">&quot;你还没有填写被转换数字&quot;</span><span class="p">,</span> <span class="nl">preferredStyle:</span> <span class="p">.</span><span class="n">Alert</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">alert</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">UIAlertAction</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;知道了&quot;</span><span class="p">,</span> <span class="nl">style:</span> <span class="p">.</span><span class="n">Cancel</span><span class="p">,</span> <span class="nl">handler:</span> <span class="nb">nil</span><span class="p">))</span>
+</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">presentViewController</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nl">animated:</span> <span class="n">true</span><span class="p">,</span> <span class="nl">completion:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">resignFirstResponder</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">segmentControl</span><span class="p">.</span><span class="n">selectedSegmentIndex</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">afterConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">decimalConvertedFromHexdecimal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">afterConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">hexdecimalConvertedFromDecimal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">wtlucky <chinawtlucky@gmail.com></span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-25T15:11:00+08:00" pubdate data-updated="true">Jul 25<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/geekerprobe//blog/categories/ios-development/'>iOS development</a>
+  
+</span>
+
+
+      
+
+<span class="tags">
+  
+    <a class='tag' href='/geekerprobe/tags/swift/'>Swift</a>, <a class='tag' href='/geekerprobe/tags/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+	
+	<div class="bshare-custom icon-medium" style="float: left;width: 270px;">
+		<div class="bsPromo bsPromo1"></div>
+	<a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+	<a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a>
+	<a title="分享到百度空间" class="bshare-baiduhi"></a><a title="分享到豆瓣" class="bshare-douban"></a>
+	<a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/button.js#style=-1&amp;uuid=8a9d6a89-3205-46e4-bb74-e9bcea7e61f7&amp;pophcol=2&amp;lang=zh"></script>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+	
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/" data-via="cz_wtlucky" data-counturl="http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/" >Tweet</a>
+  
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+<hr style="border-bottom:1px dotted #bdbabd;height:1px;border-top:0px;border-left:0px;border-right:0px;" />
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/geekerprobe/blog/2013/12/28/wax-lua/" title="Previous Post: Wax Lua—使用lua编写原生ios程序的框架实现原理">&laquo; Wax Lua—使用lua编写原生ios程序的框架实现原理</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"shuidishichuan"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/geekerprobe//blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/geekerprobe//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/geekerprobe//blog/categories/ios-development'>iOS development (4)</a></li><li><a href='/geekerprobe//blog/categories/octopress'>Octopress (1)</a></li><li><a href='/geekerprobe//blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+</section>
+<section>
+<h1>Recent Comments</h1>
+<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-time="0" data-show-title="0" data-show-admin="0" data-excerpt-length="18"></ul>
+
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/">Swift Hexadecimal conversion</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/12/28/wax-lua/">Wax Lua—使用lua编写原生ios程序的框架实现原理</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/05/02/start-write-shell/">入门bash shell脚本</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/31/strategy/">23种设计模式——策略模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/">苹果禁止使用UDID的解决方案</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>新浪微博</h1>
+  <ul id="weibo">
+    <li>
+      <iframe 
+        width="100%" 
+        height="120" 
+        class="share_self" 
+        frameborder="0" 
+        scrolling="no" 
+        src="http://widget.weibo.com/weiboshow/index.php?width=0&height=550&ptype=1&speed=0&skin=&isTitle=0&noborder=1&isWeibo=0&isFans=&uid=2381129390&verifier=4d52a72a">
+      </iframe>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cz_wtlucky", 2, false);
+    });
+  </script>
+  <script src="/geekerprobe/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cz_wtlucky" class="twitter-follow-button" data-show-count="false">Follow @cz_wtlucky</a>
+  
+</section>
+
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wtlucky">@wtlucky</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wtlucky',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/geekerprobe/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/chinawtlucky@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+<a style="font-size: 100%" href="/geekerprobe/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/git/">git</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/block/">block</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/geekerprobe/tags/apns/">APNS</a>
+<a style="font-size: 137%" href="/geekerprobe/tags/design/">Design</a>
+<a style="font-size: 155%" href="/geekerprobe/tags/ios/">iOS</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - wtlucky <chinawtlucky@gmail.com> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>&nbsp;&nbsp;&nbsp;&nbsp;<img src = "http://wtlucky.github.com/geekerprobe/images/wt_s_r.png" style="float:right" /><br/>
+  <a title="Web Analytics" href="http://clicky.com/100584144"><img alt="Web Analytics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+<script type="text/javascript">
+var clicky_site_ids = clicky_site_ids || [];
+clicky_site_ids.push(100584144);
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = '//static.getclicky.com/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100584144ns.gif" /></p></noscript>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
