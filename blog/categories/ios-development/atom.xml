@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS development | GeekerProbe]]></title>
   <link href="http://wtlucky.github.com/geekerprobe//blog/categories/ios-development/atom.xml" rel="self"/>
   <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-07-25T17:04:30+08:00</updated>
+  <updated>2014-08-11T01:39:43+08:00</updated>
   <id>http://wtlucky.github.com/geekerprobe/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,153 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Nested Xib Views - 使用XIB实现嵌套自定义视图]]></title>
+    <link href="http://wtlucky.github.com/geekerprobe/blog/2014/08/10/nested-xib-views/"/>
+    <updated>2014-08-10T15:18:00+08:00</updated>
+    <id>http://wtlucky.github.com/geekerprobe/blog/2014/08/10/nested-xib-views</id>
+    <content type="html"><![CDATA[<p>在进行<code>iOS</code>开发的过程中，对于一些复杂的界面，我们可以通过<code>Interface Builder</code>这个<code>Xcode</code>集成的可视化界面编辑工具在完成，这回节省大部分时间以及代码量。它的使用方法这里不做介绍了，这次我要介绍是使用它来实现一个嵌套的自定义视图。解释一下就是，我们使用<code>IB</code>自定义了一个<code>View</code>，然后又在其他的<code>xib</code>文件中使用了这个<code>View</code>，那么这就是所谓的嵌套自定义视图。之所以要介绍它，是因为我自己在使用它的时候遇到了一些问题，一方面写下来做个记录供自己查看，另一方面我相信大家在使用的时候应该也会遇到这样的问题，方便大家。<!-- More --></p>
+
+<p>下面使用的示例代码我已经放到<code>Github</code>上了，<a href="https://github.com/wtlucky/nestedXibLoad">项目地址</a>，有需要的朋友可以去查看，<code>Demo</code>非常简单，主要是介绍这个知识点。</p>
+
+<h2>Question</h2>
+
+<p>首先我们创建一个<code>SingleView</code>的工程，项目使用<code>StoryBoard</code>，（使用<code>Xib</code>也无所谓，因为有些老的项目可能还没有使用到<code>StoryBoard</code>），然后创建一个<code>CustomView</code>作为我们的自定义视图。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-1.jpg"></p>
+
+<p>有时对于复杂的界面我们可能会拆分出来对它进行单独处理，又有可能它的界面布局很复杂，这时我们就会用<code>Interface Builder</code>对它的布局进行处理。这里的<code>CustomView</code>就是这样一个视图，所以我们为它创建一个<code>xib</code>文件，我们通常的作法就是把<code>xib</code>中的<code>View</code>的<code>custom class</code>更改为我们的<code>CustomView</code>。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-2.jpg"></p>
+
+<p>接下来对我们的界面进行布局，并连接输出口，编写响应逻辑，这里我放了一个<code>ImageView</code>和一个<code>Label</code>在这里，并把<code>View</code>的背景色设置为浅灰色。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-3.jpg"></p>
+
+<p>自定义的<code>View</code>制作完成，回到我们<code>ViewController</code>的<code>xib</code>文件，拖入两个<code>View</code>并把他们的<code>custom class</code>更改为<code>CustomView</code>。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-11.jpg"></p>
+
+<p>这时，我们算是工作做完了，运行程序，结果悲剧了，怎么不是我们想要的结果，为什么只生成了两个空白的视图，我们视图上的图片和文字哪里去了？</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-5.jpg"></p>
+
+<p>在<code>CustomView</code>中的<code>awakeFromeNib</code>方法中增加断点调试发现，在<code>CustomView</code>初始化完成后，<code>ImageView</code>和<code>Label</code>并没有被初始化，他们仍然是<code>nil</code>。这就是在嵌套使用<code>xib</code>自定义视图时非常容易出现的问题，我们觉得被嵌套的视图能够正常显示出来，但是实际上它并没有被按照我们在<code>xib</code>上指定的方式被初始化。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-6.jpg"></p>
+
+<h2>Solution</h2>
+
+<p>那么如何解决这种问题，以及这种问题又是如何出现的呢？其实这主要是由于我们对<code>xib</code>文件的加载原理不熟悉所导致的，我们以为定义一个<code>View</code>，创建一个<code>xib</code>文件并布局好它的子视图，让后将它使用在另外一个<code>xib</code>文件中，把<code>custom class</code>改成它，然后<code>xib</code>的加载系统会自动为我们做好其余的一切。其实并不是这样的。</p>
+
+<p>这样做<code>xib</code>加载系统只会为我们创建一个<code>CustomView</code>的对象，但这并不包括<code>CustomView</code>所对应的<code>xib</code>文件中的部分，所以只创建了一个空白的<code>View</code>。</p>
+
+<p>解决他们有两种方式，不过最终的思路都是通过代码强制使<code>CustomView</code>的<code>xib</code>部分被加载。第一种是通过代码创建<code>CustomView</code>的对象，然后<code>addSubview</code>到<code>viewController</code>的<code>view</code>上。第二种是在<code>CustomView</code>的实现文件里，通过重载一些方法，来完成加载<code>xib</code>文件。</p>
+
+<p>这两种方法各有利弊，第一种使用起来方便也好理解，但是当嵌套的层级比较多的时候或者一个<code>View</code>中有多个这样的<code>CustomView</code>时，这种方式就会显得过于麻烦。而第二种虽然理解起来有些难度，但是当你处理好之后，直接在需要的<code>xib</code>文件中拖入<code>view</code>，改个<code>custom class</code>，就能直接生成需要的对象了，并且也能够在<code>xib</code>中对他们进行直接布局，不再需要用代码去布局了。</p>
+
+<h3>NO 1.</h3>
+
+<p>先来介绍第一种方法，很简单，就是找到<code>xib</code>文件，生成对象，设置属性，<code>addsubview</code>到视图上。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-7.jpg"></p>
+
+<h3>NO 2.</h3>
+
+<p>第二种方法是通过重载<code>initWithCoder</code>方法来实现，因为通过<code>xib</code>来创建一个对象会调用到这个方法，所以我们需要在这个方法里做一些处理，把这个<code>CustomView</code>的<code>xib</code>中的内容加载进来，这时同样是需要通过代码来来加载，首先附上代码</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="n">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithCoder:</span><span class="n">aDecoder</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">UIView</span> <span class="o">*</span><span class="n">containerView</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">UINib</span> <span class="nl">nibWithNibName:</span><span class="s">@&quot;CustomView&quot;</span> <span class="nl">bundle:</span><span class="nb">nil</span><span class="p">]</span> <span class="nl">instantiateWithOwner:</span><span class="n">self</span> <span class="nl">options:</span><span class="nb">nil</span><span class="p">]</span> <span class="nl">objectAtIndex:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">CGRect</span> <span class="n">newFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">frame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">frame</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">containerView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">newFrame</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="nl">addSubview:</span><span class="n">containerView</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>此外，还要这里的输出口以及设置<code>custom class</code>的位置跟第一种方式有所不同，这里需要取消掉<code>xib</code>中<code>view</code>的<code>custom class</code>，再将跟它连接的图片与文字的输出口取消掉，在这里这个<code>view</code>只是被当做一个容器来处理，它跟<code>Customview</code>没有直接关系，它将来会被<code>addSubview</code>到<code>CustomView</code>上，除此之外还要把<code>xib</code>的<code>File's ower</code>的<code>custom class</code>改成<code>CustomView</code>，表示这个<code>xib</code>文件的持有者是<code>CustomView</code>。再把它与图片和文字通过输出口连接起来。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-8.jpg"></p>
+
+<p>这个时候在运行程序就看到了我们想要的结果了。<sup>_^</sup></p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-10.jpg"></p>
+
+<p>其实想要实现第二种解决方案所要的效果，还有一种方式，它是通过重载<code>awakeAfterUsingCoder:</code>方法来实现的，这个方法的返回值会替换掉真正的加载对象，所以在具体的加载<code>CustomView</code>的方式又与第一种相同，所以<code>xib</code>的输出口连接与<code>custom class</code>的设置也与第一种解决方案相同。不过这种方式是更复杂也更难于理解的，不推荐使用，因为上一个方法就能很好的解决这个问题了，这里只是贴出这个方法的代码，有想仔细研究的请参看文章底部的参考文章。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span> <span class="nf">awakeAfterUsingCoder:</span><span class="p">(</span><span class="n">NSCoder</span><span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">BOOL</span> <span class="n">isJustAPlaceholder</span> <span class="o">=</span> <span class="p">([[</span><span class="n">self</span> <span class="n">subviews</span><span class="p">]</span> <span class="n">count</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">isJustAPlaceholder</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">CustomView</span><span class="o">*</span> <span class="n">theRealThing</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="n">class</span><span class="p">]</span> <span class="n">getClassObjectFromNib</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">theRealThing</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// make compatible with Auto Layout</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">theRealThing</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// convince ARC that we&#39;re legit, unnecessary since at least Xcode 4.5</span>
+</span><span class='line'>    <span class="n">CFRelease</span><span class="p">((</span><span class="n">__bridge</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">CFRetain</span><span class="p">((</span><span class="n">__bridge</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">theRealThing</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">theRealThing</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>参考资料</h2>
+
+<blockquote><p><a href="http://octopress.org/docs">Embedding custom-view Nibs in another Nib: Towards the holy grail</a></p>
+
+<p><a href="https://blog.compeople.eu/apps/?p=142">An Update on Nested Nib Loading</a></p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Swift Hexadecimal conversion]]></title>
