@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: PHP | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/php/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/php/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[APNS服务器搭建ssl错误问题解决方案]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/02/27/apns-ssl-error/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/02/27/apns-ssl-error/"/>
     <updated>2013-02-27T21:37:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/02/27/apns-ssl-error</id>
+    <id>http://blog.wtlucky.com/blog/2013/02/27/apns-ssl-error</id>
     <content type="html"><![CDATA[<p>最近再做一个推送项目，需要搭建<code>APNS</code>服务器，再将PHP代码部署到<code>Server</code>上时遇到了如下错误：
 <div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>APNS ssl error </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

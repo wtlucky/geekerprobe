@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: iOS | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/ios/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/ios/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Nested Xib Views - 使用XIB实现嵌套自定义视图]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2014/08/10/nested-xib-views/"/>
+    <link href="http://blog.wtlucky.com/blog/2014/08/10/nested-xib-views/"/>
     <updated>2014-08-10T15:18:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2014/08/10/nested-xib-views</id>
+    <id>http://blog.wtlucky.com/blog/2014/08/10/nested-xib-views</id>
     <content type="html"><![CDATA[<p>在进行<code>iOS</code>开发的过程中，对于一些复杂的界面，我们可以通过<code>Interface Builder</code>这个<code>Xcode</code>集成的可视化界面编辑工具在完成，这回节省大部分时间以及代码量。它的使用方法这里不做介绍了，这次我要介绍是使用它来实现一个嵌套的自定义视图。解释一下就是，我们使用<code>IB</code>自定义了一个<code>View</code>，然后又在其他的<code>xib</code>文件中使用了这个<code>View</code>，那么这就是所谓的嵌套自定义视图。之所以要介绍它，是因为我自己在使用它的时候遇到了一些问题，一方面写下来做个记录供自己查看，另一方面我相信大家在使用的时候应该也会遇到这样的问题，方便大家。<!-- More --></p>
 
 <p>下面使用的示例代码我已经放到<code>Github</code>上了，<a href="https://github.com/wtlucky/nestedXibLoad">项目地址</a>，有需要的朋友可以去查看，<code>Demo</code>非常简单，主要是介绍这个知识点。</p>
@@ -162,9 +162,9 @@
   
   <entry>
     <title type="html"><![CDATA[Swift Hexadecimal conversion]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/"/>
+    <link href="http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion/"/>
     <updated>2014-07-25T15:11:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion</id>
+    <id>http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion</id>
     <content type="html"><![CDATA[<p>自己的<code>Blog</code>好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的<code>Blog</code>增添新的血液了。<code>APPLE</code>在<code>WWDC 2014</code>上公布了一门新的编程语言<a href="https://developer.apple.com/swift/">Swift</a>，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进，这是一个集合了N多语言优秀特性于一身的全新语言，它将成为开发<code>iOS</code>和<code>MAC</code>的新的选择。并且据说他将会取代<code>Objective-C</code>，但是我觉得并不是这样，不过这也仅仅是一家之谈，至于会不会这样，我们走着瞧。<!-- More --></p>
 
 <p>既然苹果放出了这样一个利器，身为<code>iOS开发者</code>的我也不能落下，<code>APPLE</code>为我们提供了两个文档<a href="https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/index.html">The Swift Programming Language</a>和<a href="https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/index.html">Using Swift with Cocoa and Objective-C</a>。他们一个是纯语言角度的介绍<code>Swift</code>，包括各种细节语法，另一个则是介绍怎么它怎么与<code>Cocoa</code>交互，如何使用它开发<code>iOS</code>和<code>MAC</code>应用，以及如何与现有的程序兼容。学习这样一门全新的技术我还是建议读第一手资料的，虽然现在网络上有好多中文版的资料了吧，但是苹果的文档写的很是通俗易懂，读起来也没有什么困难。而起自己之前有过脚本语言的经验，所以看起来也是很快。</p>
@@ -539,9 +539,9 @@
   
   <entry>
     <title type="html"><![CDATA[Wax Lua—使用lua编写原生ios程序的框架实现原理]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/12/28/wax-lua/"/>
     <updated>2013-12-28T20:13:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua</id>
+    <id>http://blog.wtlucky.com/blog/2013/12/28/wax-lua</id>
     <content type="html"><![CDATA[<h3>Wax Lua是什么？</h3>
 
 <p><code>Lua</code>我就不介绍了，我们都在使用的脚本语言，游戏开发的神器。
@@ -663,9 +663,9 @@
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——策略模式]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/31/strategy/"/>
     <updated>2013-03-31T20:46:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/31/strategy</id>
     <content type="html"><![CDATA[<p>这次介绍一下<code>策略模式（Strategy Pattern）</code>，相比之下是一种比较简单的模式。它也叫<code>政策模式（Policy Pattern）</code>。
 <code>策略模式</code>使用的就是面向对象的<code>继承</code>和<code>多态</code>机制，其他的没有什么玄机。<code>策略模式</code>适合使用在：
 1. 多个类只有在算法或行为上稍有不同的场景。
@@ -987,9 +987,9 @@
   
   <entry>
     <title type="html"><![CDATA[苹果禁止使用UDID的解决方案]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/23/deviceuniqueidentifier/"/>
     <updated>2013-03-23T16:42:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/23/deviceuniqueidentifier</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/23/deviceuniqueidentifier</id>
     <content type="html"><![CDATA[<p><code>UDID</code>之前在<code>iOS</code>开发中广泛使用的一串字符串，用来标示唯一的设备，它本身并不包含用户信息，但是广告商却可以利用他获取到个人信息，从而发送广告，因为他涉及到隐私问题，所以苹果早在2011年就提出了将不再使用它。然而就在前天，苹果的开发者网站，发出新闻：</p>
 
 <blockquote><p>Starting May 1, the App Store will no longer accept new apps or app updates that access UDIDs. Please update your apps and servers to associate users with the Vendor or Advertising identifiers introduced in iOS 6. You can find more details in the <a href="https://developer.apple.com/library/ios/#documentation/uikit/reference/UIDevice_Class/DeprecationAppendix/AppendixADeprecatedAPI.html">UIDevice Class Reference</a>.</p></blockquote>

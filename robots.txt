@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://wtlucky.github.com/geekerprobe/sitemap.xml 
+Sitemap: http://blog.wtlucky.com/sitemap.xml 

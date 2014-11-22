@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Technical Research | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe//blog/categories/technical-research/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com//blog/categories/technical-research/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Wax Lua—使用lua编写原生ios程序的框架实现原理]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/12/28/wax-lua/"/>
     <updated>2013-12-28T20:13:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua</id>
+    <id>http://blog.wtlucky.com/blog/2013/12/28/wax-lua</id>
     <content type="html"><![CDATA[<h3>Wax Lua是什么？</h3>
 
 <p><code>Lua</code>我就不介绍了，我们都在使用的脚本语言，游戏开发的神器。

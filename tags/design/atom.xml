@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: Design | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/design/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/design/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——策略模式]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/31/strategy/"/>
     <updated>2013-03-31T20:46:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/31/strategy</id>
     <content type="html"><![CDATA[<p>这次介绍一下<code>策略模式（Strategy Pattern）</code>，相比之下是一种比较简单的模式。它也叫<code>政策模式（Policy Pattern）</code>。
 <code>策略模式</code>使用的就是面向对象的<code>继承</code>和<code>多态</code>机制，其他的没有什么玄机。<code>策略模式</code>适合使用在：
 1. 多个类只有在算法或行为上稍有不同的场景。
@@ -339,9 +339,9 @@
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——适配器模式]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/23/adapter/"/>
     <updated>2013-03-23T14:13:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/23/adapter</id>
     <content type="html"><![CDATA[<p>今天要介绍的是<code>适配器模式（Adapter Pattern）</code>，适配器模式又叫做<code>变压器模式</code>，也叫做<code>包装模式（Wrapper）</code>，但是<code>包装模式</code>却不止一个，<code>装饰模式</code>也是<code>包装模式</code>，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时，不管之前的可行性分析、需求分析、系统设计处理的多么完美，总会在关键时候、关键场合出现一些“意外”。这些“意外”，该来的还是要来，躲是躲不过的，而这时就是我们的<code>适配器模式</code>的用武之地。<code>适配器模式</code>最好在设计阶段不要考虑它，它不是为了解决还处在开发阶段的问题，而是解决正在服役的项目问题，没有一个系统分析师会再做详细设计时考虑使用<code>适配器模式</code>。</p>
 
 <p><code>适配器模式</code>包含两种，一种是<code>类适配器</code>，另一种是<code>对象适配器</code>。<code>类适配器</code>是通过类的继承实现的适配，而<code>对象适配器</code>是通过对象间的关联关系，组合关系实现的适配。二者在实际项目中都会经常用到，由于<code>对象适配器</code>是通过类间的关联关系进行耦合的，因此在设计时就可以做到比较灵活，而<code>类适配器</code>就只能通过覆写源角色的方法进行拓展，在实际项目中，<code>对象适配器</code>使用到的场景相对较多。在<code>iOS</code>开发中也推荐多使用组合关系，而尽量减少继承关系，这是一种很好的编程习惯，因此我在这里只介绍<code>对象适配器</code>，想了解更多的关于<code>类适配器</code>的话，请自行<code>Google</code>之。</p>
@@ -603,9 +603,9 @@
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——观察者模式]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/20/observer/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/20/observer/"/>
     <updated>2013-03-20T21:04:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/20/observer</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/20/observer</id>
     <content type="html"><![CDATA[<p>这次来介绍一下观察者模式，这种模式可以说使用的是最多的，也最常见。我们现在使用的智能手机的应用在本质上也都是观察者模式的一种体现，这些手机应用都是事件驱动机制，只要有事件发生，就会做出一系列的响应处理，在没有事件的时候，什么也不会发生。这就是观察者模式，观察者模式需要一个被观察者，和一个或者多个观察者。当被观察者的状态发生改变时，观察者会做出相应的处理。</p>
 
 <h4>观察者模式定义</h4>
@@ -933,9 +933,9 @@
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——单例模式]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/19/singleton/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/19/singleton/"/>
     <updated>2013-03-19T19:35:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/19/singleton</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/19/singleton</id>
     <content type="html"><![CDATA[<p>本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做<code>iOS</code>开发，所以基本上这23种设计模式我都通过<code>objective-C</code>来实现了。此系列文章的类图都是来自<a href="http://book.douban.com/subject/4260618/">《设计模式之禅》</a>，有兴趣的同学可以去买这本书看。</p>
 
 <p>话说，在编码编到一定的程度以后，由于代码体系的庞大，结构的复杂，自然就会上升到设计模式高度，而现在的软件设计又基本都是面向对象的，所以有了设计模式作支持，可以使软件更加的稳定安全，也更易于维护与拓展。</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: Swift | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/swift/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/swift/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Swift Hexadecimal conversion]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/"/>
+    <link href="http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion/"/>
     <updated>2014-07-25T15:11:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion</id>
+    <id>http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion</id>
     <content type="html"><![CDATA[<p>自己的<code>Blog</code>好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的<code>Blog</code>增添新的血液了。<code>APPLE</code>在<code>WWDC 2014</code>上公布了一门新的编程语言<a href="https://developer.apple.com/swift/">Swift</a>，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进，这是一个集合了N多语言优秀特性于一身的全新语言，它将成为开发<code>iOS</code>和<code>MAC</code>的新的选择。并且据说他将会取代<code>Objective-C</code>，但是我觉得并不是这样，不过这也仅仅是一家之谈，至于会不会这样，我们走着瞧。<!-- More --></p>
 
 <p>既然苹果放出了这样一个利器，身为<code>iOS开发者</code>的我也不能落下，<code>APPLE</code>为我们提供了两个文档<a href="https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/index.html">The Swift Programming Language</a>和<a href="https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/index.html">Using Swift with Cocoa and Objective-C</a>。他们一个是纯语言角度的介绍<code>Swift</code>，包括各种细节语法，另一个则是介绍怎么它怎么与<code>Cocoa</code>交互，如何使用它开发<code>iOS</code>和<code>MAC</code>应用，以及如何与现有的程序兼容。学习这样一门全新的技术我还是建议读第一手资料的，虽然现在网络上有好多中文版的资料了吧，但是苹果的文档写的很是通俗易懂，读起来也没有什么困难。而起自己之前有过脚本语言的经验，所以看起来也是很快。</p>

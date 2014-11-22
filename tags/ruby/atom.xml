@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: ruby | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/ruby/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/ruby/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Create blog use Octopress and GitHub]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github/"/>
     <updated>2013-02-24T23:02:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github</id>
+    <id>http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github</id>
     <content type="html"><![CDATA[<h3>介绍</h3>
 
 <p>现下大概每一个搞技术的人都会有一个技术博客，而<a href="http://github.com">GitHub</a>又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明之用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。<a href="http://octopress.org">Octopress</a>就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样<code>A blogging framework for hackers.</code>，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。</p>

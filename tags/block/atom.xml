@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: block | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/block/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/block/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[23种设计模式——单例模式]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/19/singleton/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/19/singleton/"/>
     <updated>2013-03-19T19:35:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/19/singleton</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/19/singleton</id>
     <content type="html"><![CDATA[<p>本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做<code>iOS</code>开发，所以基本上这23种设计模式我都通过<code>objective-C</code>来实现了。此系列文章的类图都是来自<a href="http://book.douban.com/subject/4260618/">《设计模式之禅》</a>，有兴趣的同学可以去买这本书看。</p>
 
 <p>话说，在编码编到一定的程度以后，由于代码体系的庞大，结构的复杂，自然就会上升到设计模式高度，而现在的软件设计又基本都是面向对象的，所以有了设计模式作支持，可以使软件更加的稳定安全，也更易于维护与拓展。</p>

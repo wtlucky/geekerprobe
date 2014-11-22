@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: Xcode | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/xcode/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/xcode/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[为Xcode添加生成注释服务]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/03/04/generate-commentate-with-xcode/"/>
     <updated>2013-03-04T13:05:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode</id>
+    <id>http://blog.wtlucky.com/blog/2013/03/04/generate-commentate-with-xcode</id>
     <content type="html"><![CDATA[<p><code>Xcode</code>不得不说，很好用的一款<code>IDE</code>，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
 在<code>Xcode 3.2</code>版本的时候，还可以找到<code>appledoc</code>插件，很方便的生成注释。但是到了<code>Xcode 4.0</code>以上的版本就找不到这个功能，虽然<code>appledoc</code>仍然可以用，但是需要使用命令行，而且生成的是<code>html</code>文件。就没有再仔细研究，继续寻找更简便的方法。
 最终找到一位大神写的一段<code>ruby</code>脚本，使用它为系统添加了一项服务，使用此可以很方便为指定的方法生成指定格式的注释。

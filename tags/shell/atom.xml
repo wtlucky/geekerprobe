@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tag: shell | GeekerProbe]]></title>
-  <link href="http://wtlucky.github.com/geekerprobe/tags/shell/atom.xml" rel="self"/>
-  <link href="http://wtlucky.github.com/geekerprobe/"/>
-  <updated>2014-11-23T01:20:45+08:00</updated>
-  <id>http://wtlucky.github.com/geekerprobe/</id>
+  <link href="http://blog.wtlucky.com/tags/shell/atom.xml" rel="self"/>
+  <link href="http://blog.wtlucky.com/"/>
+  <updated>2014-11-23T01:25:12+08:00</updated>
+  <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[入门bash shell脚本]]></title>
-    <link href="http://wtlucky.github.com/geekerprobe/blog/2013/05/02/start-write-shell/"/>
+    <link href="http://blog.wtlucky.com/blog/2013/05/02/start-write-shell/"/>
     <updated>2013-05-02T15:15:00+08:00</updated>
-    <id>http://wtlucky.github.com/geekerprobe/blog/2013/05/02/start-write-shell</id>
+    <id>http://blog.wtlucky.com/blog/2013/05/02/start-write-shell</id>
     <content type="html"><![CDATA[<p>在进行批量的操作，或者繁琐的操作时，可以使用<code>shell</code>编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。</p>
 
 <p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于"CocoaChina2013开发者大会-……"，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>

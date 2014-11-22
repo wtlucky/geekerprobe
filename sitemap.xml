@@ -1,89 +1,83 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/02/23/my-first-blog/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/02/23/my-first-blog/</loc>
         <lastmod>2013-02-25T20:32:17+08:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://wtlucky.github.com/geekerprobe/blog/2013/02/24/create-blog-use-octopress-and-github/
-        </loc>
+        <loc>http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github/</loc>
         <lastmod>2013-06-21T14:51:37+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/02/27/apns-ssl-error/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/02/27/apns-ssl-error/</loc>
         <lastmod>2013-03-04T14:37:17+08:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://wtlucky.github.com/geekerprobe/blog/2013/03/04/generate-commentate-with-xcode/
-        </loc>
+        <loc>http://blog.wtlucky.com/blog/2013/03/04/generate-commentate-with-xcode/</loc>
         <lastmod>2013-03-04T14:54:13+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/19/singleton/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/03/19/singleton/</loc>
         <lastmod>2013-03-23T14:16:05+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/20/observer/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/03/20/observer/</loc>
         <lastmod>2013-03-23T14:16:05+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/23/adapter/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/03/23/adapter/</loc>
         <lastmod>2013-03-23T15:21:15+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/23/deviceuniqueidentifier/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/03/23/deviceuniqueidentifier/</loc>
         <lastmod>2013-03-23T17:23:26+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/03/31/strategy/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/03/31/strategy/</loc>
         <lastmod>2013-03-31T21:23:46+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/05/02/start-write-shell/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/05/02/start-write-shell/</loc>
         <lastmod>2013-05-02T16:40:06+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2013/12/28/wax-lua/</loc>
+        <loc>http://blog.wtlucky.com/blog/2013/12/28/wax-lua/</loc>
         <lastmod>2013-12-28T20:47:56+08:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://wtlucky.github.com/geekerprobe/blog/2014/07/25/swift-hexadecimal-conversion/
-        </loc>
+        <loc>http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion/</loc>
         <lastmod>2014-07-25T17:03:02+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/2014/08/10/nested-xib-views/</loc>
+        <loc>http://blog.wtlucky.com/blog/2014/08/10/nested-xib-views/</loc>
         <lastmod>2014-08-11T01:39:20+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/404.html</loc>
+        <loc>http://blog.wtlucky.com/404.html</loc>
         <lastmod>2013-03-09T11:23:25+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/archives/tags.html</loc>
+        <loc>http://blog.wtlucky.com/archives/tags.html</loc>
         <lastmod>2013-02-25T20:32:59+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/about/</loc>
+        <loc>http://blog.wtlucky.com/blog/about/</loc>
         <lastmod>2013-03-09T11:36:45+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/archives/</loc>
+        <loc>http://blog.wtlucky.com/blog/archives/</loc>
         <lastmod>2014-08-11T01:39:20+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/blog/categories/</loc>
+        <loc>http://blog.wtlucky.com/blog/categories/</loc>
         <lastmod>2013-03-19T21:34:20+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/</loc>
+        <loc>http://blog.wtlucky.com/</loc>
         <lastmod>2014-08-11T01:39:20+08:00</lastmod>
     </url>
     <url>
-        <loc>http://wtlucky.github.com/geekerprobe/robots.txt</loc>
+        <loc>http://blog.wtlucky.com/robots.txt</loc>
         <lastmod>2013-02-23T08:57:12+08:00</lastmod>
     </url>
 </urlset>
