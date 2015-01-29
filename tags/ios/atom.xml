@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: iOS | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/ios/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-01-05T11:15:50+08:00</updated>
+  <updated>2015-01-29T23:57:09+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[一个特殊的iPhone6 Plus适配问题]]></title>
+    <link href="http://blog.wtlucky.com/blog/2015/01/29/adapt-view-for-iphone6-plus/"/>
+    <updated>2015-01-29T21:13:00+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2015/01/29/adapt-view-for-iphone6-plus</id>
+    <content type="html"><![CDATA[<p>最近项目在搞适配，目前的适配原则是不改变既有的设计图的设计样式，使用<code>@3x</code>的图片去进行完美适配。即不涉及到某一个模块在<code>iPhone5</code>及以下的设备上是一个展示样式，在<code>iPhone6</code>或着<code>iPhone6 Plus</code>上是另外的一个展示样式。单纯是这样的需求通过<code>Auto Resizing</code>和<code>AutoLayout</code>就完全可以应付的了。以前硬编码写的view的frame通过乘上一个屏幕放大的比例系数也可以搞定。</p>
+
+<p>可是目前设计同学提出在一个使用<code>collection view</code>的页面中，之前是通过各种设备使用同一个大小的<code>cell</code>，不同的屏幕上拉大的是<code>cell</code>之间的间距来进行适配。现如今要改成只有在<code>6 Plus</code>上要将<code>cell</code>上半部分等比例放大，<code>cell</code>中下半部分的文字的字号也放大。目前的需求就是这个样子，其实我觉得这样适配就不是苹果的设计规范，按道理说屏幕大了看的内容多才对，这样搞个等比例放大，跟没有适配在兼容模式下运行的效果似地。不过需求来了还是得搞。</p>
+
+<!-- More -->
+
+
+<p>这个<code>cell</code>本来就是使用<code>AutoLayout</code>做的，但是之前是定高定宽的，图片的宽度被限制死了，即使是在<code>collocation view</code>的代理方法中将<code>cell</code>设大，<code>cell</code>的图片也不会变大。而且还需要把字体一并放大，以及图片左上和右下的两个图片的位置是要成比例设置的，这样之前设置的<code>heading space</code> 和 <code>trailing space</code>是固定值，也不能达到要求。先来看一下这个<code>cell</code>，因为项目的保密性我没有展示全部的内容，只是列举了一部分，但足以说明问题。</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-1.jpg"></p>
+
+<p>因为使用的是<code>xcode6</code>，苹果提供了<code>Size Classes</code>这样强大的一个功能，为的是制作<code>adaptive UI</code>。就是只制作一套UI，但是可以适配多个屏幕尺寸以及选装方向，之前没有仔细研究过这个新特性，只是觉得他应该能应付当前的需求，因为使用它可以为每一种<code>size</code>设置一套<code>constraint</code>和字体大小。很好很强大！</p>
+
+<p>但是当开始使用时发现，没有一个<code>size</code>是能够单独区分出<code>6 Plus</code>的<code>portrait</code>模式的，到时能区分出<code>landscape</code>模式。<code>6 Plus</code>的<code>portrait</code>模式使用的是<code>Regular height</code>和<code>Compact width</code>，其他的设备的<code>portrait</code>模式使用的也是<code>Regular height</code>和<code>Compact width</code>。但是<code>Any height</code>和<code>Compact width</code>这个<code>size</code>对应的是<code>6 Plus</code>以外其他设备的<code>portrait</code>和<code>landscape</code>模式。如图所示，</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-3.jpg"></p>
+
+<p>这里正好不包括<code>6 Plus</code>，分别设置了这两种<code>size</code>发现不是预期的效果，所有的手机都使用了<code>Regular height</code>和<code>Compact width</code>的这个<code>size</code>。后来有看见了这个优先级的表格，</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-2.jpg"></p>
+
+<p>一旦设置了这个<code>size</code>那么就会优先加载这个<code>size</code>，所以这条路目前是行不通的，我觉得一定有其他的方法来通过<code>Size Classes</code>解决，或者通过代码修改优先级，或者使用某种方法标识<code>6 Plus</code>。由于我时间比较紧急，所以就没有继续使用这种方式，有知道的大神求告知啊，感激不尽！</p>
+
+<p><code>Size Classes</code>行不通，又想了其他两种方案，一个是为<code>6 Plus</code>单独制作一个xib，让collection view在<code>6 Plus</code>上加载这个xib上的<code>cell</code>；另外一个是修改现有的<code>cell</code>上的<code>constraints</code>把固定图片的大小<code>constraint</code>干掉搞成自适应的，自适应不了的<code>constraint</code>通过<code>IBOutlet</code>在代码中进行修改。权衡了一下这两个方案，第一个目前的工作量比较小，但是后期维护很恶心，而且这种做法实在是太low。而第二种虽然开始开上去很复杂，工作量很大，但是搞定之后，维护修改起来也容易很多，毕竟只有一个UI。</p>
+
+<p>所以选择第二种开工，自适应很好搞，把最大的那个圆圈与父view的<code>heading</code>和<code>trailing</code>设为<code>0</code>即可，难的是等比例，虽然用<code>AutoLayout</code>有几个月了但是用得都是<code>heading</code>、<code>trailing</code>、<code>vertical</code>、<code>horizontal</code>、<code>top</code>、<code>bottom</code> 还有<code>width</code>和<code>height</code>这几个<code>constraint</code>，他们就能解决我之前遇到的所有布局问题，连<code>alignment</code>的那几个<code>constraint</code>我都很少使用。但是这次需要用到<code>Aspect ratio</code>了，之前一直不知道这咋用，感谢这次需求让我知道了如何用他，最大的那个圆圈是正方形设置了左右间距就确定了宽度，而高度的确定就用<code>Aspect ratio</code>设置为<code>1:1</code>即可，同样圆圈左上和右下的图也是需要等比例放大的，他们的比例也是通过<code>Aspect ratio</code>来设置，这里的比例按照设计图写一下即可。这里发现<code>xcode</code>一个很奇怪的问题，就是按住<code>ctrl</code>从一个view拖向另外一个view选择<code>Aspect ratio</code>的时候，<code>xcode</code>为你生成的是一个view的<code>height</code>与另一个view的<code>width</code>的比，这个我一直不是很理解，虽然如果你在设置<code>Aspect ratio</code>之前把他们的<code>frame</code>设为正确的话，生成的比例是正确的，但是这样真的很奇怪，可读性特别差，为什么要一个高比上另外一个的宽呢？我承认我数学学的不好，这里可能有其他的深刻含义，但是我觉得好奇怪，如果有人知道欢迎留言评论！所以这里我又手动的把一个view的<code>height</code>改为<code>width</code>，即宽比上宽，按照设计图修改一下比例。还有一个问题是圆圈的左上有右下的view的位置是要相应改变的，也是按照比例，设置固定的值肯定是不行的，因为值也是会变得，这里再次感谢这个需求，让我又一次加深的<code>AutoLayout</code>的理解，<code>AutoLayout</code>中的约束其实是一个二元一次方程，如图所示</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-4.jpg"></p>
+
+<p><code>First item = Second item * Multiplier + Constant</code>，
+一个值是可以通过另外一个值通过这个方程式计算出来的，而我们所加的约束就是设置了<code>Multiplier</code>和<code>Constant</code>，再加上优先级，两者的属性（上下左右宽高等）以及两者的关系（大于小于等于），这些共同组成了一个<code>constraint</code>。 xcode默认创建的<code>constraint</code>的<code>Multiplier</code>为<code>1</code>，我之前使用的所有<code>constraint</code>也都是使用的是<code>1</code>，从没有改变过他，从方程式来看这里是可以按比例设置的。不得不说<code>AutoLayout</code>真的很强大，自己用到的仅仅是冰山一角。</p>
+
+<p>那圆圈右下角的view举例子，首先设置他的x轴距离，据父view一个是<code>heading</code>一个是<code>trailing</code>，因为父view的<code>heading</code>是<code>0</code>，无论<code>Multiplier</code>设置什么相乘都是零，所以只能用<code>trailing</code>，因为我们事先已经按照设计图将一个尺寸的界面拼出来了，当设置了<code>trailing</code>之后，<code>xcode</code>生成了一个<code>Multiplier</code>为<code>1</code>，<code>Constant</code>为一个固定值的<code>constraint</code>，这样不对，不能够按比例移动x轴位置，所以我们把<code>Constant</code>设为<code>0</code>，由公式算出<code>Multiplier</code>为<code>First item / Second item</code>并进行设置。确定了x方向的位置还需要y方向的位置，y这里又出现了另外一个坑，y方向父view的<code>top</code>为<code>0</code>不能这是比例，<code>bottom</code>由于有<code>Label</code>所以<code>bottom</code>的值是不确定的，所以就不能与父view做约束了，只能选择与圆圈做约束，这里使用的是<code>align bottom</code>。同理因为是按比例放大，这个<code>constraint</code>也不能使用定值，所以<code>Constant</code>设为<code>0</code>，公式算出<code>Multiplier</code>并设置。同样圆圈左上的view也这样设置即可。如此一来<code>cell</code>上半部分等比例放大的问题就搞定了。</p>
+
+<p><code>cell</code>下半部分<code>Label</code>之间的间距这个是不能自适应的，<code>6 Plus</code>和其他设备是两个不同的值，这样就只能把他们的<code>constraint</code>拿到代码中去进行修改，label上字体也是只能在代码中<code>cell</code>第一次加载时判断为<code>6 Plus</code>就将他们的字体放大。将这一部分逻辑放在了<code>aweakFromNib</code>中</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="n">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="n">fequal</span><span class="p">(</span><span class="n">ScreenWidth</span><span class="p">,</span> <span class="mf">414.0f</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">16.0f</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">memberNumLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">15.0f</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">infoLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">13.0f</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">icoTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">8.0f</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">nameTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">33.0f</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">memberCountTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">7.0f</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">infoTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">10.0f</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这里要说一下，判断<code>6 Plus</code>不能通过设备号去判断,<code>iPhone7,1</code>和<code>iPhone7,2</code>虽然是<code>iPhone6</code>和<code>iPhone6 Plus</code>没错，但是我们是在渲染界面，<code>iPhone6</code>和<code>iPhone6 Plus</code>是有一个放大模式的，在放大模式下<code>iPhone6 Plus</code>的屏幕尺寸是<code>iPhone6</code>的，<code>iPhone6</code>的屏幕尺寸是<code>iPhone5</code>的，所以如果通过设备号去判读那么渲染出来就是错误的，正确的方式是通过屏幕的尺寸来判断即<code>[UIScreen mainScreen].bounds.size</code>。</p>
+
+<hr />
+
+<p>写的很乱，因为是当天搞的，当天就记录下来，怕以后忘了，文笔不好，就凑合看吧，最后总结一下：</p>
+
+<ol>
+<li><code>Size Classes</code>还有待研究，如何区分出<code>iPhone6 Plus</code></li>
+<li>学会了使用<code>Aspect ratio</code>，用于标记一个view的宽高比或者两个view的宽高比</li>
+<li>在<code>AutoLayout</code>中使用<code>Multiplier</code>进行数值成比例改变的需求</li>
+<li>在界面布局是不要使用设备号进行判别，要使用屏幕尺寸进行判断</li>
+</ol>
+
+
+<h2>参考资料</h2>
+
+<blockquote><p><a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/LayoutandAppearance.html">Adaptivity and Layout</a></p>
+
+<p><a href="https://developer.apple.com/library/ios/recipes/xcode_help-IB_adaptive_sizes/_index.html#//apple_ref/doc/uid/TP40014436">Size Classes Design Help</a></p>
+
+<p><a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nested Xib Views - 使用XIB实现嵌套自定义视图]]></title>
@@ -982,397 +1081,6 @@
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[苹果禁止使用UDID的解决方案]]></title>
-    <link href="http://blog.wtlucky.com/blog/2013/03/23/deviceuniqueidentifier/"/>
-    <updated>2013-03-23T16:42:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2013/03/23/deviceuniqueidentifier</id>
-    <content type="html"><![CDATA[<p><code>UDID</code>之前在<code>iOS</code>开发中广泛使用的一串字符串，用来标示唯一的设备，它本身并不包含用户信息，但是广告商却可以利用他获取到个人信息，从而发送广告，因为他涉及到隐私问题，所以苹果早在2011年就提出了将不再使用它。然而就在前天，苹果的开发者网站，发出新闻：</p>
-
-<blockquote><p>Starting May 1, the App Store will no longer accept new apps or app updates that access UDIDs. Please update your apps and servers to associate users with the Vendor or Advertising identifiers introduced in iOS 6. You can find more details in the <a href="https://developer.apple.com/library/ios/#documentation/uikit/reference/UIDevice_Class/DeprecationAppendix/AppendixADeprecatedAPI.html">UIDevice Class Reference</a>.</p></blockquote>
-
-<p>“自5月1日起，App Store将不再接受任何使用UDID的app，苹果建议开发者转用iOS 6 引进的Vendor 或者 Adverstising Identifier（‘广告标识符’）”
-这次苹果打出了强制通知，再使用<code>UDID</code>的话，那么应用将不会审核通过，也就无法发布。</p>
-
-<p>不过俗话说的好“上有政策，下有对策”。虽然苹果自己也给出了替代的方法，但他们都不是最好的，<code>UUID</code>每次获取都不同，所以使用时必须要把他们存文件，存数据库或者存<code>UserDefault</code>。当应用被删除重装，那么这个<code>UUID</code>也就不同了。<code>Vendor</code>更是同一个设备上的同一个开发商的应用的<code>id</code>都是相同的，也没有办法使用。<code>Advertising identifier</code>也并不是固定的。那要如何才能达到我们的需求呢，既能方便获取又能保证唯一呢？</p>
-
-<!-- More -->
-
-
-<p>答案就是<code>MAC</code>地址，<code>MAC</code>地址在网络上用来区分设备的唯一性，接入网络的设备都有一个<code>MAC</code>地址，他们肯定都是不同的，是唯一的。一部<code>iPhone</code>上可能有多个<code>MAC</code>地址，包括<code>WIFI</code>的、<code>SIM</code>的等，但是<code>iTouch</code>和<code>iPad</code>上就有一个<code>WIFI</code>的，因此只需获取<code>WIFI</code>的<code>MAC</code>地址就好了，也就是<code>en0</code>的地址。直接把<code>MAC</code>地址拿出来使用是不安全的，因此对他们做一次<code>hash</code>计算，<code>MD5</code>就是一种哈希算法，对得到的<code>MAC</code>地址计算一下他的<code>MD5</code>值就好了，那么这样拿到的就是这个设备唯一的<code>ID</code>了。有时我们为了区分设备上的应用，也可以获取到应用的<code>bundleID</code>，在和<code>MAC</code>地址结合起来计算一下<code>MD5</code>，那么该值就是可以区分设备上应用的ID了。</p>
-
-<p>首先是<code>MD5</code>，为<code>NSString</code>添加<code>MD5</code>方法：
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>NSString+MD5  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//  NSString+MD5.h</span>
-</span><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//  Created by wtlucky on 12-12-2.</span>
-</span><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">import</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">Foundation</span><span class="o">/</span><span class="n">Foundation</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@interface</span> <span class="nc">NSString</span> <span class="nl">(MD5)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">MD5</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nl">MD5ByAStr:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">aSourceStr</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">import</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">CommonCrypto</span><span class="o">/</span><span class="n">CommonDigest</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@implementation</span> <span class="nc">NSString</span> <span class="nl">(MD5)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">MD5</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">MD5ByAStr:</span><span class="n">self</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nl">MD5ByAStr:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">aSourceStr</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">cStr</span> <span class="o">=</span> <span class="p">[</span><span class="n">aSourceStr</span> <span class="n">UTF8String</span><span class="p">];</span>
-</span><span class='line'>  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">result</span><span class="p">[</span><span class="n">CC_MD5_DIGEST_LENGTH</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">CC_MD5</span><span class="p">(</span><span class="n">cStr</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">cStr</span><span class="p">),</span> <span class="n">result</span><span class="p">);</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">NSMutableString</span> <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableString</span> <span class="nl">stringWithCapacity:</span><span class="n">CC_MD5_DIGEST_LENGTH</span><span class="p">];</span>
-</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="n">CC_MD5_DIGEST_LENGTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="p">[</span><span class="n">ret</span> <span class="nl">appendFormat:</span><span class="s">@&quot;%02x&quot;</span><span class="p">,</span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>接下来是获得唯一ID，为<code>UIDevice</code>添加方法：
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>UIDevice+UniqueIdentifier  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-<span class='line-number'>114</span>
-<span class='line-number'>115</span>
-<span class='line-number'>116</span>
-<span class='line-number'>117</span>
-<span class='line-number'>118</span>
-<span class='line-number'>119</span>
-<span class='line-number'>120</span>
-<span class='line-number'>121</span>
-<span class='line-number'>122</span>
-<span class='line-number'>123</span>
-<span class='line-number'>124</span>
-<span class='line-number'>125</span>
-<span class='line-number'>126</span>
-<span class='line-number'>127</span>
-<span class='line-number'>128</span>
-<span class='line-number'>129</span>
-<span class='line-number'>130</span>
-<span class='line-number'>131</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//  UIDevice+UniqueIdentifier.h</span>
-</span><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//  Created by wtlucky on 13-3-22.</span>
-</span><span class='line'><span class="c1">//  Copyright (c) 2013年 AlphaStudio. All rights reserved.</span>
-</span><span class='line'><span class="c1">//&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">import</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">UIKit</span><span class="o">/</span><span class="n">UIKit</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@interface</span> <span class="nc">UIDevice</span> <span class="nl">(UniqueIdentifier)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">返回针对与一个应用的唯一</span><span class="n">ID</span>
-</span><span class='line'> <span class="o">*</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="k">return</span> <span class="err">针对与一个应用的唯一</span><span class="n">ID</span>
-</span><span class='line'> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/</span>
-</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">uniqueDeviceIdentifier</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">返回设备的唯一</span><span class="n">ID</span>
-</span><span class='line'> <span class="o">*</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="k">return</span> <span class="err">设备的唯一</span><span class="n">ID</span>
-</span><span class='line'> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/</span>
-</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">uniqueGlobalDeviceIdentifier</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">import</span> <span class="s">&quot;NSString+MD5.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">sys</span><span class="o">/</span><span class="n">socket</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">sys</span><span class="o">/</span><span class="n">sysctl</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">net</span><span class="o">/</span><span class="k">if</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">net</span><span class="o">/</span><span class="n">if_dl</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@interface</span> <span class="nc">UIDevice</span> <span class="nl">(private)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">macAddress</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@implementation</span> <span class="nc">UIDevice</span> <span class="nl">(UniqueIdentifier)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">macAddress</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="kt">int</span>                 <span class="n">mib</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">size_t</span>              <span class="n">len</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">char</span>                <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">buf</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">unsigned</span> <span class="kt">char</span>       <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ptr</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">struct</span> <span class="n">if_msghdr</span>    <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ifm</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">struct</span> <span class="n">sockaddr_dl</span>  <span class="o">*</span><span class="n">sdl</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">mib</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">CTL_NET</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">mib</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">AF_ROUTE</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">mib</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">mib</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">AF_LINK</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">mib</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">NET_RT_IFLIST</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">if</span> <span class="p">((</span><span class="n">mib</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">if_nametoindex</span><span class="p">(</span><span class="s">&quot;en0&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error: if_nametoindex error</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">if</span> <span class="p">(</span><span class="n">sysctl</span><span class="p">(</span><span class="n">mib</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">len</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error: sysctl, take 1</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">if</span> <span class="p">((</span><span class="n">buf</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">len</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Could not allocate memory. error!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">if</span> <span class="p">(</span><span class="n">sysctl</span><span class="p">(</span><span class="n">mib</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">len</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error: sysctl, take 2&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">free</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">ifm</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">if_msghdr</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">buf</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">sdl</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr_dl</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)(</span><span class="n">ifm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">ptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">LLADDR</span><span class="p">(</span><span class="n">sdl</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">outstring</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%02X:%02X:%02X:%02X:%02X:%02X&quot;</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                     <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">3</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">4</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="mi">5</span><span class="p">)];</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">free</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="n">outstring</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">uniqueDeviceIdentifier</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">macAddress</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIDevice</span> <span class="n">currentDevice</span><span class="p">]</span> <span class="n">macAddress</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">NSString</span> <span class="o">*</span><span class="n">bundleIdentifier</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="n">bundleIdentifier</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">stringToHash</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%@%@&quot;</span><span class="p">,</span> <span class="n">macAddress</span><span class="p">,</span> <span class="n">bundleIdentifier</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">uniqueIdentifier</span> <span class="o">=</span> <span class="p">[</span><span class="n">stringToHash</span> <span class="n">MD5</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="n">uniqueIdentifier</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">uniqueGlobalDeviceIdentifier</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">macAddress</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIDevice</span> <span class="n">currentDevice</span><span class="p">]</span> <span class="n">macAddress</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">NSString</span> <span class="o">*</span><span class="n">uniqueGlobalIdentifier</span> <span class="o">=</span> <span class="p">[</span><span class="n">macAddress</span> <span class="n">MD5</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="n">uniqueGlobalIdentifier</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>如此一来，在使用时就相当方便了。</p>
 ]]></content>
   </entry>
   

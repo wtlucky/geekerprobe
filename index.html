@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="在进行iOS开发的过程中，对于一些复杂的界面，我们可以通过Interface Builder这个Xcode集成的可视化界面编辑工具在完成，这回节省大部分时间以及代码量。它的使用方法这里不做介绍了，这次我要介绍是使用它来实现一个嵌套的自定义视图。解释一下就是，我们使用IB自定义了一个View， &hellip;">
+  <meta name="description" content="最近项目在搞适配，目前的适配原则是不改变既有的设计图的设计样式，使用@3x的图片去进行完美适配。即不涉及到某一个模块在iPhone5及以下的设备上是一个展示样式，在iPhone6或着iPhone6 Plus上是另外的一个展示样式。单纯是这样的需求通过Auto &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/29/adapt-view-for-iphone6-plus/">一个特殊的iPhone6 Plus适配问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-29T21:13:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2015</time>
+        
+        
+      | <a href="/blog/2015/01/29/adapt-view-for-iphone6-plus/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近项目在搞适配，目前的适配原则是不改变既有的设计图的设计样式，使用<code>@3x</code>的图片去进行完美适配。即不涉及到某一个模块在<code>iPhone5</code>及以下的设备上是一个展示样式，在<code>iPhone6</code>或着<code>iPhone6 Plus</code>上是另外的一个展示样式。单纯是这样的需求通过<code>Auto Resizing</code>和<code>AutoLayout</code>就完全可以应付的了。以前硬编码写的view的frame通过乘上一个屏幕放大的比例系数也可以搞定。</p>
+
+<p>可是目前设计同学提出在一个使用<code>collection view</code>的页面中，之前是通过各种设备使用同一个大小的<code>cell</code>，不同的屏幕上拉大的是<code>cell</code>之间的间距来进行适配。现如今要改成只有在<code>6 Plus</code>上要将<code>cell</code>上半部分等比例放大，<code>cell</code>中下半部分的文字的字号也放大。目前的需求就是这个样子，其实我觉得这样适配就不是苹果的设计规范，按道理说屏幕大了看的内容多才对，这样搞个等比例放大，跟没有适配在兼容模式下运行的效果似地。不过需求来了还是得搞。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/29/adapt-view-for-iphone6-plus/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -529,86 +575,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-04T13:05:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2013</time>
-        
-        
-      | <a href="/blog/2013/03/04/generate-commentate-with-xcode/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><code>Xcode</code>不得不说，很好用的一款<code>IDE</code>，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
-在<code>Xcode 3.2</code>版本的时候，还可以找到<code>appledoc</code>插件，很方便的生成注释。但是到了<code>Xcode 4.0</code>以上的版本就找不到这个功能，虽然<code>appledoc</code>仍然可以用，但是需要使用命令行，而且生成的是<code>html</code>文件。就没有再仔细研究，继续寻找更简便的方法。
-最终找到一位大神写的一段<code>ruby</code>脚本，使用它为系统添加了一项服务，使用此可以很方便为指定的方法生成指定格式的注释。
-不过，测试发现这段<code>ruby</code>脚本还是有一点点问题的，在生成注释后会把当前生成注释的方法的声明删掉。我只好凭着多年的编程经验对这段脚本进行了一点修改（第一次接触到<code>ruby</code>代码。o(╯□╰)o），现在已经很好使用了，基本上没有啥问题了。分享给大家。</p>
-
-<p>先展示个效果：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> *   &lt;#Description#&gt;</span>
-</span><span class='line'><span class="cm"> *</span>
-</span><span class='line'><span class="cm"> *   @param  application     &lt;#application description#&gt;</span>
-</span><span class='line'><span class="cm"> *   @param  launchOptions   &lt;#launchOptions description#&gt;</span>
-</span><span class='line'><span class="cm"> *</span>
-</span><span class='line'><span class="cm"> *   @return &lt;#return value description#&gt;</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span>
-</span><span class='line'><span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/04/generate-commentate-with-xcode/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -627,11 +593,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='//blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='//blog/categories/ios-development'>iOS development (5)</a></li><li><a href='//blog/categories/octopress'>Octopress (1)</a></li><li><a href='//blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='//blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='//blog/categories/ios-development'>iOS development (6)</a></li><li><a href='//blog/categories/octopress'>Octopress (1)</a></li><li><a href='//blog/categories/technical-research'>Technical Research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/29/adapt-view-for-iphone6-plus/">一个特殊的iPhone6 Plus适配问题</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/08/10/nested-xib-views/">Nested Xib Views - 使用XIB实现嵌套自定义视图</a>
@@ -647,10 +617,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/02/start-write-shell/">入门bash shell脚本</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/31/strategy/">23种设计模式——策略模式</a>
       </li>
     
   </ul>
@@ -732,21 +698,23 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 135%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 133%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
 
   </ul>
 </section>

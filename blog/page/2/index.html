@@ -9,15 +9,8 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="最近再做一个推送项目，需要搭建APNS服务器，再将PHP代码部署到Server上时遇到了如下错误： APNS ssl error 1
-2
-3
-4
-5
-6
-7
-8
-Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
+  <meta name="description" content="Xcode不得不说，很好用的一款IDE，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
+在Xcode 3.2版本的时候，还可以找到appledoc插件，很方便的生成注释。但是到了Xcode 4. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +79,86 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/04/generate-commentate-with-xcode/">为Xcode添加生成注释服务</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-04T13:05:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2013</time>
+        
+        
+      | <a href="/blog/2013/03/04/generate-commentate-with-xcode/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>Xcode</code>不得不说，很好用的一款<code>IDE</code>，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
+在<code>Xcode 3.2</code>版本的时候，还可以找到<code>appledoc</code>插件，很方便的生成注释。但是到了<code>Xcode 4.0</code>以上的版本就找不到这个功能，虽然<code>appledoc</code>仍然可以用，但是需要使用命令行，而且生成的是<code>html</code>文件。就没有再仔细研究，继续寻找更简便的方法。
+最终找到一位大神写的一段<code>ruby</code>脚本，使用它为系统添加了一项服务，使用此可以很方便为指定的方法生成指定格式的注释。
+不过，测试发现这段<code>ruby</code>脚本还是有一点点问题的，在生成注释后会把当前生成注释的方法的声明删掉。我只好凭着多年的编程经验对这段脚本进行了一点修改（第一次接触到<code>ruby</code>代码。o(╯□╰)o），现在已经很好使用了，基本上没有啥问题了。分享给大家。</p>
+
+<p>先展示个效果：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> *   &lt;#Description#&gt;</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> *   @param  application     &lt;#application description#&gt;</span>
+</span><span class='line'><span class="cm"> *   @param  launchOptions   &lt;#launchOptions description#&gt;</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> *   @return &lt;#return value description#&gt;</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span>
+</span><span class='line'><span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/04/generate-commentate-with-xcode/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -271,11 +344,15 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='//blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='//blog/categories/ios-development'>iOS development (5)</a></li><li><a href='//blog/categories/octopress'>Octopress (1)</a></li><li><a href='//blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='//blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='//blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='//blog/categories/ios-development'>iOS development (6)</a></li><li><a href='//blog/categories/octopress'>Octopress (1)</a></li><li><a href='//blog/categories/technical-research'>Technical Research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/29/adapt-view-for-iphone6-plus/">一个特殊的iPhone6 Plus适配问题</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/08/10/nested-xib-views/">Nested Xib Views - 使用XIB实现嵌套自定义视图</a>
@@ -291,10 +368,6 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
     
       <li class="post">
         <a href="/blog/2013/05/02/start-write-shell/">入门bash shell脚本</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/31/strategy/">23种设计模式——策略模式</a>
       </li>
     
   </ul>
@@ -376,21 +449,23 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 135%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 133%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
 <a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
 
   </ul>
 </section>
