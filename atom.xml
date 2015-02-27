@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-02-27T16:53:57+08:00</updated>
+  <updated>2015-02-27T17:35:50+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -73,7 +73,7 @@
 
 <p>PS：如果有其他合作人员共同使用这个私有<code>Spec Repo</code>的话在他有对应<code>Git仓库</code>的权限的前提下执行相同的命令添加这个<code>Spec Repo</code>即可。</p>
 
-<h3>创建私有<code>Spec Repo</code></h3>
+<h3>创建<code>Pod</code>项目工程文件</h3>
 
 <p>这个第二步没有什么好介绍的，如果是有现有的组件项目，并且在<code>Git</code>的版本管理下，那么这一步就算完成了，可以直接进行下一步了。</p>
 
