@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-02-26T15:40:29+08:00</updated>
+  <updated>2015-02-27T16:53:57+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,583 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Cocoapods创建私有podspec]]></title>
+    <link href="http://blog.wtlucky.com/blog/2015/02/26/create-private-podspec/"/>
+    <updated>2015-02-26T16:14:00+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2015/02/26/create-private-podspec</id>
+    <content type="html"><![CDATA[<p><a href="http://cocoapods.org/"><code>Cocoapods</code></a>是非常好用的一个<code>iOS</code>依赖管理工具，使用它可以方便的管理和更新项目中所使用到的第三方库，以及将自己的项目中的公共组件交由它去管理。<code>Cocoapods</code>的介绍及优点本文就不在赘述，我开始使用<code>Cocoapods</code>还是在两年前，那个时候它刚刚出现，网上的资料还非常的少，就连他们自己的<code>HomePage</code>都十分的简单，我就着手尝试着使用了一下，用它管理起第三方库确实是十分的方便顺手。后来它有了更强大的功能就是自己创建<code>podspec</code>，更可以设置私有的库。</p>
+
+<p>春节回来上班，没有什么任务做，正好项目中有一些公共组件需要从庞大的项目体系中剥离出来，而且年前项目终于从<code>SVN</code>迁移到了<code>Git</code>，真是喜大普奔，大快人心！这样项目使用<code>Cocoapods</code>就有了条件，正好趁着这两天没有什么事情做，学习一下创建私有的<code>podspec</code>并在项目中部署使用，以及<code>pods</code>的<code>subspec</code>的创建及使用。<!-- More --></p>
+
+<hr />
+
+<p>整体先说明一下创建一个私有的<code>podspec</code>包括如下那么几个步骤：</p>
+
+<ol>
+<li>创建并设置一个私有的<code>Spec Repo</code>。</li>
+<li>创建<code>Pod</code>的所需要的项目工程文件，并且有可访问的项目版本控制地址。</li>
+<li>创建<code>Pod</code>所对应的<code>podspec</code>文件。</li>
+<li>本地测试配置好的<code>podspec</code>文件是否可用。</li>
+<li>向私有的<code>Spec Repo</code>中提交<code>podspec</code>。</li>
+<li>在个人项目中的<code>Podfile</code>中增加刚刚制作的好的<code>Pod</code>并使用。</li>
+<li>更新维护<code>podspec</code>。</li>
+</ol>
+
+
+<p>在这一系列的步骤中需要创建两个<code>Git仓库</code>，分别是第一步和第二步（第二步不一定非要是<code>Git仓库</code>，只要是可以获取到相关代码文件就可以，也可以是<code>SVN</code>的，也可以说<code>zip包</code>，区别就是在<code>podspec</code>中的<code>source</code>项填写的内容不同），并且第一步只是在初次创建私有<code>podspec</code>时才需要，之后在创建其他的只需要从第二步开始就可以。本文只介绍在<code>Git</code>环境下的操作，其他环境其他方式暂不说明。</p>
+
+<h3>创建私有<code>Spec Repo</code></h3>
+
+<p>先来说第一步，什么是<code>Spec Repo</code>？他是所有的<code>Pods</code>的一个索引，就是一个容器，所有公开的<code>Pods</code>都在这个里面，他实际是一个<code>Git仓库</code><a href="https://github.com/CocoaPods/Specs"><code>remote端</code>
+</a>在<code>GitHub</code>上，但是当你使用了<code>Cocoapods</code>后他会被<code>clone</code>到本地的<code>~/.cocoapods/repos</code>目录下，可以进入到这个目录看到<code>master</code>文件夹就是这个官方的<code>Spec Repo</code>了。这个<code>master</code>目录的结构是这个样子的</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>.
+</span><span class='line'>├── Specs
+</span><span class='line'>    └── <span class="o">[</span>SPEC_NAME<span class="o">]</span>
+</span><span class='line'>        └── <span class="o">[</span>VERSION<span class="o">]</span>
+</span><span class='line'>            └── <span class="o">[</span>SPEC_NAME<span class="o">]</span>.podspec
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因此我们需要创建一个类似于<code>master</code>的私有<code>Spec Repo</code>，这里我们可以<code>fork</code>官方的<code>Repo</code>，也可以自己创建，个人建议不<code>fork</code>，因为你只是想添加自己的<code>Pods</code>，没有必要把现有的公开<code>Pods</code>都<code>copy</code>一份。所以创建一个
+<code>Git仓库</code>，这个仓库你可以创建私有的也可以创建公开的，不过既然私有的<code>Spec Repo</code>，还是创建私有的仓库吧，需要注意的就是如果项目中有其他同事共同开发的话，你还要给他这个<code>Git仓库</code>的权限。因为<code>GitHub</code>的私有仓库是收费的，我还不是<code>GitHub</code>的付费用户，所以我使用了其他<code>Git</code>服务，我使用的是<a href="https://coding.net"><code>CODING</code></a>，当然还有其他的可供选择<a href="http://git.oschina.net/"><code>开源中国</code></a>、<a href="https://bitbucket.org/"><code>Bitbucket</code></a>以及<a href="https://code.csdn.net/"><code>CSDN</code></a></p>
+
+<p>创建完成之后在<code>Terminal</code>中执行如下命令</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> <span class="c"># pod repo add [Private Repo Name] [GitHub HTTPS clone URL]</span>
+</span><span class='line'><span class="nv">$ </span>pod repo add WTSpecs https://coding.net/wtlucky/WTSpecs.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此时如果成功的话进入到<code>~/.cocoapods/repos</code>目录下就可以看到<code>WTSpecs</code>这个目录了。至此第一步创建私有<code>Spec Repo</code>完成。</p>
+
+<p>PS：如果有其他合作人员共同使用这个私有<code>Spec Repo</code>的话在他有对应<code>Git仓库</code>的权限的前提下执行相同的命令添加这个<code>Spec Repo</code>即可。</p>
+
+<h3>创建私有<code>Spec Repo</code></h3>
+
+<p>这个第二步没有什么好介绍的，如果是有现有的组件项目，并且在<code>Git</code>的版本管理下，那么这一步就算完成了，可以直接进行下一步了。</p>
+
+<p>如果你的组件还在你冗余庞大的项目中，需要拆分出来或者需要自己从零开始创建一个组件库，那么我建议你使用<code>Cocoapods</code>提供的一个工具将第二步与第三步结合起来做。</p>
+
+<p>现在来说一下这个工具，相关的文档介绍是<a href="http://guides.cocoapods.org/making/using-pod-lib-create">Using Pod Lib Create</a>
+就拿我创建的<code>podTestLibrary</code>为例子具体讲一下这里是如何操作的，先<code>cd</code>到要创建项目的目录然后执行</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib create podTestLibrary
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>之后他会问你四个问题，1.是否需要一个例子工程；2.选择一个测试框架；3.是否基于View测试；4.类的前缀；4个问题的具体介绍可以去看官方文档，我这里选择的是1.yes；2.Specta/Expecta；3.yes；4.PTL。
+问完这4个问题他会自动执行<code>pod install</code>命令创建项目并生成依赖。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tree PodTestLibrary -L 2
+</span><span class='line'>PodTestLibrary
+</span><span class='line'>├── Example                                  <span class="c">#demo APP</span>
+</span><span class='line'>│   ├── PodTestLibrary
+</span><span class='line'>│   ├── PodTestLibrary.xcodeproj
+</span><span class='line'>│   ├── PodTestLibrary.xcworkspace
+</span><span class='line'>│   ├── Podfile                              <span class="c">#demo APP 的依赖描述文件</span>
+</span><span class='line'>│   ├── Podfile.lock
+</span><span class='line'>│   ├── Pods                                  <span class="c">#demo APP 的依赖文件</span>
+</span><span class='line'>│   └── Tests
+</span><span class='line'>├── LICENSE                               <span class="c">#开源协议 默认MIT</span>
+</span><span class='line'>├── Pod                                       <span class="c">#组件的目录</span>
+</span><span class='line'>│   ├── Assets                            <span class="c">#资源文件</span>
+</span><span class='line'>│   └── Classes                              <span class="c">#类文件</span>
+</span><span class='line'>├── PodTestLibrary.podspec           <span class="c">#第三步要创建的podspec文件</span>
+</span><span class='line'>└── README.md                                <span class="c">#markdown格式的README</span>
+</span><span class='line'>
+</span><span class='line'>9 directories, 5 files
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上是项目生成的目录结构及相关介绍。</p>
+
+<p>接下来就是向<code>Pod</code>文件夹中添加库文件和资源，并配置<code>podspec</code>文件，我把一个网络模块的共有组件放入<code>Pod/Classes</code>中，然后进入<code>Example</code>文件夹执行<code>pod update</code>命令，再打开项目工程可以看到，刚刚添加的组件已经在<code>Pods</code>子工程下<code>Development Pods/PodTestLibrary</code>中了，然后编辑demo工程，测试组件，我并没有使用提供的测试框架进行测试，这里就先不介绍了。</p>
+
+<p><em>注：</em>这里需要注意的是每当你向<code>Pod</code>中添加了新的文件或者以后更新了<code>podspec</code>的版本都需要重新执行一遍<code>pod update</code>命令。</p>
+
+<p>测试无误后需要将该项目添加并推送到远端仓库，并编辑<code>podspec</code>文件。</p>
+
+<p>通过<code>Cocoapods</code>创建出来的目录本身就在本地的<code>Git</code>管理下，我们需要做的就是给它添加远端仓库，同样去<code>GitHub</code>或其他的<code>Git</code>服务提供商那里创建一个私有的仓库，拿到<code>SSH</code>地址，然后<code>cd</code>到<code>PodTestLibrary</code>目录</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git add .
+</span><span class='line'><span class="nv">$ </span>git commit -s -m <span class="s2">&quot;Initial Commit of Library&quot;</span>
+</span><span class='line'><span class="nv">$ </span>git remote add origin git@coding.net:wtlucky/podTestLibrary.git           <span class="c">#添加远端仓库</span>
+</span><span class='line'><span class="nv">$ </span>git push origin master     <span class="c">#提交到远端仓库</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因为<code>podspec</code>文件中获取<code>Git</code>版本控制的项目还需要<code>tag</code>号，所以我们要打上一个<code>tag</code>，</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git tag -m <span class="s2">&quot;first release&quot;</span> <span class="s2">&quot;0.1.0&quot;</span>
+</span><span class='line'><span class="nv">$ </span>git push --tags     <span class="c">#推送tag到远端仓库</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>做完这些就可以开始编辑<code>podspec</code>文件了，它是一个<code>Ruby</code>的文件，把编辑器的格式改成<code>Ruby</code>就能看到语法高亮，下面我贴上我的<code>podspec</code>文件，并在后面以注释的形式说明每个字段的含义，没有涉及到的字段可以去<a href="http://guides.cocoapods.org/syntax/podspec.html">官方文档</a>查阅</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Pod</span><span class="p">:</span><span class="ss">:Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">name</span>             <span class="o">=</span> <span class="s2">&quot;PodTestLibrary&quot;</span>    <span class="c1">#名称</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">version</span>          <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>             <span class="c1">#版本号</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">summary</span>          <span class="o">=</span> <span class="s2">&quot;Just Testing.&quot;</span>     <span class="c1">#简短介绍，下面是详细介绍</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">description</span>      <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">DESC</span>
+</span><span class='line'><span class="sh">                       Testing Private Podspec.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sh">                       * Markdown format.</span>
+</span><span class='line'><span class="sh">                       * Don&#39;t worry about the indent, we strip it!</span>
+</span><span class='line'><span class="no">                       DESC</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">homepage</span>         <span class="o">=</span> <span class="s2">&quot;https://coding.net/u/wtlucky/p/podTestLibrary&quot;</span>                           <span class="c1">#主页,这里要填写可以访问到的地址，不然验证不通过</span>
+</span><span class='line'>  <span class="c1"># s.screenshots     = &quot;www.example.com/screenshots_1&quot;, &quot;www.example.com/screenshots_2&quot;           #截图</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">license</span>          <span class="o">=</span> <span class="s1">&#39;MIT&#39;</span>              <span class="c1">#开源协议</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>           <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;wtlucky&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;wtlucky@foxmail.com&quot;</span> <span class="p">}</span>                   <span class="c1">#作者信息</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>           <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://coding.net/wtlucky/podTestLibrary.git&quot;</span><span class="p">,</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s2">&quot;0.1.0&quot;</span> <span class="p">}</span>      <span class="c1">#项目地址，这里不支持ssh的地址，验证不通过，只支持HTTP和HTTPS，最好使用HTTPS</span>
+</span><span class='line'>  <span class="c1"># s.social_media_url = &#39;https://twitter.com/&lt;TWITTER_USERNAME&gt;&#39;                       #多媒体介绍地址</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">platform</span>     <span class="o">=</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span>            <span class="c1">#支持的平台及版本</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">requires_arc</span> <span class="o">=</span> <span class="kp">true</span>                   <span class="c1">#是否使用ARC，如果指定具体文件，则具体的问题使用ARC</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/**/*&#39;</span>     <span class="c1">#代码源文件地址，**/*表示Classes目录及其子目录下所有文件，如果有多个目录下则用逗号分开，如果需要在项目中分组显示，这里也要做相应的设置</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">resource_bundles</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s1">&#39;PodTestLibrary&#39;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;Pod/Assets/*.png&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="p">}</span>                                       <span class="c1">#资源文件地址</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/**/*.h&#39;</span>   <span class="c1">#公开头文件地址</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">=</span> <span class="s1">&#39;UIKit&#39;</span>                  <span class="c1">#所需的framework，多个用逗号隔开</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 2.3&#39;</span>   <span class="c1">#依赖关系，该项目所依赖的其他库，如果有多个需要填写多个s.dependency</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>编辑完<code>podspec</code>文件后，需要验证一下这个文件是否可用，如果有任何<code>WARNING</code>或者<code>ERROR</code>都是不可以的，它就不能被添加到<code>Spec Repo</code>中，不过<code>xcode</code>的<code>WARNING</code>是可以存在的，验证需要执行一下命令</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当你看到</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> -&gt; PodTestLibrary <span class="o">(</span>0.1.0<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>PodTestLibrary passed validation.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>时，说明验证通过了，不过这只是这个<code>podspec</code>文件是合格的，不一定说明这个<code>Pod</code>是可以用的，我们需要在本地做一下验证，这就是第四步的内容了，第四步在具体说明。</p>
+
+<h3>创建<code>podspec</code>文件</h3>
+
+<p>如果从第二步过来，已经有了现成的项目，那么就需要给这个项目创建一个<code>podspec</code>文件，创建它需要执行<code>Cocoapods</code>的另外一个命令，<a href="http://guides.cocoapods.org/making/specs-and-specs-repo.html">官方文档</a>在这里</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod spec create PodTestLibrary git@coding.net:wtlucky/podTestLibrary.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行完之后，就创建了一个<code>podspec</code>文件，他其中会包含很多内容，可以按照我之前介绍的进行编辑，没用的删掉。编辑完成之后使用验证命令验证一下</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>验证无误就可以进入下一步了。</p>
+
+<h3>本地测试<code>podspec</code>文件</h3>
+
+<p>我们可以创建一个新的项目，在这个项目的<code>Podfile</code>文件中直接指定刚才创建编辑好的<code>podspec</code>文件，看是否可用。
+在<code>Podfile</code>中我们可以这样编辑，有两种方式</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="ss">:path</span> <span class="o">=&gt;</span> <span class="s1">&#39;~/code/Cocoapods/podTest/PodTestLibrary&#39;</span>      <span class="c1">#指定路径</span>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="ss">:podspec</span> <span class="o">=&gt;</span> <span class="s1">&#39;~/code/Cocoapods/podTest/PodTestLibrary/PodTestLibrary.podspec&#39;</span>  <span class="c1">#指定podspec文件</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后执行<code>pod install</code>命令安装依赖，打开项目工程，可以看到库文件都被加载到<code>Pods</code>子项目中了，不过它们并没有在<code>Pods</code>目录下，而是跟测试项目一样存在于<code>Development Pods/PodTestLibrary</code>中，这是因为我们是在本地测试，而没有把<code>podspec</code>文件添加到<code>Spec Repo</code>中的缘故。</p>
+
+<p>在项目中编写代码，测试库文件无误后就可以开始下一步了，提交<code>podspec</code>到<code>Spec Repo</code>中。</p>
+
+<h3>向<code>Spec Repo</code>提交<code>podspec</code></h3>
+
+<p>向<code>Spec Repo</code>提交<code>podspec</code>需要完成两点一个是<code>podspec</code>必须通过验证无误，在一个就是删掉无用的注释（这个不是必须的，为了规范还是删掉吧）。
+向我们的私有<code>Spec Repo</code>提交<code>podspec</code>只需要一个命令</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec  <span class="c">#前面是本地Repo名字 后面是podspec名字</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>完成之后这个组件库就添加到我们的私有<code>Spec Repo</code>中了，可以进入到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>.
+</span><span class='line'>├── LICENSE
+</span><span class='line'>├── PodTestLibrary
+</span><span class='line'>│   └── 0.1.0
+</span><span class='line'>│       └── PodTestLibrary.podspec
+</span><span class='line'>└── README.md
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再去看我们的<code>Spec Repo</code>远端仓库，也有了一次提交，这个<code>podspec</code>也已经被<code>Push</code>上去了。</p>
+
+<p>至此，我们的这个组件库就已经制作添加完成了，使用<code>pod search</code>命令就可以查到我们自己的库了</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod search PodTestLibrary
+</span><span class='line'>
+</span><span class='line'>-&gt; PodTestLibrary <span class="o">(</span>0.1.0<span class="o">)</span>
+</span><span class='line'>   Just Testing.
+</span><span class='line'>   pod <span class="s1">&#39;PodTestLibrary&#39;</span>, <span class="s1">&#39;~&gt; 0.1.0&#39;</span>
+</span><span class='line'>   - Homepage: https://coding.net/u/wtlucky/p/podTestLibrary
+</span><span class='line'>   - Source:   https://coding.net/wtlucky/podTestLibrary.git
+</span><span class='line'>   - Versions: 0.1.0 <span class="o">[</span>WTSpecs repo<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里说的是添加到私有的<code>Repo</code>，如果要添加到<code>Cocoapods</code>的官方库了，可以使用<code>trunk</code>工具，具体可以查看<a href="http://guides.cocoapods.org/making/getting-setup-with-trunk.html">官方文档</a></p>
+
+<h3>使用制作好的<code>Pod</code></h3>
+
+<p>在完成这一系列步骤之后，我们就可以在正式项目中使用这个私有的<code>Pod</code>了只需要在项目的<code>Podfile</code>里增加以下一行代码即可</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.1.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后执行<code>pod update</code>，更新库依赖，然后打卡项目可以看到，我们自己的库文件已经出现在<code>Pods</code>子项目中的<code>Pods</code>子目录下了，而不再是<code>Development Pods</code>。</p>
+
+<h3>更新维护<code>podspec</code></h3>
+
+<p>最后再来说一下制作好的<code>podspec</code>文件后续的更新维护工作，比如如何添加新的版本，如何删除<code>Pod</code>。</p>
+
+<p>我已经制作好了<code>PodTestLibrary</code>的<code>0.1.0</code>版本，现在我对他进行升级工作，这次我添加了更多的模块到<code>PodTestLibrary</code>之中，包括工具类，底层<code>Model</code>及<code>UIKit</code>扩展等，这里又尝试了一下<code>subspec</code>功能，给<code>PodTestLibrary</code>创建了多个子分支。</p>
+
+<p>具体做法是先将源文件添加到<code>Pod/Classes</code>中，然后按照不同的模块对文件目录进行整理，因为我有四个模块，所以在<code>Pod/Classes</code>下有创建了四个子目录，完成之后继续编辑之前的<code>PodTestLibrary.podspec</code>，这次增加了<code>subspec</code>特性</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Pod</span><span class="p">:</span><span class="ss">:Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">name</span>             <span class="o">=</span> <span class="s2">&quot;PodTestLibrary&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">version</span>          <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">summary</span>          <span class="o">=</span> <span class="s2">&quot;Just Testing.&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">description</span>      <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">DESC</span>
+</span><span class='line'><span class="sh">                       Testing Private Podspec.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sh">                       * Markdown format.</span>
+</span><span class='line'><span class="sh">                       * Don&#39;t worry about the indent, we strip it!</span>
+</span><span class='line'><span class="no">                       DESC</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">homepage</span>         <span class="o">=</span> <span class="s2">&quot;https://coding.net/u/wtlucky/p/podTestLibrary&quot;</span>
+</span><span class='line'>  <span class="c1"># s.screenshots     = &quot;www.example.com/screenshots_1&quot;, &quot;www.example.com/screenshots_2&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">license</span>          <span class="o">=</span> <span class="s1">&#39;MIT&#39;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>           <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;wtlucky&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;wtlucky@foxmail.com&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>           <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://coding.net/wtlucky/podTestLibrary.git&quot;</span><span class="p">,</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s2">&quot;1.0.0&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># s.social_media_url = &#39;https://twitter.com/&lt;TWITTER_USERNAME&gt;&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">platform</span>     <span class="o">=</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">requires_arc</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">#s.source_files = &#39;Pod/Classes/**/*&#39;</span>
+</span><span class='line'>  <span class="c1">#s.resource_bundles = {</span>
+</span><span class='line'>  <span class="c1">#  &#39;PodTestLibrary&#39; =&gt; [&#39;Pod/Assets/*.png&#39;]</span>
+</span><span class='line'>  <span class="c1">#}</span>
+</span><span class='line'>  <span class="c1">#s.public_header_files = &#39;Pod/Classes/**/*.h&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">subspec</span> <span class="s1">&#39;NetWorkEngine&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">networkEngine</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">networkEngine</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/NetworkEngine/**/*&#39;</span>
+</span><span class='line'>      <span class="n">networkEngine</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/NetworkEngine/**/*.h&#39;</span>
+</span><span class='line'>      <span class="n">networkEngine</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 2.3&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">subspec</span> <span class="s1">&#39;DataModel&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">dataModel</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">dataModel</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/DataModel/**/*&#39;</span>
+</span><span class='line'>      <span class="n">dataModel</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/DataModel/**/*.h&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">subspec</span> <span class="s1">&#39;CommonTools&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">commonTools</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">commonTools</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/CommonTools/**/*&#39;</span>
+</span><span class='line'>      <span class="n">commonTools</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/CommonTools/**/*.h&#39;</span>
+</span><span class='line'>      <span class="n">commonTools</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;OpenUDID&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.0.0&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">subspec</span> <span class="s1">&#39;UIKitAddition&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">ui</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">ui</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/UIKitAddition/**/*&#39;</span>
+</span><span class='line'>      <span class="n">ui</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/UIKitAddition/**/*.h&#39;</span>
+</span><span class='line'>      <span class="n">ui</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="s2">&quot;Pod/Assets/MLSUIKitResource.bundle&quot;</span>
+</span><span class='line'>      <span class="n">ui</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;PodTestLibrary/CommonTools&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">=</span> <span class="s1">&#39;UIKit&#39;</span>
+</span><span class='line'>  <span class="c1">#s.dependency &#39;AFNetworking&#39;, &#39;~&gt; 2.3&#39;</span>
+</span><span class='line'>  <span class="c1">#s.dependency &#39;OpenUDID&#39;, &#39;~&gt; 1.0.0&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因为我们创建了<code>subspec</code>所以项目整体的依赖<code>dependency</code>，源文件<code>source_files</code>，头文件<code>public_header_files</code>，资源文件<code>resource</code>等都移动到了各自的<code>subspec</code>中，每个<code>subspec</code>之间也可以有相互的依赖关系，比如<code>UIKitAddition</code>就依赖于<code>CommonTools</code>。</p>
+
+<p>编辑完成之后，在测试项目里<code>pod update</code>一下，几个子项目都被加进项目工程了，写代码验证无误之后，就可以将这个工程<code>push</code>到远端仓库，并打上新的<code>tag</code>-><code>1.0.0</code>。</p>
+
+<p>最后再次使用<code>pod lib lint</code>验证编辑好的<code>podsepc</code>文件，没有自身的<code>WARNING</code>或者<code>ERROR</code>之后，就可以再次提交到<code>Spec Repo</code>中了，命令跟之前是一样的</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>之后再次到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>.
+</span><span class='line'>├── LICENSE
+</span><span class='line'>├── PodTestLibrary
+</span><span class='line'>│   ├── 0.1.0
+</span><span class='line'>│   │   └── PodTestLibrary.podspec
+</span><span class='line'>│   └── 1.0.0
+</span><span class='line'>│       └── PodTestLibrary.podspec
+</span><span class='line'>└── README.md
+</span><span class='line'>
+</span><span class='line'>3 directories, 4 files
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>已经有两个版本了，使用<code>pod search</code>查找得到的结果为</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod search PodTestLibrary
+</span><span class='line'>
+</span><span class='line'>-&gt; PodTestLibrary <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'>   Just Testing.
+</span><span class='line'>   pod <span class="s1">&#39;PodTestLibrary&#39;</span>, <span class="s1">&#39;~&gt; 1.0.0&#39;</span>
+</span><span class='line'>   - Homepage: https://coding.net/u/wtlucky/p/podTestLibrary
+</span><span class='line'>   - Source:   https://coding.net/wtlucky/podTestLibrary.git
+</span><span class='line'>   - Versions: 1.0.0, 0.1.0 <span class="o">[</span>WTSpecs repo<span class="o">]</span>
+</span><span class='line'>   - Sub specs:
+</span><span class='line'>     - PodTestLibrary/NetWorkEngine <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'>     - PodTestLibrary/DataModel <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'>     - PodTestLibrary/CommonTools <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'>     - PodTestLibrary/UIKitAddition <span class="o">(</span>1.0.0<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>完成这些之后，在实际项目中我们就可以选择使用整个组件库或者是组件库的某一个部分了，对应的<code>Podfile</code>中添加的内容为</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary/NetWorkEngine&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0&#39;</span>  <span class="c1">#使用某一个部分</span>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary/UIKitAddition&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0&#39;</span>   <span class="c1">#使用整个库</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最后介绍一下如何删除一个私有<code>Spec Repo</code>，只需要执行一条命令即可</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo remove WTSpecs
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样这个<code>Spec Repo</code>就在本地删除了，我们还可以通过</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo add WTSpecs git@coding.net:wtlucky/WTSpecs.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再把它给加回来。</p>
+
+<p>如果我们要删除私有<code>Spec Repo</code>下的某一个<code>podspec</code>怎么操作呢，此时无需借助<code>Cocoapods</code>，只需要<code>cd</code>到<code>~/.cocoapods/repos/WTSpecs</code>目录下，删掉库目录</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>rm -Rf PodTestLibrary
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在将<code>Git</code>的变动<code>push</code>到远端仓库即可</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git add --all .
+</span><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git ci -m <span class="s2">&quot;remove unuseful pods&quot;</span>
+</span><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git push origin master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>参考资料</h2>
+
+<blockquote><p><a href="http://guides.cocoapods.org/making/private-cocoapods.html">Private Pods</a></p>
+
+<p><a href="http://blog.grio.com/2014/11/creating-a-private-cocoapod.html">Creating a Private CocoaPod</a></p>
+
+<p><a href="http://www.objectpartners.com/2014/06/25/developing-private-in-house-libraries-with-cocoapods/">Developing Private In-House Libraries with CocoaPods</a></p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[一个特殊的iPhone6 Plus适配问题]]></title>

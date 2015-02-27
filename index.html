@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="最近项目在搞适配，目前的适配原则是不改变既有的设计图的设计样式，使用@3x的图片去进行完美适配。即不涉及到某一个模块在iPhone5及以下的设备上是一个展示样式，在iPhone6或着iPhone6 Plus上是另外的一个展示样式。单纯是这样的需求通过Auto &hellip;">
+  <meta name="description" content="Cocoapods是非常好用的一个iOS依赖管理工具，使用它可以方便的管理和更新项目中所使用到的第三方库，以及将自己的项目中的公共组件交由它去管理。Cocoapods的介绍及优点本文就不在赘述，我开始使用Cocoapods还是在两年前，那个时候它刚刚出现，网上的资料还非常的少， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-26T16:14:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2015</time>
+        
+        
+      | <a href="/blog/2015/02/26/create-private-podspec/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://cocoapods.org/"><code>Cocoapods</code></a>是非常好用的一个<code>iOS</code>依赖管理工具，使用它可以方便的管理和更新项目中所使用到的第三方库，以及将自己的项目中的公共组件交由它去管理。<code>Cocoapods</code>的介绍及优点本文就不在赘述，我开始使用<code>Cocoapods</code>还是在两年前，那个时候它刚刚出现，网上的资料还非常的少，就连他们自己的<code>HomePage</code>都十分的简单，我就着手尝试着使用了一下，用它管理起第三方库确实是十分的方便顺手。后来它有了更强大的功能就是自己创建<code>podspec</code>，更可以设置私有的库。</p>
+
+<p>春节回来上班，没有什么任务做，正好项目中有一些公共组件需要从庞大的项目体系中剥离出来，而且年前项目终于从<code>SVN</code>迁移到了<code>Git</code>，真是喜大普奔，大快人心！这样项目使用<code>Cocoapods</code>就有了条件，正好趁着这两天没有什么事情做，学习一下创建私有的<code>podspec</code>并在项目中部署使用，以及<code>pods</code>的<code>subspec</code>的创建及使用。</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/02/26/create-private-podspec/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -523,58 +567,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/19/singleton/">23种设计模式——单例模式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-19T19:35:00+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
-        
-        
-      | <a href="/blog/2013/03/19/singleton/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做<code>iOS</code>开发，所以基本上这23种设计模式我都通过<code>objective-C</code>来实现了。此系列文章的类图都是来自<a href="http://book.douban.com/subject/4260618/">《设计模式之禅》</a>，有兴趣的同学可以去买这本书看。</p>
-
-<p>话说，在编码编到一定的程度以后，由于代码体系的庞大，结构的复杂，自然就会上升到设计模式高度，而现在的软件设计又基本都是面向对象的，所以有了设计模式作支持，可以使软件更加的稳定安全，也更易于维护与拓展。</p>
-
-<p>首先来介绍最常用最简单的单例模式（Singleton），在以后的文章中再依次介绍其他的模式。</p>
-
-<h4>单例模式定义</h4>
-
-<p><code>Ensure a class has only one instance, and provide a global point of access to it. (确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。)</code></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/19/singleton/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -593,11 +585,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (6)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (7)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/01/29/adapt-view-for-iphone6-plus/">一个特殊的iPhone6 Plus适配问题</a>
@@ -613,10 +609,6 @@
     
       <li class="post">
         <a href="/blog/2013/12/28/wax-lua/">Wax Lua—使用lua编写原生ios程序的框架实现原理</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/02/start-write-shell/">入门bash shell脚本</a>
       </li>
     
   </ul>
@@ -698,23 +690,24 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 116%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 132%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 <a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
 <a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 133%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 
   </ul>
 </section>

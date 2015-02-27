@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS development | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/ios-development/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-02-26T15:40:29+08:00</updated>
+  <updated>2015-02-27T16:53:57+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,587 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Cocoapods创建私有podspec]]></title>
+    <link href="http://blog.wtlucky.com/blog/2015/02/26/create-private-podspec/"/>
+    <updated>2015-02-26T16:14:00+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2015/02/26/create-private-podspec</id>
+    <content type="html"><![CDATA[<p><a href="http://cocoapods.org/"><code>Cocoapods</code></a>是非常好用的一个<code>iOS</code>依赖管理工具，使用它可以方便的管理和更新项目中所使用到的第三方库，以及将自己的项目中的公共组件交由它去管理。<code>Cocoapods</code>的介绍及优点本文就不在赘述，我开始使用<code>Cocoapods</code>还是在两年前，那个时候它刚刚出现，网上的资料还非常的少，就连他们自己的<code>HomePage</code>都十分的简单，我就着手尝试着使用了一下，用它管理起第三方库确实是十分的方便顺手。后来它有了更强大的功能就是自己创建<code>podspec</code>，更可以设置私有的库。</p>
+
+<p>春节回来上班，没有什么任务做，正好项目中有一些公共组件需要从庞大的项目体系中剥离出来，而且年前项目终于从<code>SVN</code>迁移到了<code>Git</code>，真是喜大普奔，大快人心！这样项目使用<code>Cocoapods</code>就有了条件，正好趁着这两天没有什么事情做，学习一下创建私有的<code>podspec</code>并在项目中部署使用，以及<code>pods</code>的<code>subspec</code>的创建及使用。<!-- More --></p>
+
+<hr />
+
+<p>整体先说明一下创建一个私有的<code>podspec</code>包括如下那么几个步骤：</p>
+
+<ol>
+<li>创建并设置一个私有的<code>Spec Repo</code>。</li>
+<li>创建<code>Pod</code>的所需要的项目工程文件，并且有可访问的项目版本控制地址。</li>
+<li>创建<code>Pod</code>所对应的<code>podspec</code>文件。</li>
+<li>本地测试配置好的<code>podspec</code>文件是否可用。</li>
+<li>向私有的<code>Spec Repo</code>中提交<code>podspec</code>。</li>
+<li>在个人项目中的<code>Podfile</code>中增加刚刚制作的好的<code>Pod</code>并使用。</li>
+<li>更新维护<code>podspec</code>。</li>
+</ol>
+
+
+<p>在这一系列的步骤中需要创建两个<code>Git仓库</code>，分别是第一步和第二步（第二步不一定非要是<code>Git仓库</code>，只要是可以获取到相关代码文件就可以，也可以是<code>SVN</code>的，也可以说<code>zip包</code>，区别就是在<code>podspec</code>中的<code>source</code>项填写的内容不同），并且第一步只是在初次创建私有<code>podspec</code>时才需要，之后在创建其他的只需要从第二步开始就可以。本文只介绍在<code>Git</code>环境下的操作，其他环境其他方式暂不说明。</p>
+
+<h3>创建私有<code>Spec Repo</code></h3>
+
+<p>先来说第一步，什么是<code>Spec Repo</code>？他是所有的<code>Pods</code>的一个索引，就是一个容器，所有公开的<code>Pods</code>都在这个里面，他实际是一个<code>Git仓库</code><a href="https://github.com/CocoaPods/Specs"><code>remote端</code>
+</a>在<code>GitHub</code>上，但是当你使用了<code>Cocoapods</code>后他会被<code>clone</code>到本地的<code>~/.cocoapods/repos</code>目录下，可以进入到这个目录看到<code>master</code>文件夹就是这个官方的<code>Spec Repo</code>了。这个<code>master</code>目录的结构是这个样子的
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>.
+</span><span class='line'>├── Specs&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;└── <span class="o">[</span>SPEC_NAME<span class="o">]</span>
+</span><span class='line'>    └── <span class="o">[</span>VERSION<span class="o">]</span>
+</span><span class='line'>        └── <span class="o">[</span>SPEC_NAME<span class="o">]</span>.podspec
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+因此我们需要创建一个类似于<code>master</code>的私有<code>Spec Repo</code>，这里我们可以<code>fork</code>官方的<code>Repo</code>，也可以自己创建，个人建议不<code>fork</code>，因为你只是想添加自己的<code>Pods</code>，没有必要把现有的公开<code>Pods</code>都<code>copy</code>一份。所以创建一个
+<code>Git仓库</code>，这个仓库你可以创建私有的也可以创建公开的，不过既然私有的<code>Spec Repo</code>，还是创建私有的仓库吧，需要注意的就是如果项目中有其他同事共同开发的话，你还要给他这个<code>Git仓库</code>的权限。因为<code>GitHub</code>的私有仓库是收费的，我还不是<code>GitHub</code>的付费用户，所以我使用了其他<code>Git</code>服务，我使用的是<a href="https://coding.net"><code>CODING</code></a>，当然还有其他的可供选择<a href="http://git.oschina.net/"><code>开源中国</code></a>、<a href="https://bitbucket.org/"><code>Bitbucket</code></a>以及<a href="https://code.csdn.net/"><code>CSDN</code></a></p>
+
+<p>创建完成之后在<code>Terminal</code>中执行如下命令
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> <span class="c"># pod repo add [Private Repo Name] [GitHub HTTPS clone URL]</span>
+</span><span class='line'><span class="nv">$ </span>pod repo add WTSpecs https://coding.net/wtlucky/WTSpecs.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+此时如果成功的话进入到<code>~/.cocoapods/repos</code>目录下就可以看到<code>WTSpecs</code>这个目录了。至此第一步创建私有<code>Spec Repo</code>完成。</p>
+
+<p>PS：如果有其他合作人员共同使用这个私有<code>Spec Repo</code>的话在他有对应<code>Git仓库</code>的权限的前提下执行相同的命令添加这个<code>Spec Repo</code>即可。</p>
+
+<h3>创建私有<code>Spec Repo</code></h3>
+
+<p>这个第二步没有什么好介绍的，如果是有现有的组件项目，并且在<code>Git</code>的版本管理下，那么这一步就算完成了，可以直接进行下一步了。</p>
+
+<p>如果你的组件还在你冗余庞大的项目中，需要拆分出来或者需要自己从零开始创建一个组件库，那么我建议你使用<code>Cocoapods</code>提供的一个工具将第二步与第三步结合起来做。</p>
+
+<p>现在来说一下这个工具，相关的文档介绍是<a href="http://guides.cocoapods.org/making/using-pod-lib-create">Using Pod Lib Create</a>
+就拿我创建的<code>podTestLibrary</code>为例子具体讲一下这里是如何操作的，先<code>cd</code>到要创建项目的目录然后执行
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib create podTestLibrary
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+之后他会问你四个问题，1.是否需要一个例子工程；2.选择一个测试框架；3.是否基于View测试；4.类的前缀；4个问题的具体介绍可以去看官方文档，我这里选择的是1.yes；2.Specta/Expecta；3.yes；4.PTL。
+问完这4个问题他会自动执行<code>pod install</code>命令创建项目并生成依赖。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tree PodTestLibrary -L 2
+</span><span class='line'>PodTestLibrary
+</span><span class='line'>├── Example                                    <span class="c">#demo APP</span>
+</span><span class='line'>│   ├── PodTestLibrary
+</span><span class='line'>│   ├── PodTestLibrary.xcodeproj
+</span><span class='line'>│   ├── PodTestLibrary.xcworkspace
+</span><span class='line'>│   ├── Podfile                                <span class="c">#demo APP 的依赖描述文件</span>
+</span><span class='line'>│   ├── Podfile.lock
+</span><span class='line'>│   ├── Pods                                <span class="c">#demo APP 的依赖文件</span>
+</span><span class='line'>│   └── Tests
+</span><span class='line'>├── LICENSE                                 <span class="c">#开源协议 默认MIT</span>
+</span><span class='line'>├── Pod                                         <span class="c">#组件的目录</span>
+</span><span class='line'>│   ├── Assets                              <span class="c">#资源文件</span>
+</span><span class='line'>│   └── Classes                                <span class="c">#类文件</span>
+</span><span class='line'>├── PodTestLibrary.podspec             <span class="c">#第三步要创建的podspec文件</span>
+</span><span class='line'>└── README.md                              <span class="c">#markdown格式的README&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;9 directories, 5 files
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+以上是项目生成的目录结构及相关介绍。</p>
+
+<p>接下来就是向<code>Pod</code>文件夹中添加库文件和资源，并配置<code>podspec</code>文件，我把一个网络模块的共有组件放入<code>Pod/Classes</code>中，然后进入<code>Example</code>文件夹执行<code>pod update</code>命令，再打开项目工程可以看到，刚刚添加的组件已经在<code>Pods</code>子工程下<code>Development Pods/PodTestLibrary</code>中了，然后编辑demo工程，测试组件，我并没有使用提供的测试框架进行测试，这里就先不介绍了。</p>
+
+<p><em>注：</em>这里需要注意的是每当你向<code>Pod</code>中添加了新的文件或者以后更新了<code>podspec</code>的版本都需要重新执行一遍<code>pod update</code>命令。</p>
+
+<p>测试无误后需要将该项目添加并推送到远端仓库，并编辑<code>podspec</code>文件。</p>
+
+<p>通过<code>Cocoapods</code>创建出来的目录本身就在本地的<code>Git</code>管理下，我们需要做的就是给它添加远端仓库，同样去<code>GitHub</code>或其他的<code>Git</code>服务提供商那里创建一个私有的仓库，拿到<code>SSH</code>地址，然后<code>cd</code>到<code>PodTestLibrary</code>目录</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git add .
+</span><span class='line'><span class="nv">$ </span>git commit -s -m <span class="s2">&quot;Initial Commit of Library&quot;</span>
+</span><span class='line'><span class="nv">$ </span>git remote add origin git@coding.net:wtlucky/podTestLibrary.git           <span class="c">#添加远端仓库</span>
+</span><span class='line'><span class="nv">$ </span>git push origin master     <span class="c">#提交到远端仓库</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>因为<code>podspec</code>文件中获取<code>Git</code>版本控制的项目还需要<code>tag</code>号，所以我们要打上一个<code>tag</code>，</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git tag -m <span class="s2">&quot;first release&quot;</span> <span class="s2">&quot;0.1.0&quot;</span>
+</span><span class='line'><span class="nv">$ </span>git push --tags     <span class="c">#推送tag到远端仓库</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>做完这些就可以开始编辑<code>podspec</code>文件了，它是一个<code>Ruby</code>的文件，把编辑器的格式改成<code>Ruby</code>就能看到语法高亮，下面我贴上我的<code>podspec</code>文件，并在后面以注释的形式说明每个字段的含义，没有涉及到的字段可以去<a href="http://guides.cocoapods.org/syntax/podspec.html">官方文档</a>查阅</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;Pod::Spec.new do |s|</span>
+</span><span class='line'><span class="sr">  s.name             = &quot;PodTestLibrary&quot;    #名称</span>
+</span><span class='line'><span class="sr">  s.version          = &quot;0.1.0&quot;             #版本号</span>
+</span><span class='line'><span class="sr">  s.summary          = &quot;Just Testing.&quot;     #简短介绍，下面是详细介绍</span>
+</span><span class='line'><span class="sr">  s.description      = &amp;lt;&amp;lt;-DESC&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                   <span class="no">Testing</span> <span class="no">Private</span> <span class="no">Podspec</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'>                   <span class="o">*</span> <span class="no">Markdown</span> <span class="nb">format</span><span class="o">.</span>
+</span><span class='line'>                   <span class="o">*</span> <span class="no">Don</span><span class="s1">&#39;t worry about the indent, we strip it!</span>
+</span><span class='line'><span class="s1">                   DESC</span>
+</span><span class='line'><span class="s1">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s1">&lt;p&gt;  s.homepage         = &quot;https://coding.net/u/wtlucky/p/podTestLibrary&quot;                           #主页,这里要填写可以访问到的地址，不然验证不通过</span>
+</span><span class='line'><span class="s1">  # s.screenshots     = &quot;www.example.com/screenshots_1&quot;, &quot;www.example.com/screenshots_2&quot;           #截图</span>
+</span><span class='line'><span class="s1">  s.license          = &#39;</span><span class="no">MIT</span><span class="s1">&#39;              #开源协议</span>
+</span><span class='line'><span class="s1">  s.author           = { &quot;wtlucky&quot; =&gt; &quot;wtlucky@foxmail.com&quot; }                   #作者信息</span>
+</span><span class='line'><span class="s1">  s.source           = { :git =&gt; &quot;https://coding.net/wtlucky/podTestLibrary.git&quot;, :tag =&gt; &quot;0.1.0&quot; }      #项目地址，这里不支持ssh的地址，验证不通过，只支持HTTP和HTTPS，最好使用HTTPS</span>
+</span><span class='line'><span class="s1">  # s.social_media_url = &#39;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">twitter</span><span class="o">.</span><span class="n">com</span><span class="o">/&lt;</span><span class="no">TWITTER_USERNAME</span><span class="o">&gt;</span><span class="s1">&#39;                       #多媒体介绍地址&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s1">&lt;p&gt;  s.platform     = :ios, &#39;</span><span class="mi">7</span><span class="o">.</span><span class="mi">0</span><span class="s1">&#39;            #支持的平台及版本</span>
+</span><span class='line'><span class="s1">  s.requires_arc = true                   #是否使用ARC，如果指定具体文件，则具体的问题使用ARC&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s1">&lt;p&gt;  s.source_files = &#39;</span><span class="no">Pod</span><span class="o">/</span><span class="no">Classes</span><span class="o">/&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="sr">/*&#39;     #代码源文件地址，&lt;/s</span><span class="n">trong</span><span class="o">&gt;</span><span class="sr">/*表示Classes目录及其子目录下所有文件，如果有多个目录下则用逗号分开，如果需要在项目中分组显示，这里也要做相应的设置</span>
+</span><span class='line'><span class="sr">  s.resource_bundles = {&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="s1">&#39;PodTestLibrary&#39;</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="o">[</span><span class="s1">&#39;Pod/Assets/*.png&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="p">}</span>                                       <span class="c1">#资源文件地址&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="n">s</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s1">&#39;Pod/Classes/&lt;em&gt;*/&lt;/em&gt;.h&#39;</span>   <span class="c1">#公开头文件地址</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">=</span> <span class="s1">&#39;UIKit&#39;</span>                  <span class="c1">#所需的framework，多个用逗号隔开</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">dependency</span> <span class="s1">&#39;AFNetworking&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 2.3&#39;</span>   <span class="c1">#依赖关系，该项目所依赖的其他库，如果有多个需要填写多个s.dependency</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>编辑完<code>podspec</code>文件后，需要验证一下这个文件是否可用，如果有任何<code>WARNING</code>或者<code>ERROR</code>都是不可以的，它就不能被添加到<code>Spec Repo</code>中，不过<code>xcode</code>的<code>WARNING</code>是可以存在的，验证需要执行一下命令
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+当你看到
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> -&gt; PodTestLibrary <span class="o">(</span>0.1.0<span class="o">)</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PodTestLibrary passed validation.
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+时，说明验证通过了，不过这只是这个<code>podspec</code>文件是合格的，不一定说明这个<code>Pod</code>是可以用的，我们需要在本地做一下验证，这就是第四步的内容了，第四步在具体说明。</p>
+
+<h3>创建<code>podspec</code>文件</h3>
+
+<p>如果从第二步过来，已经有了现成的项目，那么就需要给这个项目创建一个<code>podspec</code>文件，创建它需要执行<code>Cocoapods</code>的另外一个命令，<a href="http://guides.cocoapods.org/making/specs-and-specs-repo.html">官方文档</a>在这里
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod spec create PodTestLibrary git@coding.net:wtlucky/podTestLibrary.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+执行完之后，就创建了一个<code>podspec</code>文件，他其中会包含很多内容，可以按照我之前介绍的进行编辑，没用的删掉。编辑完成之后使用验证命令验证一下
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+验证无误就可以进入下一步了。</p>
+
+<h3>本地测试<code>podspec</code>文件</h3>
+
+<p>我们可以创建一个新的项目，在这个项目的<code>Podfile</code>文件中直接指定刚才创建编辑好的<code>podspec</code>文件，看是否可用。
+在<code>Podfile</code>中我们可以这样编辑，有两种方式</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;pod &#39;PodTestLibrary&#39;, :path =&gt; &#39;~/</span><span class="n">code</span><span class="o">/</span><span class="no">Cocoapods</span><span class="o">/</span><span class="n">podTest</span><span class="o">/</span><span class="no">PodTestLibrary</span><span class="s1">&#39;      #指定路径</span>
+</span><span class='line'><span class="s1">pod &#39;</span><span class="no">PodTestLibrary</span><span class="s1">&#39;, :podspec =&gt; &#39;</span><span class="o">~</span><span class="sr">/code/</span><span class="no">Cocoapods</span><span class="o">/</span><span class="n">podTest</span><span class="o">/</span><span class="no">PodTestLibrary</span><span class="o">/</span><span class="no">PodTestLibrary</span><span class="o">.</span><span class="n">podspec</span><span class="err">&#39;</span>  <span class="c1">#指定podspec文件</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>然后执行<code>pod install</code>命令安装依赖，打开项目工程，可以看到库文件都被加载到<code>Pods</code>子项目中了，不过它们并没有在<code>Pods</code>目录下，而是跟测试项目一样存在于<code>Development Pods/PodTestLibrary</code>中，这是因为我们是在本地测试，而没有把<code>podspec</code>文件添加到<code>Spec Repo</code>中的缘故。</p>
+
+<p>在项目中编写代码，测试库文件无误后就可以开始下一步了，提交<code>podspec</code>到<code>Spec Repo</code>中。</p>
+
+<h3>向<code>Spec Repo</code>提交<code>podspec</code></h3>
+
+<p>向<code>Spec Repo</code>提交<code>podspec</code>需要完成两点一个是<code>podspec</code>必须通过验证无误，在一个就是删掉无用的注释（这个不是必须的，为了规范还是删掉吧）。
+向我们的私有<code>Spec Repo</code>提交<code>podspec</code>只需要一个命令
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec  <span class="c">#前面是本地Repo名字 后面是podspec名字</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+完成之后这个组件库就添加到我们的私有<code>Spec Repo</code>中了，可以进入到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>.
+</span><span class='line'>├── LICENSE
+</span><span class='line'>├── PodTestLibrary
+</span><span class='line'>│   └── 0.1.0
+</span><span class='line'>│       └── PodTestLibrary.podspec
+</span><span class='line'>└── README.md
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+再去看我们的<code>Spec Repo</code>远端仓库，也有了一次提交，这个<code>podspec</code>也已经被<code>Push</code>上去了。</p>
+
+<p>至此，我们的这个组件库就已经制作添加完成了，使用<code>pod search</code>命令就可以查到我们自己的库了
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod search PodTestLibrary&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;-&gt; PodTestLibrary <span class="o">(</span>0.1.0<span class="o">)</span>
+</span><span class='line'>   Just Testing.
+</span><span class='line'>   pod <span class="s1">&#39;PodTestLibrary&#39;</span>, <span class="s1">&#39;~&gt; 0.1.0&#39;</span>
+</span><span class='line'>   - Homepage: https://coding.net/u/wtlucky/p/podTestLibrary
+</span><span class='line'>   - Source:   https://coding.net/wtlucky/podTestLibrary.git
+</span><span class='line'>   - Versions: 0.1.0 <span class="o">[</span>WTSpecs repo<span class="o">]</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这里说的是添加到私有的<code>Repo</code>，如果要添加到<code>Cocoapods</code>的官方库了，可以使用<code>trunk</code>工具，具体可以查看<a href="http://guides.cocoapods.org/making/getting-setup-with-trunk.html">官方文档</a></p>
+
+<h3>使用制作好的<code>Pod</code></h3>
+
+<p>在完成这一系列步骤之后，我们就可以在正式项目中使用这个私有的<code>Pod</code>了只需要在项目的<code>Podfile</code>里增加以下一行代码即可
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.1.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+然后执行<code>pod update</code>，更新库依赖，然后打卡项目可以看到，我们自己的库文件已经出现在<code>Pods</code>子项目中的<code>Pods</code>子目录下了，而不再是<code>Development Pods</code>。</p>
+
+<h3>更新维护<code>podspec</code></h3>
+
+<p>最后再来说一下制作好的<code>podspec</code>文件后续的更新维护工作，比如如何添加新的版本，如何删除<code>Pod</code>。</p>
+
+<p>我已经制作好了<code>PodTestLibrary</code>的<code>0.1.0</code>版本，现在我对他进行升级工作，这次我添加了更多的模块到<code>PodTestLibrary</code>之中，包括工具类，底层<code>Model</code>及<code>UIKit</code>扩展等，这里又尝试了一下<code>subspec</code>功能，给<code>PodTestLibrary</code>创建了多个子分支。</p>
+
+<p>具体做法是先将源文件添加到<code>Pod/Classes</code>中，然后按照不同的模块对文件目录进行整理，因为我有四个模块，所以在<code>Pod/Classes</code>下有创建了四个子目录，完成之后继续编辑之前的<code>PodTestLibrary.podspec</code>，这次增加了<code>subspec</code>特性
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Pod</span><span class="p">:</span><span class="ss">:Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">name</span>             <span class="o">=</span> <span class="s2">&quot;PodTestLibrary&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">version</span>          <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">summary</span>          <span class="o">=</span> <span class="s2">&quot;Just Testing.&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">description</span>      <span class="o">=</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">-</span><span class="no">DESC</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;                   Testing Private Podspec.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">                   * Markdown format.</span>
+</span><span class='line'><span class="sr">                   * Don&#39;t worry about the indent, we strip it!</span>
+</span><span class='line'><span class="sr">                   DESC</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  s.homepage         = &quot;https:/</span><span class="o">/</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">u</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="nb">p</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  # s.screenshots     = &quot;</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">screenshots_1</span><span class="s2">&quot;, &quot;</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">screenshots_2</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  s.license          = &#39;MIT&#39;</span>
+</span><span class='line'><span class="s2">  s.author           = { &quot;</span><span class="n">wtlucky</span><span class="s2">&quot; =&gt; &quot;</span><span class="n">wtlucky</span><span class="vi">@foxmail</span><span class="o">.</span><span class="n">com</span><span class="s2">&quot; }</span>
+</span><span class='line'><span class="s2">  s.source           = { :git =&gt; &quot;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">.</span><span class="n">git</span><span class="s2">&quot;, :tag =&gt; &quot;</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="s2">&quot; }</span>
+</span><span class='line'><span class="s2">  # s.social_media_url = &#39;https://twitter.com/&lt;TWITTER_USERNAME&gt;&#39;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  s.platform     = :ios, &#39;7.0&#39;</span>
+</span><span class='line'><span class="s2">  s.requires_arc = true&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  #s.source_files = &#39;Pod/Classes/&lt;strong&gt;/&lt;em&gt;&#39;</span>
+</span><span class='line'><span class="s2">  #s.resource_bundles = {</span>
+</span><span class='line'><span class="s2">  #  &#39;PodTestLibrary&#39; =&gt; [&#39;Pod/Assets/&lt;/em&gt;.png&#39;]</span>
+</span><span class='line'><span class="s2">  #}</span>
+</span><span class='line'><span class="s2">  #s.public_header_files = &#39;Pod/Classes/&lt;/strong&gt;/*.h&#39;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  s.subspec &#39;NetWorkEngine&#39; do |networkEngine|&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;  networkEngine.source_files = &#39;Pod/Classes/NetworkEngine/**/*&#39;</span>
+</span><span class='line'><span class="s2">  networkEngine.public_header_files = &#39;Pod/Classes/NetworkEngine/**/*.h&#39;</span>
+</span><span class='line'><span class="s2">  networkEngine.dependency &#39;AFNetworking&#39;, &#39;~&amp;gt; 2.3&#39;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  end&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  s.subspec &#39;DataModel&#39; do |dataModel|&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;  dataModel.source_files = &#39;Pod/Classes/DataModel/**/*&#39;</span>
+</span><span class='line'><span class="s2">  dataModel.public_header_files = &#39;Pod/Classes/DataModel/**/*.h&#39;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  end&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  s.subspec &#39;CommonTools&#39; do |commonTools|&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;  commonTools.source_files = &#39;Pod/Classes/CommonTools/**/*&#39;</span>
+</span><span class='line'><span class="s2">  commonTools.public_header_files = &#39;Pod/Classes/CommonTools/**/*.h&#39;</span>
+</span><span class='line'><span class="s2">  commonTools.dependency &#39;OpenUDID&#39;, &#39;~&amp;gt; 1.0.0&#39;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  end&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  s.subspec &#39;UIKitAddition&#39; do |ui|&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;  ui.source_files = &#39;Pod/Classes/UIKitAddition/**/*&#39;</span>
+</span><span class='line'><span class="s2">  ui.public_header_files = &#39;Pod/Classes/UIKitAddition/**/*.h&#39;</span>
+</span><span class='line'><span class="s2">  ui.resource = &quot;</span><span class="no">Pod</span><span class="o">/</span><span class="no">Assets</span><span class="o">/</span><span class="no">MLSUIKitResource</span><span class="o">.</span><span class="n">bundle</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  ui.dependency &#39;PodTestLibrary/CommonTools&#39;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  end&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;  s.frameworks = &#39;UIKit&#39;</span>
+</span><span class='line'><span class="s2">  #s.dependency &#39;AFNetworking&#39;, &#39;~&gt; 2.3&#39;</span>
+</span><span class='line'><span class="s2">  #s.dependency &#39;OpenUDID&#39;, &#39;~&gt; 1.0.0&#39;</span>
+</span><span class='line'><span class="s2">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>因为我们创建了<code>subspec</code>所以项目整体的依赖<code>dependency</code>，源文件<code>source_files</code>，头文件<code>public_header_files</code>，资源文件<code>resource</code>等都移动到了各自的<code>subspec</code>中，每个<code>subspec</code>之间也可以有相互的依赖关系，比如<code>UIKitAddition</code>就依赖于<code>CommonTools</code>。</p>
+
+<p>编辑完成之后，在测试项目里<code>pod update</code>一下，几个子项目都被加进项目工程了，写代码验证无误之后，就可以将这个工程<code>push</code>到远端仓库，并打上新的<code>tag</code>-><code>1.0.0</code>。</p>
+
+<p>最后再次使用<code>pod lib lint</code>验证编辑好的<code>podsepc</code>文件，没有自身的<code>WARNING</code>或者<code>ERROR</code>之后，就可以再次提交到<code>Spec Repo</code>中了，命令跟之前是一样的
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+之后再次到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>.
+</span><span class='line'>├── LICENSE
+</span><span class='line'>├── PodTestLibrary
+</span><span class='line'>│   ├── 0.1.0
+</span><span class='line'>│   │   └── PodTestLibrary.podspec
+</span><span class='line'>│   └── 1.0.0
+</span><span class='line'>│       └── PodTestLibrary.podspec
+</span><span class='line'>└── README.md&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;3 directories, 4 files
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+已经有两个版本了，使用<code>pod search</code>查找得到的结果为
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod search PodTestLibrary&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;-&gt; PodTestLibrary <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'>   Just Testing.
+</span><span class='line'>   pod <span class="s1">&#39;PodTestLibrary&#39;</span>, <span class="s1">&#39;~&gt; 1.0.0&#39;</span>
+</span><span class='line'>   - Homepage: https://coding.net/u/wtlucky/p/podTestLibrary
+</span><span class='line'>   - Source:   https://coding.net/wtlucky/podTestLibrary.git
+</span><span class='line'>   - Versions: 1.0.0, 0.1.0 <span class="o">[</span>WTSpecs repo<span class="o">]</span>
+</span><span class='line'>   - Sub specs:&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt; - PodTestLibrary/NetWorkEngine <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'> - PodTestLibrary/DataModel <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'> - PodTestLibrary/CommonTools <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'> - PodTestLibrary/UIKitAddition <span class="o">(</span>1.0.0<span class="o">)</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>完成这些之后，在实际项目中我们就可以选择使用整个组件库或者是组件库的某一个部分了，对应的<code>Podfile</code>中添加的内容为
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;pod &#39;PodTestLibrary/</span><span class="no">NetWorkEngine</span><span class="s1">&#39;, &#39;</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="s1">&#39;  #使用某一个部分</span>
+</span><span class='line'><span class="s1">pod &#39;</span><span class="no">PodTestLibrary</span><span class="o">/</span><span class="no">UIKitAddition</span><span class="s1">&#39;, &#39;</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="s1">&#39;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s1">&lt;p&gt;pod &#39;</span><span class="no">PodTestLibrary</span><span class="s1">&#39;, &#39;</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="err">&#39;</span>   <span class="c1">#使用整个库</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>最后介绍一下如何删除一个私有<code>Spec Repo</code>，只需要执行一条命令即可
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo remove WTSpecs
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+这样这个<code>Spec Repo</code>就在本地删除了，我们还可以通过
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo add WTSpecs git@coding.net:wtlucky/WTSpecs.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+再把它给加回来。</p>
+
+<p>如果我们要删除私有<code>Spec Repo</code>下的某一个<code>podspec</code>怎么操作呢，此时无需借助<code>Cocoapods</code>，只需要<code>cd</code>到<code>~/.cocoapods/repos/WTSpecs</code>目录下，删掉库目录
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>rm -Rf PodTestLibrary
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+然后在将<code>Git</code>的变动<code>push</code>到远端仓库即可
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git add --all .
+</span><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git ci -m <span class="s2">&quot;remove unuseful pods&quot;</span>
+</span><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git push origin master
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>参考资料</h2>
+
+<blockquote><p><a href="http://guides.cocoapods.org/making/private-cocoapods.html">Private Pods</a></p>
+
+<p><a href="http://blog.grio.com/2014/11/creating-a-private-cocoapod.html">Creating a Private CocoaPod</a></p>
+
+<p><a href="http://www.objectpartners.com/2014/06/25/developing-private-in-house-libraries-with-cocoapods/">Developing Private In-House Libraries with CocoaPods</a></p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[一个特殊的iPhone6 Plus适配问题]]></title>
@@ -1024,915 +1605,6 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如此一来，在使用时就相当方便了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[为Xcode添加生成注释服务]]></title>
-    <link href="http://blog.wtlucky.com/blog/2013/03/04/generate-commentate-with-xcode/"/>
-    <updated>2013-03-04T13:05:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2013/03/04/generate-commentate-with-xcode</id>
-    <content type="html"><![CDATA[<p><code>Xcode</code>不得不说，很好用的一款<code>IDE</code>，他集成了很多功能，但惟独没有发现为一个方法添加注释的功能。尤其是在当有大量的方法需要添加注释，而且注释的格式还要统一的时候，真的让人头疼。
-在<code>Xcode 3.2</code>版本的时候，还可以找到<code>appledoc</code>插件，很方便的生成注释。但是到了<code>Xcode 4.0</code>以上的版本就找不到这个功能，虽然<code>appledoc</code>仍然可以用，但是需要使用命令行，而且生成的是<code>html</code>文件。就没有再仔细研究，继续寻找更简便的方法。
-最终找到一位大神写的一段<code>ruby</code>脚本，使用它为系统添加了一项服务，使用此可以很方便为指定的方法生成指定格式的注释。
-不过，测试发现这段<code>ruby</code>脚本还是有一点点问题的，在生成注释后会把当前生成注释的方法的声明删掉。我只好凭着多年的编程经验对这段脚本进行了一点修改（第一次接触到<code>ruby</code>代码。o(╯□╰)o），现在已经很好使用了，基本上没有啥问题了。分享给大家。</p>
-
-<p>先展示个效果：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">/&lt;</span><span class="n">em</span><span class="o">&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>  <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">Description</span><span class="err">#</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="n">param</span>  <span class="n">application</span>     <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">application</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="n">param</span>  <span class="n">launchOptions</span>   <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">launchOptions</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>
-</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="k">return</span> <span class="n">value</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/</span>
-</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">application</span>
-</span><span class='line'><span class="nl">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<!--More -->
-
-
-<h3>如何安装使用</h3>
-
-<p>所需文件：<a href="http://wtlucky.github.com/geekerprobe/downloads/XcodeAddCommentate.zip">下载</a>
-1. ruby脚本 <code>Doxygen.rb</code>原始的 <code>DoxygenNew.rb</code>我修改的
-2. 添加服务的应用程序 <code>ThisService.app</code></p>
-
-<p>首先打开<code>ThisService.app</code>，加载<code>DoxygenNew.rb</code>
-<img src="http://ww4.sinaimg.cn/large/8ded26aejw1e2dppl3txtj.jpg"></p>
-
-<p>可以通过<code>Add option</code>增加一些自定义设置，这里只添加了应用程序filter，添加的该服务只有<code>Xcode</code>能使用</p>
-
-<p>点<code>Test Service</code>测试服务，可以粘过一些代码过来测试。
-<img src="http://ww3.sinaimg.cn/bmiddle/8ded26aejw1e2dpwj5pk9j.jpg"></p>
-
-<p>测试无误后，添加服务就好了。</p>
-
-<p>然后就可以在<code>Xcode</code>的服务里找到添加的这个服务了。
-<img src="http://ww2.sinaimg.cn/bmiddle/8ded26aejw1e2dpzqi9jhj.jpg"></p>
-
-<p>为了方便使用再为这个服务设置一个快捷键，往后在使用时，只需要选中要生成注释的方法名，按下快捷键，注释就会自动给生成了。</p>
-
-<p>最后贴上我改过的<code>ruby</code>代码，希望大家根据自己的需要再进行编辑，拿出来与大家分享。
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (DoxygenNew.rb)</span> <a href='/downloads/code/ruby/DoxygenNew.rb'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-<span class='line-number'>114</span>
-<span class='line-number'>115</span>
-<span class='line-number'>116</span>
-<span class='line-number'>117</span>
-<span class='line-number'>118</span>
-<span class='line-number'>119</span>
-<span class='line-number'>120</span>
-<span class='line-number'>121</span>
-<span class='line-number'>122</span>
-<span class='line-number'>123</span>
-<span class='line-number'>124</span>
-<span class='line-number'>125</span>
-<span class='line-number'>126</span>
-<span class='line-number'>127</span>
-<span class='line-number'>128</span>
-<span class='line-number'>129</span>
-<span class='line-number'>130</span>
-<span class='line-number'>131</span>
-<span class='line-number'>132</span>
-<span class='line-number'>133</span>
-<span class='line-number'>134</span>
-<span class='line-number'>135</span>
-<span class='line-number'>136</span>
-<span class='line-number'>137</span>
-<span class='line-number'>138</span>
-<span class='line-number'>139</span>
-<span class='line-number'>140</span>
-<span class='line-number'>141</span>
-<span class='line-number'>142</span>
-<span class='line-number'>143</span>
-<span class='line-number'>144</span>
-<span class='line-number'>145</span>
-<span class='line-number'>146</span>
-<span class='line-number'>147</span>
-<span class='line-number'>148</span>
-<span class='line-number'>149</span>
-<span class='line-number'>150</span>
-<span class='line-number'>151</span>
-<span class='line-number'>152</span>
-<span class='line-number'>153</span>
-<span class='line-number'>154</span>
-<span class='line-number'>155</span>
-<span class='line-number'>156</span>
-<span class='line-number'>157</span>
-<span class='line-number'>158</span>
-<span class='line-number'>159</span>
-<span class='line-number'>160</span>
-<span class='line-number'>161</span>
-<span class='line-number'>162</span>
-<span class='line-number'>163</span>
-<span class='line-number'>164</span>
-<span class='line-number'>165</span>
-<span class='line-number'>166</span>
-<span class='line-number'>167</span>
-<span class='line-number'>168</span>
-<span class='line-number'>169</span>
-<span class='line-number'>170</span>
-<span class='line-number'>171</span>
-<span class='line-number'>172</span>
-<span class='line-number'>173</span>
-<span class='line-number'>174</span>
-<span class='line-number'>175</span>
-<span class='line-number'>176</span>
-<span class='line-number'>177</span>
-<span class='line-number'>178</span>
-<span class='line-number'>179</span>
-<span class='line-number'>180</span>
-<span class='line-number'>181</span>
-<span class='line-number'>182</span>
-<span class='line-number'>183</span>
-<span class='line-number'>184</span>
-<span class='line-number'>185</span>
-<span class='line-number'>186</span>
-<span class='line-number'>187</span>
-<span class='line-number'>188</span>
-<span class='line-number'>189</span>
-<span class='line-number'>190</span>
-<span class='line-number'>191</span>
-<span class='line-number'>192</span>
-<span class='line-number'>193</span>
-<span class='line-number'>194</span>
-<span class='line-number'>195</span>
-<span class='line-number'>196</span>
-<span class='line-number'>197</span>
-<span class='line-number'>198</span>
-<span class='line-number'>199</span>
-<span class='line-number'>200</span>
-<span class='line-number'>201</span>
-<span class='line-number'>202</span>
-<span class='line-number'>203</span>
-<span class='line-number'>204</span>
-<span class='line-number'>205</span>
-<span class='line-number'>206</span>
-<span class='line-number'>207</span>
-<span class='line-number'>208</span>
-<span class='line-number'>209</span>
-<span class='line-number'>210</span>
-<span class='line-number'>211</span>
-<span class='line-number'>212</span>
-<span class='line-number'>213</span>
-<span class='line-number'>214</span>
-<span class='line-number'>215</span>
-<span class='line-number'>216</span>
-<span class='line-number'>217</span>
-<span class='line-number'>218</span>
-<span class='line-number'>219</span>
-<span class='line-number'>220</span>
-<span class='line-number'>221</span>
-<span class='line-number'>222</span>
-<span class='line-number'>223</span>
-<span class='line-number'>224</span>
-<span class='line-number'>225</span>
-<span class='line-number'>226</span>
-<span class='line-number'>227</span>
-<span class='line-number'>228</span>
-<span class='line-number'>229</span>
-<span class='line-number'>230</span>
-<span class='line-number'>231</span>
-<span class='line-number'>232</span>
-<span class='line-number'>233</span>
-<span class='line-number'>234</span>
-<span class='line-number'>235</span>
-<span class='line-number'>236</span>
-<span class='line-number'>237</span>
-<span class='line-number'>238</span>
-<span class='line-number'>239</span>
-<span class='line-number'>240</span>
-<span class='line-number'>241</span>
-<span class='line-number'>242</span>
-<span class='line-number'>243</span>
-<span class='line-number'>244</span>
-<span class='line-number'>245</span>
-<span class='line-number'>246</span>
-<span class='line-number'>247</span>
-<span class='line-number'>248</span>
-<span class='line-number'>249</span>
-<span class='line-number'>250</span>
-<span class='line-number'>251</span>
-<span class='line-number'>252</span>
-<span class='line-number'>253</span>
-<span class='line-number'>254</span>
-<span class='line-number'>255</span>
-<span class='line-number'>256</span>
-<span class='line-number'>257</span>
-<span class='line-number'>258</span>
-<span class='line-number'>259</span>
-<span class='line-number'>260</span>
-<span class='line-number'>261</span>
-<span class='line-number'>262</span>
-<span class='line-number'>263</span>
-<span class='line-number'>264</span>
-<span class='line-number'>265</span>
-<span class='line-number'>266</span>
-<span class='line-number'>267</span>
-<span class='line-number'>268</span>
-<span class='line-number'>269</span>
-<span class='line-number'>270</span>
-<span class='line-number'>271</span>
-<span class='line-number'>272</span>
-<span class='line-number'>273</span>
-<span class='line-number'>274</span>
-<span class='line-number'>275</span>
-<span class='line-number'>276</span>
-<span class='line-number'>277</span>
-<span class='line-number'>278</span>
-<span class='line-number'>279</span>
-<span class='line-number'>280</span>
-<span class='line-number'>281</span>
-<span class='line-number'>282</span>
-<span class='line-number'>283</span>
-<span class='line-number'>284</span>
-<span class='line-number'>285</span>
-<span class='line-number'>286</span>
-<span class='line-number'>287</span>
-<span class='line-number'>288</span>
-<span class='line-number'>289</span>
-<span class='line-number'>290</span>
-<span class='line-number'>291</span>
-<span class='line-number'>292</span>
-<span class='line-number'>293</span>
-<span class='line-number'>294</span>
-<span class='line-number'>295</span>
-<span class='line-number'>296</span>
-<span class='line-number'>297</span>
-<span class='line-number'>298</span>
-<span class='line-number'>299</span>
-<span class='line-number'>300</span>
-<span class='line-number'>301</span>
-<span class='line-number'>302</span>
-<span class='line-number'>303</span>
-<span class='line-number'>304</span>
-<span class='line-number'>305</span>
-<span class='line-number'>306</span>
-<span class='line-number'>307</span>
-<span class='line-number'>308</span>
-<span class='line-number'>309</span>
-<span class='line-number'>310</span>
-<span class='line-number'>311</span>
-<span class='line-number'>312</span>
-<span class='line-number'>313</span>
-<span class='line-number'>314</span>
-<span class='line-number'>315</span>
-<span class='line-number'>316</span>
-<span class='line-number'>317</span>
-<span class='line-number'>318</span>
-<span class='line-number'>319</span>
-<span class='line-number'>320</span>
-<span class='line-number'>321</span>
-<span class='line-number'>322</span>
-<span class='line-number'>323</span>
-<span class='line-number'>324</span>
-<span class='line-number'>325</span>
-<span class='line-number'>326</span>
-<span class='line-number'>327</span>
-<span class='line-number'>328</span>
-<span class='line-number'>329</span>
-<span class='line-number'>330</span>
-<span class='line-number'>331</span>
-<span class='line-number'>332</span>
-<span class='line-number'>333</span>
-<span class='line-number'>334</span>
-<span class='line-number'>335</span>
-<span class='line-number'>336</span>
-<span class='line-number'>337</span>
-<span class='line-number'>338</span>
-<span class='line-number'>339</span>
-<span class='line-number'>340</span>
-<span class='line-number'>341</span>
-<span class='line-number'>342</span>
-<span class='line-number'>343</span>
-<span class='line-number'>344</span>
-<span class='line-number'>345</span>
-<span class='line-number'>346</span>
-<span class='line-number'>347</span>
-<span class='line-number'>348</span>
-<span class='line-number'>349</span>
-<span class='line-number'>350</span>
-<span class='line-number'>351</span>
-<span class='line-number'>352</span>
-<span class='line-number'>353</span>
-<span class='line-number'>354</span>
-<span class='line-number'>355</span>
-<span class='line-number'>356</span>
-<span class='line-number'>357</span>
-<span class='line-number'>358</span>
-<span class='line-number'>359</span>
-<span class='line-number'>360</span>
-<span class='line-number'>361</span>
-<span class='line-number'>362</span>
-<span class='line-number'>363</span>
-<span class='line-number'>364</span>
-<span class='line-number'>365</span>
-<span class='line-number'>366</span>
-<span class='line-number'>367</span>
-<span class='line-number'>368</span>
-<span class='line-number'>369</span>
-<span class='line-number'>370</span>
-<span class='line-number'>371</span>
-<span class='line-number'>372</span>
-<span class='line-number'>373</span>
-<span class='line-number'>374</span>
-<span class='line-number'>375</span>
-<span class='line-number'>376</span>
-<span class='line-number'>377</span>
-<span class='line-number'>378</span>
-<span class='line-number'>379</span>
-<span class='line-number'>380</span>
-<span class='line-number'>381</span>
-<span class='line-number'>382</span>
-<span class='line-number'>383</span>
-<span class='line-number'>384</span>
-<span class='line-number'>385</span>
-<span class='line-number'>386</span>
-<span class='line-number'>387</span>
-<span class='line-number'>388</span>
-<span class='line-number'>389</span>
-<span class='line-number'>390</span>
-<span class='line-number'>391</span>
-<span class='line-number'>392</span>
-<span class='line-number'>393</span>
-<span class='line-number'>394</span>
-<span class='line-number'>395</span>
-<span class='line-number'>396</span>
-<span class='line-number'>397</span>
-<span class='line-number'>398</span>
-<span class='line-number'>399</span>
-<span class='line-number'>400</span>
-<span class='line-number'>401</span>
-<span class='line-number'>402</span>
-<span class='line-number'>403</span>
-<span class='line-number'>404</span>
-<span class='line-number'>405</span>
-<span class='line-number'>406</span>
-<span class='line-number'>407</span>
-<span class='line-number'>408</span>
-<span class='line-number'>409</span>
-<span class='line-number'>410</span>
-<span class='line-number'>411</span>
-<span class='line-number'>412</span>
-<span class='line-number'>413</span>
-<span class='line-number'>414</span>
-<span class='line-number'>415</span>
-<span class='line-number'>416</span>
-<span class='line-number'>417</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1">#!/usr/bin/env ruby</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#</span>
-</span><span class='line'><span class="c1"># This script helps you make doxygen comments in Obj-C/C/C++ files in XCode</span>
-</span><span class='line'><span class="c1">#</span>
-</span><span class='line'><span class="c1"># Created by Fred McCann on 03/16/2010 - and Edwin.</span>
-</span><span class='line'><span class="c1"># http://www.duckrowing.com</span>
-</span><span class='line'><span class="c1"># Adapted for ThisService by Martin Pichlmair 03/29/2011</span>
-</span><span class='line'><span class="c1"># Modified for Objectiv-c by Dake 07/22/2012</span>
-</span><span class='line'><span class="c1"># Modified by wtlucky 11/21/2012</span>
-</span><span class='line'><span class="c1"># httip://glade.tk</span>
-</span><span class='line'><span class="c1">#</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">module</span> <span class="nn">Duckrowing</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1"># Convenience class to hold name and type information</span>
-</span><span class='line'>    <span class="k">class</span> <span class="nc">Argument</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">type</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="nb">name</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'>            <span class="nb">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span>
-</span><span class='line'>            <span class="nb">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">name</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">name</span>
-</span><span class='line'>            <span class="vi">@name</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">name</span><span class="o">=</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="nb">name</span> <span class="o">!=</span> <span class="kp">nil</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^&amp;/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^\*/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\[.*$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/,$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/;$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">name</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>            <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;...&#39;</span>
-</span><span class='line'>                <span class="vi">@name</span> <span class="o">=</span> <span class="s1">&#39;vararg_list&#39;</span>
-</span><span class='line'>                <span class="k">else</span>
-</span><span class='line'>                <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">type</span>
-</span><span class='line'>            <span class="vi">@type</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">type</span><span class="o">=</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="kp">nil</span>
-</span><span class='line'>                <span class="n">type</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/&amp;$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">type</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*\*$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">type</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">type</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>            <span class="vi">@type</span> <span class="o">=</span> <span class="n">type</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1"># Base implementation of commenter</span>
-</span><span class='line'>    <span class="k">class</span> <span class="nc">BaseCommenter</span>
-</span><span class='line'>        <span class="c1"># Creates a new commenter object</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">indent</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
-</span><span class='line'>            <span class="vi">@indent</span> <span class="o">=</span> <span class="n">indent</span>
-</span><span class='line'>            <span class="vi">@code</span> <span class="o">=</span> <span class="n">code</span>
-</span><span class='line'>            <span class="vi">@arguments</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>            <span class="vi">@returns</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># Creates an opening comment</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">start_comment</span><span class="p">(</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Description&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">str</span> <span class="o">=</span> <span class="s2">&quot;/**</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>            <span class="c1">#str = &quot;#{@indent}/**\n&quot;</span>
-</span><span class='line'>            <span class="n">str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2"> *</span><span class="se">\t</span><span class="s2">&lt;#</span><span class="si">#{</span><span class="n">description</span><span class="si">}</span><span class="s2">#&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>            <span class="n">str</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">arguments_comment</span>
-</span><span class='line'>            <span class="n">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span><span class='line'>            <span class="vi">@arguments</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">arg</span><span class="o">|</span>
-</span><span class='line'>                <span class="k">if</span> <span class="n">str</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span>
-</span><span class='line'>                    <span class="n">str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2"> *</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>                <span class="k">end</span>
-</span><span class='line'>                <span class="n">str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2"> *</span><span class="se">\t</span><span class="s2">@param </span><span class="se">\t</span><span class="si">#{</span><span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2">&lt;#</span><span class="si">#{</span><span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> description#&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>            <span class="n">str</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">return_comment</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="o">!</span><span class="vi">@returns</span>
-</span><span class='line'>            <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2"> *</span><span class="se">\n</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2"> *</span><span class="se">\t</span><span class="s2">@return</span><span class="se">\t</span><span class="s2">&lt;#return value description#&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># Creates closing comment</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">end_comment</span><span class="p">()</span>
-</span><span class='line'>            <span class="c1">#&quot;#{@indent} */\n&quot;</span>
-</span><span class='line'>            <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2"> */</span><span class="se">\n</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># Convenience method to detect multiline statements</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">is_multiline?</span>
-</span><span class='line'>            <span class="vi">@code</span> <span class="o">=~</span> <span class="sr">/\n/</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># Adds inline comments to a comma delimited list</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">comment_list</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="n">base_indent</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">commented_list</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span class='line'>            <span class="n">ids</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/,/</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">ids</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">list_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>                <span class="n">list_id</span> <span class="o">+=</span> <span class="s1">&#39;,&#39;</span> <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="n">ids</span><span class="o">.</span><span class="n">last</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\=.*$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\[.*\]/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/;/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*\:\s*\d+/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">doc_id</span> <span class="o">=</span> <span class="nb">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\s/</span><span class="p">)</span><span class="o">.</span><span class="n">last</span>
-</span><span class='line'>                <span class="n">doc_id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\*/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">commented_list</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">base_indent</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="n">ids</span><span class="o">.</span><span class="n">first</span>
-</span><span class='line'>                <span class="n">commented_list</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="se">\t</span><span class="si">#{</span><span class="n">list_id</span><span class="si">}</span><span class="s2"> /**&lt; &lt;#</span><span class="si">#{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2"> description#&gt; */&quot;</span>
-</span><span class='line'>                <span class="n">commented_list</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="n">ids</span><span class="o">.</span><span class="n">last</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>            <span class="n">commented_list</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># Parses a comma delimited list into an array of Argument objects</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">parse_c_style_argument_list</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">arguments</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>            <span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/,/</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">a</span><span class="o">|</span>
-</span><span class='line'>                <span class="n">arg</span> <span class="o">=</span> <span class="no">Argument</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>                <span class="n">parts</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\s+/</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">arg</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">parts</span><span class="o">.</span><span class="n">last</span>
-</span><span class='line'>                <span class="n">parts</span><span class="o">.</span><span class="n">delete_at</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">arg</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">parts</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-</span><span class='line'>                <span class="vi">@arguments</span> <span class="o">&lt;&lt;</span> <span class="n">arg</span>
-</span><span class='line'>            <span class="k">end</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># Add Xcode selection markup to first editable field</span>
-</span><span class='line'>        <span class="k">def</span> <span class="nf">select_first_field</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
-</span><span class='line'>            <span class="c1"># Add PBX selection to first field</span>
-</span><span class='line'>            <span class="n">matches</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\&lt;\#.*\#\&gt;/</span><span class="p">)</span>
-</span><span class='line'>           <span class="k">if</span> <span class="n">matches</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
-</span><span class='line'>               <span class="n">first_field</span> <span class="o">=</span> <span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span>
-</span><span class='line'>               <span class="c1"># str.gsub!(/#{first_field}/, &quot;%%%{PBXSelection}%%%#{first_field}%%%{PBXSelection}%%%&quot;)</span>
-</span><span class='line'>               <span class="n">str</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/</span><span class="si">#{</span><span class="n">first_field</span><span class="si">}</span><span class="sr">/</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">first_field</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>           <span class="n">str</span>
-</span><span class='line'>        <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="c1"># Returns a comment above the code and the original section of commented code</span>
-</span><span class='line'>   <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>       <span class="n">str</span> <span class="o">=</span> <span class="n">start_comment</span><span class="p">()</span>
-</span><span class='line'>       <span class="n">str</span> <span class="o">+=</span> <span class="n">arguments_comment</span><span class="p">()</span>
-</span><span class='line'>       <span class="n">str</span> <span class="o">+=</span> <span class="n">return_comment</span><span class="p">()</span>
-</span><span class='line'>       <span class="n">str</span> <span class="o">+=</span> <span class="n">end_comment</span><span class="p">()</span>
-</span><span class='line'>       <span class="n">str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@code</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>       <span class="c1">#print &quot;#{@code}&quot;</span>
-</span><span class='line'>       <span class="c1">#matches = @code.scan(/\n/)</span>
-</span><span class='line'>       <span class="c1">#print matches.size</span>
-</span><span class='line'>                               <span class="c1">#if matches.size &gt; 1</span>
-</span><span class='line'>                               <span class="c1">#str += &quot;#{@code}&quot;</span>
-</span><span class='line'>                               <span class="c1">#end</span>
-</span><span class='line'>       <span class="n">select_first_field</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
-</span><span class='line'>       <span class="k">end</span>
-</span><span class='line'>   <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="k">class</span> <span class="nc">VariableCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>   <span class="c1"># Adds a basic comment above individual variables and rewrites multiple</span>
-</span><span class='line'>   <span class="c1"># declaritions into an inline commented list</span>
-</span><span class='line'>   <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>   <span class="k">if</span> <span class="vi">@code</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\n/</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/^([^\{]+\,)/</span>
-</span><span class='line'>   <span class="n">commented_code</span> <span class="o">=</span> <span class="n">comment_list</span><span class="p">(</span><span class="vi">@code</span><span class="p">)</span>
-</span><span class='line'>   <span class="n">commented_code</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span><span class="vi">@indent</span><span class="p">);</span>
-</span><span class='line'>   <span class="n">select_first_field</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">commented_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>   <span class="k">else</span>
-</span><span class='line'>   <span class="k">super</span>
-</span><span class='line'>   <span class="k">end</span>
-</span><span class='line'>   <span class="k">end</span>
-</span><span class='line'>   <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="k">class</span> <span class="nc">PropertyCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>   <span class="c1"># Adds a basic comment above individual properties</span>
-</span><span class='line'>   <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="k">class</span> <span class="nc">MacroCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>   <span class="c1"># Parse out args for inclusion in comment</span>
-</span><span class='line'>   <span class="k">def</span> <span class="nf">capture_args</span>
-</span><span class='line'>   <span class="n">matches</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\(([^\(\)]*)\)/</span><span class="p">)</span>
-</span><span class='line'>   <span class="n">parse_c_style_argument_list</span><span class="p">(</span><span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span><span class="p">)</span>
-</span><span class='line'>   <span class="vi">@returns</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>   <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="c1"># Adds a basic comment above individual variables and rewrites multiple</span>
-</span><span class='line'>   <span class="c1"># declaritions into an inline commented list</span>
-</span><span class='line'>   <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>   <span class="n">capture_args</span> <span class="k">if</span> <span class="vi">@code</span> <span class="o">=~</span> <span class="sr">/\(/</span>
-</span><span class='line'>                               <span class="k">super</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="c1"># Implementation of commenter to comment C style enums</span>
-</span><span class='line'>                               <span class="k">class</span> <span class="nc">EnumCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>                               <span class="c1"># Comments identifiers in the code block</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">comment_code</span>
-</span><span class='line'>                               <span class="n">block_match</span> <span class="o">=</span> <span class="sr">/\{([^\{\}]*)\}/</span>
-</span><span class='line'>                               <span class="n">matches</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">block_match</span><span class="p">)</span>
-</span><span class='line'>                               <span class="k">return</span> <span class="k">if</span> <span class="n">matches</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">1</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="n">block</span> <span class="o">=</span> <span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span>
-</span><span class='line'>                               <span class="vi">@code</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="n">block_match</span><span class="p">,</span> <span class="s2">&quot;{</span><span class="se">\n</span><span class="si">#{</span><span class="n">comment_list</span><span class="p">(</span><span class="n">block</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2">}&quot;</span><span class="p">)</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="c1"># Comments the enum. This will write comments next to each name for a multiline</span>
-</span><span class='line'>                               <span class="c1"># statement. It will not for single line enumerations.</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>                               <span class="n">comment_code</span> <span class="k">if</span> <span class="n">is_multiline?</span>
-</span><span class='line'>                               <span class="k">super</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="c1"># Implementation of commenter to comment C style enums</span>
-</span><span class='line'>                               <span class="k">class</span> <span class="nc">StructCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>                               <span class="c1"># Comments semicolon delimited list of struct members</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">comment_struct_list</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
-</span><span class='line'>                               <span class="n">commented_list</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span class='line'>                               <span class="n">ids</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\s*$/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/;/</span><span class="p">)</span>
-</span><span class='line'>                               <span class="n">ids</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
-</span><span class='line'>                               <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/\s*$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                               <span class="nb">id</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="sr">/^\s*/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                               <span class="n">list_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">;&quot;</span>
-</span><span class='line'>                               <span class="n">base_indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
-</span><span class='line'>                               <span class="n">commented_list</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">comment_list</span><span class="p">(</span><span class="n">list_id</span><span class="p">,</span> <span class="n">base_indent</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>                               <span class="n">commented_list</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="c1"># Comments identifiers in the code block</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">comment_code</span>
-</span><span class='line'>                               <span class="n">block_match</span> <span class="o">=</span> <span class="sr">/\{([^\{\}]*)\}/</span>
-</span><span class='line'>                               <span class="n">matches</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">block_match</span><span class="p">)</span>
-</span><span class='line'>                               <span class="k">return</span> <span class="k">if</span> <span class="n">matches</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">1</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="n">block</span> <span class="o">=</span> <span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span>
-</span><span class='line'>                               <span class="vi">@code</span><span class="o">.</span><span class="n">gsub!</span><span class="p">(</span><span class="n">block_match</span><span class="p">,</span> <span class="s2">&quot;{</span><span class="se">\n</span><span class="si">#{</span><span class="n">comment_struct_list</span><span class="p">(</span><span class="n">block</span><span class="p">)</span><span class="si">}#{</span><span class="vi">@indent</span><span class="si">}</span><span class="s2">}&quot;</span><span class="p">)</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="c1"># Adds inline comments for members and a comment for the entire struct</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>                               <span class="n">comment_code</span>
-</span><span class='line'>                               <span class="k">super</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="k">class</span> <span class="nc">FunctionCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>                               <span class="c1"># Parse out args for inclusion in comment</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">capture_args</span>
-</span><span class='line'>                               <span class="n">matches</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\(([^\(\)]*)\)/</span><span class="p">)</span>
-</span><span class='line'>                               <span class="n">parse_c_style_argument_list</span><span class="p">(</span><span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span><span class="p">)</span>
-</span><span class='line'>                               <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                               <span class="c1"># Decides whether or not to add a returns tag to comment</span>
-</span><span class='line'>                               <span class="k">def</span> <span class="nf">capture_return</span>
-</span><span class='line'>                               <span class="vi">@returns</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/\(/</span><span class="p">)</span><span class="o">.</span><span class="n">first</span> <span class="o">!~</span> <span class="sr">/void/</span>
-</span><span class='line'>                                                      <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                      <span class="c1"># Adds a basic comment above individual variables and rewrites multiple</span>
-</span><span class='line'>                                                      <span class="c1"># declaritions into an inline commented list</span>
-</span><span class='line'>                                                      <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>                                                      <span class="n">capture_args</span>
-</span><span class='line'>                                                      <span class="n">capture_return</span>
-</span><span class='line'>                                                      <span class="k">super</span>
-</span><span class='line'>                                                      <span class="k">end</span>
-</span><span class='line'>                                                      <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                      <span class="k">class</span> <span class="nc">MethodCommenter</span> <span class="o">&lt;</span> <span class="no">BaseCommenter</span>
-</span><span class='line'>                                                      <span class="no">TAILMATCH</span> <span class="o">=</span> <span class="sr">/[\s*;.*]/</span>
-</span><span class='line'>
-</span><span class='line'>                                                      <span class="c1"># Find the return type</span>
-</span><span class='line'>                                                      <span class="k">def</span> <span class="nf">capture_return_type</span>
-</span><span class='line'>                                                      <span class="n">matches</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/^\s*[+-]\s*\(([^\(\)]*)\)/</span><span class="p">)</span>
-</span><span class='line'>                                                      <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="n">matches</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">1</span>
-</span><span class='line'>                                                      <span class="n">type</span> <span class="o">=</span> <span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="no">TAILMATCH</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>                                                      <span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;void&#39;</span> <span class="o">||</span> <span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;IBAction&#39;</span>
-</span><span class='line'>                                                      <span class="vi">@returns</span> <span class="o">=</span> <span class="kp">nil</span>
-</span><span class='line'>                                                      <span class="k">else</span>
-</span><span class='line'>                                                      <span class="vi">@returns</span> <span class="o">=</span> <span class="n">type</span>
-</span><span class='line'>                                                      <span class="k">end</span>
-</span><span class='line'>                                                      <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                      <span class="c1"># Parse out params</span>
-</span><span class='line'>                                                      <span class="k">def</span> <span class="nf">capture_parameters</span>
-</span><span class='line'>                                                      <span class="n">params</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>                                                      <span class="n">matches</span> <span class="o">=</span> <span class="vi">@code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\:\(([^\(]+)\)(\S+)/</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">matches</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-</span><span class='line'>                                                                           <span class="k">next</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">2</span>
-</span><span class='line'>                                                                           <span class="n">arg</span> <span class="o">=</span> <span class="no">Argument</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>                                                                           <span class="n">arg</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="no">TAILMATCH</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">arg</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">to_s</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="no">TAILMATCH</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="vi">@arguments</span> <span class="o">&lt;&lt;</span> <span class="n">arg</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="c1"># Adds a basic comment above individual variables and rewrites multiple</span>
-</span><span class='line'>                                                                           <span class="c1"># declaritions into an inline commented list</span>
-</span><span class='line'>                                                                           <span class="k">def</span> <span class="nf">document</span>
-</span><span class='line'>                                                                           <span class="n">capture_parameters</span>
-</span><span class='line'>                                                                           <span class="n">capture_return_type</span>
-</span><span class='line'>                                                                           <span class="k">super</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="k">class</span> <span class="nc">Documenter</span>
-</span><span class='line'>                                                                           <span class="k">def</span> <span class="nf">document</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="c1"># 此句刷格式缩进了</span>
-</span><span class='line'>                                                                           <span class="c1">#code.gsub!(/\s*$/, &#39;&#39;)</span>
-</span><span class='line'>                                                                           <span class="n">indent</span> <span class="o">=</span> <span class="n">base_indentation</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="kp">nil</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="k">if</span> <span class="n">is_objc_property?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">PropertyCommenter</span>
-</span><span class='line'>                                                                           <span class="k">elsif</span> <span class="n">is_objc_method?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">MethodCommenter</span>
-</span><span class='line'>                                                                           <span class="k">elsif</span> <span class="n">is_function?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">FunctionCommenter</span>
-</span><span class='line'>                                                                           <span class="k">elsif</span> <span class="n">is_macro?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">MacroCommenter</span>
-</span><span class='line'>                                                                           <span class="k">elsif</span> <span class="n">is_struct?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">StructCommenter</span>
-</span><span class='line'>                                                                           <span class="k">elsif</span> <span class="n">is_union?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">StructCommenter</span>
-</span><span class='line'>                                                                           <span class="k">elsif</span> <span class="n">is_enum?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">EnumCommenter</span>
-</span><span class='line'>                                                                           <span class="k">else</span>
-</span><span class='line'>                                                                           <span class="n">klass</span> <span class="o">=</span> <span class="no">VariableCommenter</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="c1">#puts &quot;USE --&gt; #{klass}&quot;</span>
-</span><span class='line'>                                                                           <span class="n">commenter</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">indent</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">commenter</span><span class="o">.</span><span class="n">document</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="kp">private</span>
-</span><span class='line'>                                                                           <span class="k">def</span> <span class="nf">is_objc_method?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">code</span> <span class="o">=~</span> <span class="sr">/^\s*[+-]/</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="k">def</span> <span class="nf">is_objc_property?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="n">code</span> <span class="o">=~</span> <span class="sr">/^\s*\@property/</span>
-</span><span class='line'>                                                                           <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                           <span class="k">def</span> <span class="nf">is_function?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                           <span class="o">!</span><span class="n">is_macro?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">is_objc_method?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">code</span> <span class="o">=~</span> <span class="sr">/\(/</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="k">def</span> <span class="nf">is_macro?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="n">code</span> <span class="o">=~</span> <span class="sr">/^\s*\#define/</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="k">def</span> <span class="nf">is_enum?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="n">code</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\n/</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/^\s*(\w+\s)?enum.*\{.*\}/</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="k">def</span> <span class="nf">is_struct?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="n">code</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\n/</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/^\s*(\w+\s)?struct.*\{.*\}/</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="k">def</span> <span class="nf">is_union?</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="n">code</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/\n/</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/^\s*(\w+\s)?union.*\{.*\}/</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="k">def</span> <span class="nf">base_indentation</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="n">matches</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/^(\s*)/</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="k">return</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">matches</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span>
-</span><span class='line'>                                                                                                                                    <span class="n">matches</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">to_s</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="c1"># Unicode considerations:</span>
-</span><span class='line'>                                                                                                                                    <span class="c1">#  Set $KCODE to &#39;u&#39;. This makes STDIN and STDOUT both act as containing UTF-8.</span>
-</span><span class='line'>                                                                                                                                    <span class="vg">$KCODE</span> <span class="o">=</span> <span class="s1">&#39;u&#39;</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="c1">#  Since any Ruby version before 1.9 doesn&#39;t much care for Unicode,</span>
-</span><span class='line'>                                                                                                                                    <span class="c1">#  patch in a new String#utf8_length method that returns the correct length</span>
-</span><span class='line'>                                                                                                                                    <span class="c1">#  for UTF-8 strings.</span>
-</span><span class='line'>                                                                                                                                    <span class="no">UNICODE_COMPETENT</span> <span class="o">=</span> <span class="p">((</span><span class="no">RUBY_VERSION</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">].</span><span class="n">to_f</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="mi">8</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="k">unless</span> <span class="no">UNICODE_COMPETENT</span> <span class="c1"># lower than 1.9</span>
-</span><span class='line'>                                                                                                                                    <span class="k">class</span> <span class="nc">String</span>
-</span><span class='line'>                                                                                                                                    <span class="k">def</span> <span class="nf">utf8_length</span>
-</span><span class='line'>                                                                                                                                    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>                                                                                                                                    <span class="n">i</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/(.)/</span><span class="p">)</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>                                                                                                                                    <span class="n">i</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>                                                                                                                                    <span class="k">else</span> <span class="c1"># 1.9 and above</span>
-</span><span class='line'>                                                                                                                                    <span class="k">class</span> <span class="nc">String</span>
-</span><span class='line'>                                                                                                                                    <span class="n">alias_method</span> <span class="ss">:utf8_length</span><span class="p">,</span> <span class="ss">:length</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>                                                                                                                                    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>                                                                                                                                    <span class="n">input</span> <span class="o">=</span> <span class="no">STDIN</span><span class="o">.</span><span class="n">read</span>
-</span><span class='line'>                                                                                                                                    <span class="c1"># input now contains the contents of STDIN.</span>
-</span><span class='line'>                                                                                                                                    <span class="c1"># Write your script here. </span>
-</span><span class='line'>                                                                                                                                    <span class="c1"># Be sure to print anything you want the service to output.</span>
-</span><span class='line'>                                                                                                                                    <span class="n">documenter</span> <span class="o">=</span> <span class="ss">Duckrowing</span><span class="p">:</span><span class="ss">:Documenter</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>                                                                                                                                    <span class="n">replacement</span> <span class="o">=</span> <span class="n">documenter</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
-</span><span class='line'>                                                                                                                                    <span class="nb">puts</span> <span class="n">replacement</span>
-</span><span class='line'>                                                                                                                                    <span class="c1">#print replacement</span>
-</span><span class='line'>                                                                                                                                    <span class="c1">#print input</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
