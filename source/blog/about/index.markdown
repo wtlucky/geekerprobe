@@ -6,7 +6,7 @@ footer: true
 
 
 
-{% img http://wtlucky.github.com/geekerprobe/images/mypic.jpg %}
+{% img http://blog.wtlucky.com/images/mypic.jpg %}
 
 我是王涛，一个一直在努力奋斗的IT工作者。wtlucky是我的惯用名。
 
@@ -15,6 +15,8 @@ footer: true
 
 
 我是一个`iOS`开发攻城狮，精通`objective-C`，并对互联网的新技术充满兴趣。我还有过`PHP`开发经验，服务器维护经验，数据库管理经验，开发团队管理经验。
+
+曾在`人人游戏`开发过游戏`《神兵天降》`，也算混过游戏圈，现工作于`美丽说`，负责`美丽说主站APP`的开发工作，从游戏圈转为时尚圈。
 
 
 我会一点`shell`，了解软件测试，懂`Scrum`，懂IT项目管理，懂算法。我有着很强的求知欲，渴望新的知识与新的技术。
