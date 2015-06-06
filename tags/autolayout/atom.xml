@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: AutoLayout | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/autolayout/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-03-03T17:21:40+08:00</updated>
+  <updated>2015-06-06T09:40:15+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Constraints &amp; Transformations 在iOS7和8上的不同]]></title>
+    <link href="http://blog.wtlucky.com/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/"/>
+    <updated>2015-06-06T09:03:00+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong</id>
+    <content type="html"><![CDATA[<p>使用<code>AutoLayout</code>时，在<code>iOS7</code>和<code>iOS8</code>上两者会有很大的不同，<code>iOS8</code>苹果优化了很多。最近看了一篇<code>bolg</code>，是<code>Reveal</code>的工程师写的介绍使用<code>Constraints</code>以及<code>transform</code>变幻之后在<code>iOS78</code>上的异同。<!-- More --></p>
+
+<p><a href="http://revealapp.com/blog/constraints-and-transforms.html">原文链接</a></p>
+
+<hr />
+
+<p>先贴张图说明一下问题:</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/06/autolayout1.jpg"></p>
+
+<p>可以看到<code>iOS7</code>在使用了<code>autolayout</code>之后，进行<code>transform</code>变幻之后<code>view</code>并没有达到预期效果，而在<code>iOS8</code>和和纯<code>frame</code>布局的情况下是正常的。</p>
+
+<p><code>autolayout</code>使用的是<code>Top</code>和<code>leading</code>与灰色的<code>view</code>进行约束，而<code>frame</code>是通过<code>setCenter</code>来设置位置的。</p>
+
+<p>这种错误的现象会发生在<code>iOS7</code>及以前的版本中，在<code>iOS8</code>之后得到了修复。</p>
+
+<p>通过<code>Reveal</code>查看可以看到:</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/06/autolayout2.jpg"></p>
+
+<p>使用<code>autolayout</code>的<code>view</code>跟他的参照<code>View</code>相比只移动了<code>（-10，-10）</code>,而且它的布局位置也发生了偏移<code>（10，10）</code>，在<code>iOS8</code>下查看，会发现布局位置并没有移动，跟参照<code>View</code>完全一致</p>
+
+<p><img src="http://picturemapstore.bcs.duapp.com/2015/06/autolayout3.jpg"></p>
+
+<p>由此可以得到的结论就是，在<code>iOS7</code>和<code>8</code>上使用<code>autolayout</code>布局的<code>view</code>的<code>center</code>属性的位置发生了改变。</p>
+
+<p>通过设置断点和重写<code>setFrame</code>和<code>setCenter</code>方法研究发现，在<code>iOS7</code>和<code>8</code>上<code>setFrame</code>方法都没有被<code>UIKit</code>调用到，而只有<code>setCenter</code>方法被调用。</p>
+
+<blockquote><p>“If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.”</p>
+
+<pre><code>                       ————UIView's Class Reference
+</code></pre></blockquote>
+
+<p>如果<code>transform</code>属性不是<code>identity</code>的，那么他的值就是不确定的而且应该被忽略。因此可以断定<code>setFrame</code>方法没有没调用，因而<code>view</code>的<code>transform</code>属性也就不是<code>identity</code>的，所以会出现问题。</p>
+
+<p>至于具体的<code>iOS7</code>和<code>8</code>在<code>NSISLayoutEngine</code>里面做了什么改变，可以查看<a href="http://revealapp.com/blog/constraints-and-transforms.html">博客原文</a>。</p>
+
+<p>最后说一下结论：如果我们的<code>app</code>是使用<code>iOS8</code>或者以后的<code>SDK</code>编译链接的并且还要支持<code>iOS7</code>，并在没有<code>identity</code>的<code>transform</code>的<code>view</code>上使用了<code>AutoLayout</code>。那么就应该注意一下几点：</p>
+
+<ol>
+<li>如果只使用旋转和缩放的<code>transform</code>变换，那么就要使用<code>CenterX/CenterY</code>约束，来替代<code>Top/Bottom/Left/Right/Trailing/Leading</code>约束，因为如果<code>transform</code>的<code>view</code>是通过它的<code>centre</code>布局的话，那么结果就有可能是正确的。</li>
+<li>将要变换的<code>view</code>放到一个<code>containerView</code>里，然后用约束约束<code>containerView</code>好过直接约束变换的<code>view</code>。变换的<code>view</code>可以直接用代码布局，也可以用<code>CentreX/CenterY</code>约束。但是使用等宽等高与<code>containerView</code>建立约束将不会达到预期效果</li>
+<li>不要使用<code>constraint</code>来约束这些<code>View</code>，使用<code>autosizingMask</code>，然后设置这些<code>View</code>的<code>translatesAutoresizingMaskIntoConstraints</code>为<code>YES</code>。</li>
+</ol>
+
+
+<hr />
+
+<p>PS:
+最后算是做个广告吧，<a href="http://revealapp.com/"><code>Reveal</code></a>这个工具真的是很<code>NB</code>很好用，当你使用了之后就会爱不释手。它可以查看<code>view</code>的层级关系，动态的改变<code>UI</code>属性，在最近的版本还支持对<code>autolayout</code>的支持，可以查看<code>constraints</code>已经对他们进行修改，我们做<code>iOS</code>开发的更多的是做界面开发工作，那么有了这样一个神器在手，那么必然会达到事半功倍的效果，工欲善其事，必先利其器！</p>
+
+<p><code>Reveal</code>还能做更NB的事情就是当你手机越狱后，然后你就可以查看任何<code>app</code>的视图层级关系了。就说到这里了，至于接下来怎样大家自己脑补吧。</p>
+
+<p>既然这个工具这么强大，我们还是支持一下作者吧，同为开发者，都知道这行挺不容易的还是支持下正版吧，好消息是Reveal对中国的开发者们有个特惠价格：<code>RMB249</code>就可以拿下了，<a href="http://item.taobao.com/item.htm?spm=a230r.1.14.1.kpBX7S&amp;id=45630069705&amp;ns=1&amp;abbucket=4#detail">购买地址</a>，比半价还优惠，我在知道这个消息后第一时间拿下了它，因为之前的价格确实有点贵，对我来说还是有压力的。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[一个特殊的iPhone6 Plus适配问题]]></title>
