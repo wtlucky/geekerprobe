@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2015-06-06T09:03:00+08:00" pubdate data-updated="true">Jun 6<span>th</span>, 2015</time>
+<time datetime="2015-06-06T09:03:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="#comments">Comments</a>
@@ -135,10 +135,8 @@
 
 <p>通过设置断点和重写<code>setFrame</code>和<code>setCenter</code>方法研究发现，在<code>iOS7</code>和<code>8</code>上<code>setFrame</code>方法都没有被<code>UIKit</code>调用到，而只有<code>setCenter</code>方法被调用。</p>
 
-<blockquote><p>“If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.”</p>
-
-<pre><code>                       ————UIView's Class Reference
-</code></pre></blockquote>
+<blockquote><p>“If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.”<br/>
+                           ————UIView&rsquo;s Class Reference</p></blockquote>
 
 <p>如果<code>transform</code>属性不是<code>identity</code>的，那么他的值就是不确定的而且应该被忽略。因此可以断定<code>setFrame</code>方法没有没调用，因而<code>view</code>的<code>transform</code>属性也就不是<code>identity</code>的，所以会出现问题。</p>
 
@@ -183,12 +181,12 @@
   
 
 
-<time datetime="2015-06-06T09:03:00+08:00" pubdate data-updated="true">Jun 6<span>th</span>, 2015</time>
+<time datetime="2015-06-06T09:03:00+08:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ios-development/'>iOS development</a>
+    <a class='category' href='/blog/categories/ios-development/'>ios development</a>
   
 </span>
 
@@ -264,7 +262,7 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (8)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -373,24 +371,24 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
 <a style="font-size: 115%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 <a style="font-size: 131%" href="/tags/design/">Design</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
 
   </ul>
 </section>

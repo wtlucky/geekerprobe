@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2013</time>
+<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="#comments">Comments</a>
@@ -132,8 +132,8 @@
 </ol>
 
 
-<figure class='code'><figcaption><span>rake deploy error  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>rake deploy error </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">## Pushing generated _deploy website</span>
 </span><span class='line'>Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
@@ -147,8 +147,8 @@
 
 <p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入以下命令：</p>
 
-<figure class='code'><figcaption><span>install Octopress  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>install Octopress </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -163,8 +163,8 @@
 
 <p>到此Octopress在本地已经安装完毕，但是还都是默认配置，而且没有发表博文。但是你可以通过一下命令来生成并预览一下原始的界面：</p>
 
-<figure class='code'><figcaption><span>generate and preview blog  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>generate and preview blog </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate    <span class="c">#生成blog，就是根据配置文件，将主题、模板、发表的markdown格式的博文等众多文件生成静态的html文件存放在geekerprobe/public文件夹下</span>
 </span><span class='line'>rake preview   <span class="c">#预览生成的blog，此时ruby会启动一个小型的server</span>
@@ -178,7 +178,7 @@
 
 <p>此时在<code>terminal</code>下使用‘ls’命令查看目录结构为：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -205,7 +205,7 @@
 <p>博文有两种一种是post一种是page，具体有什么区别请google之。
 发送博文只需要在当前目录下：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;My First Blog&quot;</span><span class="o">]</span>   <span class="c">#发送名为My First Blog的post，会在source/_post目录下按照配置文件生成markdown文件</span>
 </span><span class='line'>rake new_page<span class="o">[</span><span class="s2">&quot;title&quot;</span><span class="o">]</span>   <span class="c">#发送page，会生成在source/下，我还没有使用过具体请看官方文档</span>
@@ -214,8 +214,8 @@
 
 <p>使用喜欢的编辑器打开source/_post/yyyy-mm-dd-my-first-blog.markdown进行编辑，书写博文。</p>
 
-<figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -252,7 +252,7 @@
 </ul>
 
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake set_root_dir<span class="o">[</span>/geekerprobe<span class="o">]</span>   <span class="c">#将路径设置为/geekerprobe</span>
 </span><span class='line'>rake set_root_dir<span class="o">[</span>/<span class="o">]</span>   <span class="c">#如果你想恢复到初始目录，则键入此命令</span>
@@ -266,7 +266,7 @@
 </ul>
 
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake setup_github_pages   <span class="c">#将Octopress部署到GitHub上</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -281,7 +281,7 @@
 </ul>
 
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate   <span class="c">#生成</span>
 </span><span class='line'>rake deploy   <span class="c">#push到GitHub上，此时会将/public目录下的文件完全拷贝，粘贴到/_deploy目录下，然后在push</span>
@@ -294,7 +294,7 @@
 
 <h3>使用发布博文</h3>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -314,7 +314,7 @@
 <p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录下被排除在<code>git</code>库外的文件以及目录。
 这些我们在<code>clone</code>之前就已经由作者做好了。我们需要做的是：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git remote add origin git@github.com:username/geekerprobe.git   <span class="c">#在远端添加源，origin可以随便写，建议用origin这是默认，后面的路径还是那个</span>
@@ -329,7 +329,7 @@
 
 <p>在一个<code>git</code>库中会有文件记录你所有对库(working dir)中文件的增删改，类似于<code>svn</code>,可以使用</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git status
 </span></code></pre></td></tr></table></div></figure>
 
@@ -337,7 +337,7 @@
 <p>来查看当前的所有文件改动。
 之后将显示出来的有改动的文件<code>add</code>到缓冲区(index)，通常我都是</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git add .
 </span></code></pre></td></tr></table></div></figure>
 
@@ -345,14 +345,14 @@
 <p>将所有改动都<code>add</code>到缓冲区，但这只是临时的并没有提交到remote端，也没有被提交到上次提交后的状态下。
 然后就是将缓冲区的内容提交到上次提交的状态(HEAD)下</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git commit -m <span class="s2">&quot;something to say&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>这些引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git push origin site   <span class="c">#将HEAD push到remote段</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -389,12 +389,12 @@
   
 
 
-<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2013</time>
+<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/octopress/'>Octopress</a>
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
   
 </span>
 
@@ -472,7 +472,7 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (8)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -581,22 +581,22 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 131%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 115%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
 

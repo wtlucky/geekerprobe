@@ -105,7 +105,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
   
 
 
-<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="#comments">Comments</a>
@@ -139,7 +139,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 <p>上网Google之，发现很多人遇到此问题，给出的解决方案照做后错误依然存在。
 最终还是自己解决，从问题本身出发吧，自己当初调试时<code>Server</code>是部署在<code>Mac os</code>上的，而现在却要部署在<code>Windows Server 2008</code>上。所以很可能是两边的配置出了问题，而代码的第24行为：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -159,7 +159,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 
 <p>首先<code>.pem</code>证书已经制作，并且可用。还有就是证书的路径需要放正确</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
@@ -171,7 +171,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 <p>确保该函数的最后一个参数所指的路径能正确找到证书。
 经过测试在<code>Mac OS</code>下这样就可以了，但是在<code>Windows</code>下要改成这样：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
@@ -191,7 +191,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 
 <p>接下来打开<code>Apache</code>的配置文件<code>httpd.conf</code>大概50-100行之间模块加载部分，放开这三个模块加载前的注释：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -229,7 +229,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 <p>最后附上推送部分的<code>PHP</code>代码：</p>
 
 <figure class='code'><figcaption><span> (push.php)</span> <a href='/downloads/code/php/push.php'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -413,12 +413,12 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
   
 
 
-<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ios-development/'>iOS development</a>
+    <a class='category' href='/blog/categories/ios-development/'>ios development</a>
   
 </span>
 
@@ -496,7 +496,7 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (8)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -605,24 +605,24 @@ Warning: stream_socket_client() [function.stream-socket-client]: &hellip;">
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 115%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 131%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 <a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 
   </ul>
 </section>
