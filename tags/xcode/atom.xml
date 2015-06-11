@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Xcode | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/xcode/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-06-11T10:58:35+08:00</updated>
+  <updated>2015-06-06T09:40:15+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -24,7 +24,7 @@
 不过，测试发现这段<code>ruby</code>脚本还是有一点点问题的，在生成注释后会把当前生成注释的方法的声明删掉。我只好凭着多年的编程经验对这段脚本进行了一点修改（第一次接触到<code>ruby</code>代码。o(╯□╰)o），现在已经很好使用了，基本上没有啥问题了。分享给大家。</p>
 
 <p>先展示个效果：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -37,20 +37,26 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">/&lt;</span><span class="n">em</span><span class="o">&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span>
 </span><span class='line'> <span class="o">*</span>  <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">Description</span><span class="err">#</span><span class="o">&gt;</span>
 </span><span class='line'> <span class="o">*</span>
-</span><span class='line'> <span class="o">*</span>  <span class="p">@</span><span class="n">param</span>  <span class="n">application</span>     <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">application</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
-</span><span class='line'> <span class="o">*</span>  <span class="p">@</span><span class="n">param</span>  <span class="n">launchOptions</span>   <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">launchOptions</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
+</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="n">param</span>  <span class="n">application</span>     <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">application</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
+</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="n">param</span>  <span class="n">launchOptions</span>   <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="n">launchOptions</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
 </span><span class='line'> <span class="o">*</span>
-</span><span class='line'> <span class="o">*</span>  <span class="p">@</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="k">return</span> <span class="n">value</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
+</span><span class='line'> <span class="o">*</span>  <span class="err">@</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="err">#</span><span class="k">return</span> <span class="n">value</span> <span class="n">description</span><span class="err">#</span><span class="o">&gt;</span>
 </span><span class='line'> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/</span>
-</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">application</span><span class="p">:(</span><span class="bp">UIApplication</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">application</span>
-</span><span class='line'><span class="nl">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">application</span>
+</span><span class='line'><span class="nl">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <!--More -->
 
@@ -62,23 +68,23 @@
 2. 添加服务的应用程序 <code>ThisService.app</code></p>
 
 <p>首先打开<code>ThisService.app</code>，加载<code>DoxygenNew.rb</code>
-<img class="<a" src="href="http://ww4.sinaimg.cn/large/8ded26aejw1e2dppl3txtj.jpg">http://ww4.sinaimg.cn/large/8ded26aejw1e2dppl3txtj.jpg</a>"></p>
+<img src="http://ww4.sinaimg.cn/large/8ded26aejw1e2dppl3txtj.jpg"></p>
 
 <p>可以通过<code>Add option</code>增加一些自定义设置，这里只添加了应用程序filter，添加的该服务只有<code>Xcode</code>能使用</p>
 
 <p>点<code>Test Service</code>测试服务，可以粘过一些代码过来测试。
-<img class="<a" src="href="http://ww3.sinaimg.cn/bmiddle/8ded26aejw1e2dpwj5pk9j.jpg">http://ww3.sinaimg.cn/bmiddle/8ded26aejw1e2dpwj5pk9j.jpg</a>"></p>
+<img src="http://ww3.sinaimg.cn/bmiddle/8ded26aejw1e2dpwj5pk9j.jpg"></p>
 
 <p>测试无误后，添加服务就好了。</p>
 
 <p>然后就可以在<code>Xcode</code>的服务里找到添加的这个服务了。
-<img class="<a" src="href="http://ww2.sinaimg.cn/bmiddle/8ded26aejw1e2dpzqi9jhj.jpg">http://ww2.sinaimg.cn/bmiddle/8ded26aejw1e2dpzqi9jhj.jpg</a>"></p>
+<img src="http://ww2.sinaimg.cn/bmiddle/8ded26aejw1e2dpzqi9jhj.jpg"></p>
 
 <p>为了方便使用再为这个服务设置一个快捷键，往后在使用时，只需要选中要生成注释的方法名，按下快捷键，注释就会自动给生成了。</p>
 
 <p>最后贴上我改过的<code>ruby</code>代码，希望大家根据自己的需要再进行编辑，拿出来与大家分享。
-<figure class='code'><figcaption><span> (DoxygenNew.rb)</span> <a href='/downloads/code/ruby/DoxygenNew.rb'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (DoxygenNew.rb)</span> <a href='/downloads/code/ruby/DoxygenNew.rb'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -912,7 +918,7 @@
 </span><span class='line'>                                                                                                                                    <span class="nb">puts</span> <span class="n">replacement</span>
 </span><span class='line'>                                                                                                                                    <span class="c1">#print replacement</span>
 </span><span class='line'>                                                                                                                                    <span class="c1">#print input</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

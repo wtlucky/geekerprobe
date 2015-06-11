@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-06-11T10:58:35+08:00</updated>
+  <updated>2015-06-06T09:40:15+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -46,8 +46,10 @@
 
 <p>通过设置断点和重写<code>setFrame</code>和<code>setCenter</code>方法研究发现，在<code>iOS7</code>和<code>8</code>上<code>setFrame</code>方法都没有被<code>UIKit</code>调用到，而只有<code>setCenter</code>方法被调用。</p>
 
-<blockquote><p>“If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.”<br/>
-                           ————UIView&rsquo;s Class Reference</p></blockquote>
+<blockquote><p>“If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.”</p>
+
+<pre><code>                       ————UIView's Class Reference
+</code></pre></blockquote>
 
 <p>如果<code>transform</code>属性不是<code>identity</code>的，那么他的值就是不确定的而且应该被忽略。因此可以断定<code>setFrame</code>方法没有没调用，因而<code>view</code>的<code>transform</code>属性也就不是<code>identity</code>的，所以会出现问题。</p>
 
@@ -104,7 +106,7 @@
 <p>先来说第一步，什么是<code>Spec Repo</code>？他是所有的<code>Pods</code>的一个索引，就是一个容器，所有公开的<code>Pods</code>都在这个里面，他实际是一个<code>Git仓库</code><a href="https://github.com/CocoaPods/Specs"><code>remote端</code>
 </a>在<code>GitHub</code>上，但是当你使用了<code>Cocoapods</code>后他会被<code>clone</code>到本地的<code>~/.cocoapods/repos</code>目录下，可以进入到这个目录看到<code>master</code>文件夹就是这个官方的<code>Spec Repo</code>了。这个<code>master</code>目录的结构是这个样子的</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -122,7 +124,7 @@
 
 <p>创建完成之后在<code>Terminal</code>中执行如下命令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'> <span class="c"># pod repo add [Private Repo Name] [GitHub HTTPS clone URL]</span>
 </span><span class='line'><span class="nv">$ </span>pod repo add WTSpecs https://coding.net/wtlucky/WTSpecs.git
@@ -142,7 +144,7 @@
 <p>现在来说一下这个工具，相关的文档介绍是<a href="http://guides.cocoapods.org/making/using-pod-lib-create">Using Pod Lib Create</a>
 就拿我创建的<code>podTestLibrary</code>为例子具体讲一下这里是如何操作的，先<code>cd</code>到要创建项目的目录然后执行</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib create podTestLibrary
 </span></code></pre></td></tr></table></div></figure>
 
@@ -150,7 +152,7 @@
 <p>之后他会问你四个问题，1.是否需要一个例子工程；2.选择一个测试框架；3.是否基于View测试；4.类的前缀；4个问题的具体介绍可以去看官方文档，我这里选择的是1.yes；2.Specta/Expecta；3.yes；4.PTL。
 问完这4个问题他会自动执行<code>pod install</code>命令创建项目并生成依赖。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -199,7 +201,7 @@
 
 <p>通过<code>Cocoapods</code>创建出来的目录本身就在本地的<code>Git</code>管理下，我们需要做的就是给它添加远端仓库，同样去<code>GitHub</code>或其他的<code>Git</code>服务提供商那里创建一个私有的仓库，拿到<code>SSH</code>地址，然后<code>cd</code>到<code>PodTestLibrary</code>目录</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -212,7 +214,7 @@
 
 <p>因为<code>podspec</code>文件中获取<code>Git</code>版本控制的项目还需要<code>tag</code>号，所以我们要打上一个<code>tag</code>，</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git tag -m <span class="s2">&quot;first release&quot;</span> 0.1.0
 </span><span class='line'><span class="nv">$ </span>git push --tags     <span class="c">#推送tag到远端仓库</span>
@@ -221,7 +223,7 @@
 
 <p>做完这些就可以开始编辑<code>podspec</code>文件了，它是一个<code>Ruby</code>的文件，把编辑器的格式改成<code>Ruby</code>就能看到语法高亮，下面我贴上我的<code>podspec</code>文件，并在后面以注释的形式说明每个字段的含义，没有涉及到的字段可以去<a href="http://guides.cocoapods.org/syntax/podspec.html">官方文档</a>查阅</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -284,14 +286,14 @@
 
 <p>编辑完<code>podspec</code>文件后，需要验证一下这个文件是否可用，如果有任何<code>WARNING</code>或者<code>ERROR</code>都是不可以的，它就不能被添加到<code>Spec Repo</code>中，不过<code>xcode</code>的<code>WARNING</code>是可以存在的，验证需要执行一下命令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>当你看到</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'> -&gt; PodTestLibrary <span class="o">(</span>0.1.0<span class="o">)</span>
@@ -306,14 +308,14 @@
 
 <p>如果从第二步过来，已经有了现成的项目，那么就需要给这个项目创建一个<code>podspec</code>文件，创建它需要执行<code>Cocoapods</code>的另外一个命令，<a href="http://guides.cocoapods.org/making/specs-and-specs-repo.html">官方文档</a>在这里</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod spec create PodTestLibrary git@coding.net:wtlucky/podTestLibrary.git
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>执行完之后，就创建了一个<code>podspec</code>文件，他其中会包含很多内容，可以按照我之前介绍的进行编辑，没用的删掉。编辑完成之后使用验证命令验证一下</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
 </span></code></pre></td></tr></table></div></figure>
 
@@ -325,7 +327,7 @@
 <p>我们可以创建一个新的项目，在这个项目的<code>Podfile</code>文件中直接指定刚才创建编辑好的<code>podspec</code>文件，看是否可用。
 在<code>Podfile</code>中我们可以这样编辑，有两种方式</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -345,14 +347,14 @@
 <p>向<code>Spec Repo</code>提交<code>podspec</code>需要完成两点一个是<code>podspec</code>必须通过验证无误，在一个就是删掉无用的注释（这个不是必须的，为了规范还是删掉吧）。
 向我们的私有<code>Spec Repo</code>提交<code>podspec</code>只需要一个命令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec  <span class="c">#前面是本地Repo名字 后面是podspec名字</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>完成之后这个组件库就添加到我们的私有<code>Spec Repo</code>中了，可以进入到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -371,7 +373,7 @@
 
 <p>至此，我们的这个组件库就已经制作添加完成了，使用<code>pod search</code>命令就可以查到我们自己的库了</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -396,7 +398,7 @@
 
 <p>在完成这一系列步骤之后，我们就可以在正式项目中使用这个私有的<code>Pod</code>了只需要在项目的<code>Podfile</code>里增加以下一行代码即可</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.1.0&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -411,7 +413,7 @@
 
 <p>具体做法是先将源文件添加到<code>Pod/Classes</code>中，然后按照不同的模块对文件目录进行整理，因为我有四个模块，所以在<code>Pod/Classes</code>下有创建了四个子目录，完成之后继续编辑之前的<code>PodTestLibrary.podspec</code>，这次增加了<code>subspec</code>特性</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -528,14 +530,14 @@
 
 <p>最后再次使用<code>pod lib lint</code>验证编辑好的<code>podsepc</code>文件，没有自身的<code>WARNING</code>或者<code>ERROR</code>之后，就可以再次提交到<code>Spec Repo</code>中了，命令跟之前是一样的</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>之后再次到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -560,7 +562,7 @@
 
 <p>已经有两个版本了，使用<code>pod search</code>查找得到的结果为</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -591,7 +593,7 @@
 
 <p>完成这些之后，在实际项目中我们就可以选择使用整个组件库或者是组件库的某一个部分了，对应的<code>Podfile</code>中添加的内容为</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -608,14 +610,14 @@
 
 <p>最后介绍一下如何删除一个私有<code>Spec Repo</code>，只需要执行一条命令即可</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo remove WTSpecs
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>这样这个<code>Spec Repo</code>就在本地删除了，我们还可以通过</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo add WTSpecs git@coding.net:wtlucky/WTSpecs.git
 </span></code></pre></td></tr></table></div></figure>
 
@@ -624,14 +626,14 @@
 
 <p>如果我们要删除私有<code>Spec Repo</code>下的某一个<code>podspec</code>怎么操作呢，此时无需借助<code>Cocoapods</code>，只需要<code>cd</code>到<code>~/.cocoapods/repos/WTSpecs</code>目录下，删掉库目录</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>rm -Rf PodTestLibrary
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>然后在将<code>Git</code>的变动<code>push</code>到远端仓库即可</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git add --all .
@@ -691,7 +693,7 @@
 
 <p><code>cell</code>下半部分<code>Label</code>之间的间距这个是不能自适应的，<code>6 Plus</code>和其他设备是两个不同的值，这样就只能把他们的<code>constraint</code>拿到代码中去进行修改，label上字体也是只能在代码中<code>cell</code>第一次加载时判断为<code>6 Plus</code>就将他们的字体放大。将这一部分逻辑放在了<code>aweakFromNib</code>中</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -799,7 +801,7 @@
 
 <p>第二种方法是通过重载<code>initWithCoder</code>方法来实现，因为通过<code>xib</code>来创建一个对象会调用到这个方法，所以我们需要在这个方法里做一些处理，把这个<code>CustomView</code>的<code>xib</code>中的内容加载进来，这时同样是需要通过代码来来加载，首先附上代码</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -826,13 +828,13 @@
 
 <p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-8.jpg"></p>
 
-<p>这个时候在运行程序就看到了我们想要的结果了。^_^</p>
+<p>这个时候在运行程序就看到了我们想要的结果了。<sup>_^</sup></p>
 
 <p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-10.jpg"></p>
 
 <p>其实想要实现第二种解决方案所要的效果，还有一种方式，它是通过重载<code>awakeAfterUsingCoder:</code>方法来实现的，这个方法的返回值会替换掉真正的加载对象，所以在具体的加载<code>CustomView</code>的方式又与第一种相同，所以<code>xib</code>的输出口连接与<code>custom class</code>的设置也与第一种解决方案相同。不过这种方式是更复杂也更难于理解的，不推荐使用，因为上一个方法就能很好的解决这个问题了，这里只是贴出这个方法的代码，有想仔细研究的请参看文章底部的参考文章。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -894,8 +896,8 @@
 
 <p>这个程序最主要的部分也就是两个进制相互转换的算法了，用<code>Objective-C</code>实现起来很简单，通过一下字符<code>char</code>的运算就能搞定。代码如下：</p>
 
-<figure class='code'><figcaption><span>Hexdecimal To Decimal </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Hexdecimal To Decimal  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -958,8 +960,8 @@
 
 
 
-<figure class='code'><figcaption><span>Decimal To Hexdecimal </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Decimal To Hexdecimal  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1004,8 +1006,8 @@
 
 <p>但是当我使用<code>Swift</code>重写的时候，我进入到了一个很深的坑里，发现这项任务是如此的难做，我定义了这样两个方法，注意方法的参数和返回值：</p>
 
-<figure class='code'><figcaption><span>Swift Code </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Swift Code  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1029,7 +1031,7 @@
 <p>下面附上完全的代码，</p>
 
 <figure class='code'><figcaption><span> (HexConverterViewController.m)</span> <a href='http://blog.wtlucky.com/downloads/code/swift/HexConverterViewController.m'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1291,25 +1293,25 @@
 
 <p>使用一个类时你会这样使用：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">NSString</span> <span class="c1">-- Returns the NSString class</span>
 </span><span class='line'><span class="n">UIView</span> <span class="c1">-- Returns the UIView class</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这样调用其实一个语法糖，实际上他调用的是wax.class[&ldquo;UIView &rdquo;]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
+<p>这样调用其实一个语法糖，实际上他调用的是wax.class[&#8220;UIView &#8220;]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
 
 <p>当定义一个类的时候会是这样：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span> <span class="n">NSObject</span><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>遵循协议的类：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span><span class="n">NSObject</span><span class="p">,</span><span class="n">protocols</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">UITableViewDelegate&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="s">UITableViewDataSource&quot;</span><span class="p">}}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -1317,28 +1319,28 @@
 <p>在你定义这个类的脚本文件里缩写的其他function都将作为这个类的实例方法。且这个方法的第一个参数必须是<code>self</code>，这就是Wax模仿Objective-C的面向对象的关键所在。
 因此在Wax中调用方法要使用冒号，类似这样：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">:</span><span class="n">sharedApplication</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>其实他就等同于这样：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">(</span><span class="n">UIApplication</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>在调用含有多个参数的方法时候，使用<code>_</code>来代替OC中的:,例如：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">UIAlertView</span> <span class="nl">initWithTitle:</span><span class="s">@&quot;title&quot;</span> <span class="nl">message:</span><span class="s">@&quot;message&quot;</span> <span class="nl">delegate:</span><span class="nb">nil</span><span class="p">];</span>  <span class="c1">//OC方式</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIAlertView</span><span class="p">:</span><span class="n">initWithTitle_message_delegate</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">title&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">message&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>    <span class="c1">--Wax 方式</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -1366,7 +1368,7 @@
 
 <p><code>Wax</code>主要是维护了这样的一个结构，基本上所有与对象有关的操作都是在这个基础上完成的：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1403,7 +1405,7 @@
     <id>http://blog.wtlucky.com/blog/2013/05/02/start-write-shell</id>
     <content type="html"><![CDATA[<p>在进行批量的操作，或者繁琐的操作时，可以使用<code>shell</code>编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。</p>
 
-<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于"CocoaChina2013开发者大会-……"，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
+<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于&#8221;CocoaChina2013开发者大会-……&#8221;，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
 
 <p>从来没有编写过<code>shell</code>脚本，向来都是使用<code>shell</code>命令的我，先从学习编写<code>shell</code>脚本文件开始吧！</p>
 
@@ -1426,12 +1428,12 @@
 
 <p>只写一下本次用到的<code>for</code>循环，其他的流程控制以后用到时在学习。
 for-loop表达式查看一个字符串列表 (字符串用空格分隔) 然后将其赋给一个变量：
-for var in &hellip;.; do
-　 &hellip;.
+for var in &#8230;.; do
+　 &#8230;.
 done
 在下面的例子中，将分别打印ABC到屏幕上：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1446,7 +1448,7 @@ done
 
 <p>在我写的<code>shell</code>脚本中则是使用循环输出当前文件夹下文件的名字：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1461,7 +1463,7 @@ done
 
 <p>接下来就是对获取到的每一个文件名的字符串进行截取，删掉不需要的部分：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1480,7 +1482,7 @@ done
 
 <p>这里学习了一下<code>shell</code>字符串的操作知识，<code>:</code>选取子串 <code>#</code>正向截取子串 <code>%</code>逆向截取子串 <code>##</code>正向最长匹配 <code>%%</code>逆向最长匹配。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1529,7 +1531,7 @@ done
 
 <p>最后就是将文件重命名了：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1554,7 +1556,7 @@ done
 
 <p>文章中还介绍了一种终极解决方法就是设置<code>IFS(the Internal Field Separator)</code>，但是在设置之前先保存当前的<code>IFS</code>，操作完成之后在设置回去。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1575,7 +1577,7 @@ done
 
 <p>最后附上自己写的完整的<code>shell</code>脚本，虽然很短，但这是第一次写，也算是个入门吧。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1684,8 +1686,8 @@ done
 
 <h4>策略模式的objective-C实现</h4>
 
-<figure class='code'><figcaption><span>Strategy </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Strategy  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1704,8 +1706,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>ConcreteStrategy </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>ConcreteStrategy  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1792,8 +1794,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>Context </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Context  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1832,8 +1834,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>main </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>main  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1909,8 +1911,8 @@ done
 
 <p>首先是<code>MD5</code>，为<code>NSString</code>添加<code>MD5</code>方法：</p>
 
-<figure class='code'><figcaption><span>NSString+MD5 </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>NSString+MD5  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1997,8 +1999,8 @@ done
 
 <p>接下来是获得唯一ID，为<code>UIDevice</code>添加方法：</p>
 
-<figure class='code'><figcaption><span>UIDevice+UniqueIdentifier </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>UIDevice+UniqueIdentifier  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2271,8 +2273,8 @@ done
 
 <h4>适配器模式的objective-C实现</h4>
 
-<figure class='code'><figcaption><span>Target </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Target  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2291,8 +2293,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>Adaptee </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Adaptee  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2329,8 +2331,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>Adapter </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Adapter  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2395,8 +2397,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>main </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>main  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2433,6 +2435,8 @@ done
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
 
 ]]></content>
   </entry>
@@ -2488,8 +2492,8 @@ done
 
 <p>下面附上一个用<code>objective-C</code>写的类似的一个观察者模式的小程序：</p>
 
-<figure class='code'><figcaption><span>Student </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Student  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2554,8 +2558,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>Teacher </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Teacher  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2662,8 +2666,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>main </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>main  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2779,8 +2783,8 @@ done
 
 <p>该方法是苹果的官方文档中写的一种方式，通过覆盖<code>NSObject</code>的部分方法实现，使该类无法<code>alloc</code>、<code>retain</code>、<code>release</code>。这是最麻烦的一种方法，也是最不好的一种方法。</p>
 
-<figure class='code'><figcaption><span>Singleton </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Singleton  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -2868,7 +2872,7 @@ done
 <p>第二种跟第一种差不多，也是通过覆盖<code>NSObject</code>的方法实现的，但是它在第一种的基础上增加了多线程的处理，所以即使在多线程下，该种方法创建的对象也是唯一的。这种方法已经有大牛为我们写好了，全都都是通过<code>C</code>的宏定义<code>#define</code>出来了。现给出该头文件：</p>
 
 <figure class='code'><figcaption><span> (SynthesizeSingleton.h)</span> <a href='http://blog.wtlucky.com/downloads/code/designPattern/SynthesizeSingleton.h'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -3595,8 +3599,8 @@ done
 
 <p>使用这种方式首先把该头文件加到我们的项目中，然后直接使用就可以了：</p>
 
-<figure class='code'><figcaption><span>Singleton.h </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Singleton.h  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -3621,8 +3625,8 @@ done
 
 
 
-<figure class='code'><figcaption><span>Singleton.m </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Singleton.m  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -3647,8 +3651,8 @@ done
 <p>这是最后一种也是我最推荐的一种。<code>iOS</code>在4.0以后推出了<code>block</code>和<code>GCD</code>，这两个特性给<code>iOS</code>开发带来的很大的便利，也使开发变得更加趣味话。那么如何通过<code>GCD</code>+<code>block</code>来实现单例模式呢，这主要归功于<code>dispatch_once(dispatch_once_t *predicate, ^(void)block)</code>这个<code>GCD</code>的函数，他有两个参数第一参数是一个指向<code>dispatch_once_t</code>类型结构体的指针，用来测试<code>block</code>是否执行完成，该指针所指向的结构体必须是全局的或者静态的，第二个参数是一个返回值与参数均为空的<code>block</code>，在<code>block</code>体中进行对象的初始化即可。<code>dispatch_once</code>在程序的生命周期中保证只会被调用一次，所以在多线程中也不会有问题。
 该种方法使用方法：</p>
 
-<figure class='code'><figcaption><span>Singleton </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Singleton  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -3689,7 +3693,7 @@ done
 
 <p>先展示个效果：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -3747,7 +3751,7 @@ done
 <p>最后贴上我改过的<code>ruby</code>代码，希望大家根据自己的需要再进行编辑，拿出来与大家分享。</p>
 
 <figure class='code'><figcaption><span> (DoxygenNew.rb)</span> <a href='http://blog.wtlucky.com/downloads/code/ruby/DoxygenNew.rb'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -4615,7 +4619,7 @@ done
 <p>上网Google之，发现很多人遇到此问题，给出的解决方案照做后错误依然存在。
 最终还是自己解决，从问题本身出发吧，自己当初调试时<code>Server</code>是部署在<code>Mac os</code>上的，而现在却要部署在<code>Windows Server 2008</code>上。所以很可能是两边的配置出了问题，而代码的第24行为：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -4635,7 +4639,7 @@ done
 
 <p>首先<code>.pem</code>证书已经制作，并且可用。还有就是证书的路径需要放正确</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
@@ -4647,7 +4651,7 @@ done
 <p>确保该函数的最后一个参数所指的路径能正确找到证书。
 经过测试在<code>Mac OS</code>下这样就可以了，但是在<code>Windows</code>下要改成这样：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
@@ -4667,7 +4671,7 @@ done
 
 <p>接下来打开<code>Apache</code>的配置文件<code>httpd.conf</code>大概50-100行之间模块加载部分，放开这三个模块加载前的注释：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -4705,7 +4709,7 @@ done
 <p>最后附上推送部分的<code>PHP</code>代码：</p>
 
 <figure class='code'><figcaption><span> (push.php)</span> <a href='http://blog.wtlucky.com/downloads/code/php/push.php'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -4900,8 +4904,8 @@ done
 </ol>
 
 
-<figure class='code'><figcaption><span>rake deploy error </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>rake deploy error  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">## Pushing generated _deploy website</span>
 </span><span class='line'>Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
@@ -4915,8 +4919,8 @@ done
 
 <p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入以下命令：</p>
 
-<figure class='code'><figcaption><span>install Octopress </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>install Octopress  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -4931,8 +4935,8 @@ done
 
 <p>到此Octopress在本地已经安装完毕，但是还都是默认配置，而且没有发表博文。但是你可以通过一下命令来生成并预览一下原始的界面：</p>
 
-<figure class='code'><figcaption><span>generate and preview blog </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>generate and preview blog  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate    <span class="c">#生成blog，就是根据配置文件，将主题、模板、发表的markdown格式的博文等众多文件生成静态的html文件存放在geekerprobe/public文件夹下</span>
 </span><span class='line'>rake preview   <span class="c">#预览生成的blog，此时ruby会启动一个小型的server</span>
@@ -4946,7 +4950,7 @@ done
 
 <p>此时在<code>terminal</code>下使用‘ls’命令查看目录结构为：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -4973,7 +4977,7 @@ done
 <p>博文有两种一种是post一种是page，具体有什么区别请google之。
 发送博文只需要在当前目录下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;My First Blog&quot;</span><span class="o">]</span>   <span class="c">#发送名为My First Blog的post，会在source/_post目录下按照配置文件生成markdown文件</span>
 </span><span class='line'>rake new_page<span class="o">[</span><span class="s2">&quot;title&quot;</span><span class="o">]</span>   <span class="c">#发送page，会生成在source/下，我还没有使用过具体请看官方文档</span>
@@ -4982,8 +4986,8 @@ done
 
 <p>使用喜欢的编辑器打开source/_post/yyyy-mm-dd-my-first-blog.markdown进行编辑，书写博文。</p>
 
-<figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -5020,7 +5024,7 @@ done
 </ul>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake set_root_dir<span class="o">[</span>/geekerprobe<span class="o">]</span>   <span class="c">#将路径设置为/geekerprobe</span>
 </span><span class='line'>rake set_root_dir<span class="o">[</span>/<span class="o">]</span>   <span class="c">#如果你想恢复到初始目录，则键入此命令</span>
@@ -5034,7 +5038,7 @@ done
 </ul>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake setup_github_pages   <span class="c">#将Octopress部署到GitHub上</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -5049,7 +5053,7 @@ done
 </ul>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate   <span class="c">#生成</span>
 </span><span class='line'>rake deploy   <span class="c">#push到GitHub上，此时会将/public目录下的文件完全拷贝，粘贴到/_deploy目录下，然后在push</span>
@@ -5062,7 +5066,7 @@ done
 
 <h3>使用发布博文</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -5082,7 +5086,7 @@ done
 <p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录下被排除在<code>git</code>库外的文件以及目录。
 这些我们在<code>clone</code>之前就已经由作者做好了。我们需要做的是：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git remote add origin git@github.com:username/geekerprobe.git   <span class="c">#在远端添加源，origin可以随便写，建议用origin这是默认，后面的路径还是那个</span>
@@ -5097,7 +5101,7 @@ done
 
 <p>在一个<code>git</code>库中会有文件记录你所有对库(working dir)中文件的增删改，类似于<code>svn</code>,可以使用</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git status
 </span></code></pre></td></tr></table></div></figure>
 
@@ -5105,7 +5109,7 @@ done
 <p>来查看当前的所有文件改动。
 之后将显示出来的有改动的文件<code>add</code>到缓冲区(index)，通常我都是</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git add .
 </span></code></pre></td></tr></table></div></figure>
 
@@ -5113,14 +5117,14 @@ done
 <p>将所有改动都<code>add</code>到缓冲区，但这只是临时的并没有提交到remote端，也没有被提交到上次提交后的状态下。
 然后就是将缓冲区的内容提交到上次提交的状态(HEAD)下</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git commit -m <span class="s2">&quot;something to say&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>这些引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git push origin site   <span class="c">#将HEAD push到remote段</span>
 </span></code></pre></td></tr></table></div></figure>
 

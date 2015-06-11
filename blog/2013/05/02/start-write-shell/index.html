@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2013-05-02T15:15:00+08:00" pubdate data-updated="true"></time>
+<time datetime="2013-05-02T15:15:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
         
         
       | <a href="#comments">Comments</a>
@@ -109,7 +109,7 @@
 
 <div class="entry-content"><p>在进行批量的操作，或者繁琐的操作时，可以使用<code>shell</code>编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。</p>
 
-<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于"CocoaChina2013开发者大会-……"，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
+<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于&#8221;CocoaChina2013开发者大会-……&#8221;，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
 
 <p>从来没有编写过<code>shell</code>脚本，向来都是使用<code>shell</code>命令的我，先从学习编写<code>shell</code>脚本文件开始吧！</p>
 
@@ -132,12 +132,12 @@
 
 <p>只写一下本次用到的<code>for</code>循环，其他的流程控制以后用到时在学习。
 for-loop表达式查看一个字符串列表 (字符串用空格分隔) 然后将其赋给一个变量：
-for var in &hellip;.; do
-　 &hellip;.
+for var in &#8230;.; do
+　 &#8230;.
 done
 在下面的例子中，将分别打印ABC到屏幕上：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -152,7 +152,7 @@ done
 
 <p>在我写的<code>shell</code>脚本中则是使用循环输出当前文件夹下文件的名字：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -167,7 +167,7 @@ done
 
 <p>接下来就是对获取到的每一个文件名的字符串进行截取，删掉不需要的部分：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -186,7 +186,7 @@ done
 
 <p>这里学习了一下<code>shell</code>字符串的操作知识，<code>:</code>选取子串 <code>#</code>正向截取子串 <code>%</code>逆向截取子串 <code>##</code>正向最长匹配 <code>%%</code>逆向最长匹配。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -235,7 +235,7 @@ done
 
 <p>最后就是将文件重命名了：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -260,7 +260,7 @@ done
 
 <p>文章中还介绍了一种终极解决方法就是设置<code>IFS(the Internal Field Separator)</code>，但是在设置之前先保存当前的<code>IFS</code>，操作完成之后在设置回去。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -281,7 +281,7 @@ done
 
 <p>最后附上自己写的完整的<code>shell</code>脚本，虽然很短，但这是第一次写，也算是个入门吧。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -351,12 +351,12 @@ done
   
 
 
-<time datetime="2013-05-02T15:15:00+08:00" pubdate data-updated="true"></time>
+<time datetime="2013-05-02T15:15:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/bash-shell/'>bash shell</a>
+    <a class='category' href='/blog/categories/bash-shell/'>Bash Shell</a>
   
 </span>
 
@@ -434,7 +434,7 @@ done
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (8)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -543,24 +543,24 @@ done
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 131%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 115%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
 <a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 <a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
 
   </ul>
 </section>

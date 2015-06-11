@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2014-08-10T15:18:00+08:00" pubdate data-updated="true"></time>
+<time datetime="2014-08-10T15:18:00+08:00" pubdate data-updated="true">Aug 10<span>th</span>, 2014</time>
         
         
       | <a href="#comments">Comments</a>
@@ -157,7 +157,7 @@
 
 <p>第二种方法是通过重载<code>initWithCoder</code>方法来实现，因为通过<code>xib</code>来创建一个对象会调用到这个方法，所以我们需要在这个方法里做一些处理，把这个<code>CustomView</code>的<code>xib</code>中的内容加载进来，这时同样是需要通过代码来来加载，首先附上代码</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -184,13 +184,13 @@
 
 <p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-8.jpg"></p>
 
-<p>这个时候在运行程序就看到了我们想要的结果了。^_^</p>
+<p>这个时候在运行程序就看到了我们想要的结果了。<sup>_^</sup></p>
 
 <p><img src="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-10.jpg"></p>
 
 <p>其实想要实现第二种解决方案所要的效果，还有一种方式，它是通过重载<code>awakeAfterUsingCoder:</code>方法来实现的，这个方法的返回值会替换掉真正的加载对象，所以在具体的加载<code>CustomView</code>的方式又与第一种相同，所以<code>xib</code>的输出口连接与<code>custom class</code>的设置也与第一种解决方案相同。不过这种方式是更复杂也更难于理解的，不推荐使用，因为上一个方法就能很好的解决这个问题了，这里只是贴出这个方法的代码，有想仔细研究的请参看文章底部的参考文章。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -258,12 +258,12 @@
   
 
 
-<time datetime="2014-08-10T15:18:00+08:00" pubdate data-updated="true"></time>
+<time datetime="2014-08-10T15:18:00+08:00" pubdate data-updated="true">Aug 10<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ios-development/'>ios development</a>
+    <a class='category' href='/blog/categories/ios-development/'>iOS development</a>
   
 </span>
 
@@ -341,7 +341,7 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (8)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -450,24 +450,24 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 131%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 115%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 <a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
 
   </ul>
 </section>

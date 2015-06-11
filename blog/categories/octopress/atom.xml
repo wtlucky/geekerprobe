@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: octopress | GeekerProbe]]></title>
+  <title><![CDATA[Category: Octopress | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-06-11T10:58:35+08:00</updated>
+  <updated>2015-06-06T09:40:15+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -40,14 +40,14 @@
 <li>你需要一个<a href="http://github.com">GitHub</a>的账号，注册不说了，已有的跳过。</li>
 <li>你需要在你的机器上安装并配置<code>git</code>，<a href="https://help.github.com/articles/set-up-git">官方文档</a>说的很清楚，这要用到<code>terminal</code>，也就是命令行，懒的人可以安装可视化工具GitHub，我建议还是使用命令行，以为之后众多操作都是必须使用命令行来完成的，而且这对于hacker们来说也不是什么难事。</li>
 <li>为GitHub创建<code>SSH</code> Keys，<a href="https://help.github.com/articles/generating-ssh-keys">官方文档</a>，这一步很重要，不然之后使用<code>rake deploy</code>命令时会出现如下错误：
-<figure class='code'><figcaption><span>rake deploy error </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>rake deploy error  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;h2&gt;Pushing generated _deploy website&lt;/h2&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;p&gt;Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 由于我使用GitHub比较早，这个<code>SSH</code> Key早就生成添加到了GitHub上，但是没有使用默认的名字，始终都是Permission denied。直到在GitHub上的文档中爬了很久才找到解决办法，o(╯□╰)o原来是生成的publickey没有添加到<code>SSH</code>中。</p></li>
 <li>你的机器要有ruby环境，<code>Octopress</code>要求的是ruby-1.9.2，现在<code>ruby</code>最新的版本是ruby-1.9.3。可以使用<code>ruby --version</code>命令来查看。如果没有该命令或者是版本低于1.9.2的话，那么就需要安装与升级<code>ruby</code>。可以使用两种方法<a href="http://octopress.org/docs/setup/rbenv">rbenv</a>和<a href="http://octopress.org/docs/setup/rvm">RVM</a>。具体使用方法请自行查看之，我是用的<code>RVM</code>，在安装中遇到的问题就是我是用的是MAC OX MountainLion（10.8.2）系统，xcode的版本是4.6，没有<code>gcc</code>编译器，用得是<code>LLVM</code>，而ruby-1.9.3-p385在<code>LLVM</code>下编译不通过。最终在Google和<a href="http://stackoverflow.com">stackoverflow</a>帮助下解决之。</li>
 </ol>
@@ -56,8 +56,8 @@
 <h3>安装Octopress</h3>
 
 <p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入以下命令：
-<figure class='code'><figcaption><span>install Octopress </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>install Octopress  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -67,21 +67,21 @@
 </span><span class='line'>gem install bundler   <span class="c"># 下载bundler，有可能提示gem命令未找到，请自行google解决方法</span>
 </span><span class='line'>bundle install    <span class="c">#安装bundle</span>
 </span><span class='line'>rake install   <span class="c">#安装Octopress默认主题</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 到此Octopress在本地已经安装完毕，但是还都是默认配置，而且没有发表博文。但是你可以通过一下命令来生成并预览一下原始的界面：
-<figure class='code'><figcaption><span>generate and preview blog </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>generate and preview blog  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate    <span class="c">#生成blog，就是根据配置文件，将主题、模板、发表的markdown格式的博文等众多文件生成静态的html文件存放在geekerprobe/public文件夹下</span>
 </span><span class='line'>rake preview   <span class="c">#预览生成的blog，此时ruby会启动一个小型的server</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 接下来打开浏览器访问<a href="http://127.0.0.1:4000">http://127.0.0.1:4000</a>就可以看到页面啦！
 退出预览当然是Ctrl+C了。</p>
 
 <h3>Octopress简单配置</h3>
 
 <p>此时在<code>terminal</code>下使用‘ls’命令查看目录结构为：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -89,7 +89,7 @@
 </span><span class='line'>Gemfile             _config.yml     public
 </span><span class='line'>Gemfile.lock        config.rb       sass
 </span><span class='line'>README.markdown     config.ru       <span class="nb">source</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <code>\_config.yml</code>、<code>Rakefile</code>、<code>config.ru</code>和<code>config.rb</code>就是四个配置文件了，我们修改配置主要是在<code>\_config.yml</code>上进行的，其他的三个一般不需要我们去直接管理。<code>\_config.yml</code>的配置分为三个部分：</p>
 
 <ol>
@@ -105,15 +105,15 @@
 
 <p>博文有两种一种是post一种是page，具体有什么区别请google之。
 发送博文只需要在当前目录下：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_post<span class="o">[</span><span class="p">&amp;</span>ldquo<span class="p">;</span>My First Blog<span class="p">&amp;</span>rdquo<span class="p">;</span><span class="o">]</span>   <span class="c">#发送名为My First Blog的post，会在source/_post目录下按照配置文件生成markdown文件</span>
-</span><span class='line'>rake new_page<span class="o">[</span><span class="p">&amp;</span>ldquo<span class="p">;</span>title<span class="p">&amp;</span>rdquo<span class="p">;</span><span class="o">]</span>   <span class="c">#发送page，会生成在source/下，我还没有使用过具体请看官方文档</span>
-</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;My First Blog&quot;</span><span class="o">]</span>   <span class="c">#发送名为My First Blog的post，会在source/_post目录下按照配置文件生成markdown文件</span>
+</span><span class='line'>rake new_page<span class="o">[</span><span class="s2">&quot;title&quot;</span><span class="o">]</span>   <span class="c">#发送page，会生成在source/下，我还没有使用过具体请看官方文档</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 使用喜欢的编辑器打开source/_post/yyyy-mm-dd-my-first-blog.markdown进行编辑，书写博文。</p>
 
-<h2><figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<h2><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -128,7 +128,7 @@
 </pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/h2&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="nt">&lt;p&gt;</span>layout: post
-</span><span class='line'>title: <span class="ni">&amp;ldquo;</span>My First Blog<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>title: &quot;My First Blog&quot;
 </span><span class='line'>date: 2013-02-23 09:01
 </span><span class='line'>comments: true<span class="nt">&lt;/p&gt;</span>
 </span><span class='line'>
@@ -137,7 +137,7 @@
 </span><span class='line'><span class="nt">&lt;h2&gt;</span>Hello octopress!<span class="nt">&lt;/h2&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="nt">&lt;p&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 开头两个下划线之间的部分是<code>yaml</code>头，用来告诉Jekyll怎么处理你的posts或者是pages，在这里你可以对你的post或者page做一些设置，比如添加作者，category，是否允许评论等。
 在后面就是你自己要写的东西啦，当然是使用<code>markdown</code>来写了，当然它也支持<code>HTML</code>。<code>markdown</code>很简单，还不会的看<a href="http://wowubuntu.com/markdown/#backslash">这里</a>,语法说明。
 写完保存generate preview就可以了。</p>
@@ -151,26 +151,26 @@
 <ul>
 <li>先到GitHub上创建名为<code>geekerprobe</code>的repo。</li>
 <li><p>因为使用第二种方法我们要将blog放在<code>username.github.com</code>的子集目录所以我们要在本地将目录也设置为子集目录，不然会出现<em>“Sorry！I can not find /”</em>的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake set_root_dir<span class="o">[</span>/geekerprobe<span class="o">]</span>   <span class="c">#将路径设置为/geekerprobe</span>
 </span><span class='line'>rake set_root_dir<span class="o">[</span>/<span class="o">]</span>   <span class="c">#如果你想恢复到初始目录，则键入此命令</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 这条命令会修改<code>\_config.yml</code>、<code>Rakefile</code>和<code>config.rb</code>中的有关路径部分的设置，并将实际文件进行剪切移动操作，以适应路径的改变。而且在本地预览时也要使用子集目录来访问预览<strong><a href="http://127.0.0.1:4000/geekerprobe">http://127.0.0.1:4000/geekerprobe</a></strong>。</p></li>
 <li><p>接下来就是将blog部署上去了
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake setup_github_pages   <span class="c">#将Octopress部署到GitHub上</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 会提示你输入一个形如<code>git@github.com:username/geekerprobe.git</code>的地址，那么就按照这种形式输入你自己的repo的地址，这个地址可以在GitHub上你的repo的SSH文本框中得到，粘贴过来就好。
 <img src="/images/2013-2-24/repo-ssh.jpg">
 回车确定，等待片刻提示成功就可以了。
 这时查看目录会发现多了一个_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的<code>gh-pages</code>分支。同时你的repo的<code>gh-pages</code>分支在GitHub上也已被创建了。</p></li>
 <li><p>接下来生成并push博文到GitHub上
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate   <span class="c">#生成</span>
 </span><span class='line'>rake deploy   <span class="c">#push到GitHub上，此时会将/public目录下的文件完全拷贝，粘贴到/_deploy目录下，然后在push</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 如果你的GitHub的<code>SSH Key</code>没有设置或者设置错误的话，此时会出现权限不允许的错误。看到成功时就说名部署工作已经完成了，恭喜你赶紧到浏览器访问一下你的<a href="http://wtlucky.github.com/geekerprobe">url</a>试试看吧。</p></li>
 </ul>
 
@@ -179,7 +179,7 @@
 
 <h3>使用发布博文</h3>
 
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -187,7 +187,7 @@
 </span><span class='line'>rake generate     <span class="c">#生成静态html</span>
 </span><span class='line'>rake preview      <span class="c">#本地预览，修改错误，查看效果</span>
 </span><span class='line'>rake deploy       <span class="c">#无误后，push到GitHub上</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>到此，你可以离开此页了，如果还要看其他设置的话，请看下去，我觉得这还是挺有用的，他将你的posts也同样备份到GitHub上，下次在你换了一个环境或者电脑后，就可以直接<code>clone</code>下来或者<code>pull</code>合并，免去博文与各种配置丢失。</p>
 
@@ -197,35 +197,35 @@
 
 <p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录下被排除在<code>git</code>库外的文件以及目录。
 这些我们在<code>clone</code>之前就已经由作者做好了。我们需要做的是：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git remote add origin git@github.com:username/geekerprobe.git   <span class="c">#在远端添加源，origin可以随便写，建议用origin这是默认，后面的路径还是那个</span>
 </span><span class='line'>git branch -m site    <span class="c">#创建一个分支site，这个site也可以随便写。官方文档使用的是master主分支</span>
 </span><span class='line'>git push origin site   <span class="c">#将这个源push到site分支中</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 这样你去你的GitHub上就可以看到你的repo又多了一个site分支，并且有了文件也有版本记录。</p>
 
 <p>这里说一下我理解到的<code>git</code>的简单原理，我也是刚刚接触到<code>git</code>之前都是使用<code>subvision</code>的，通过配置这个blog有了一点体会，但是比较浅显，有不对之处欢迎指出。</p>
 
 <p>在一个<code>git</code>库中会有文件记录你所有对库(working dir)中文件的增删改，类似于<code>svn</code>,可以使用
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git status
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 来查看当前的所有文件改动。
 之后将显示出来的有改动的文件<code>add</code>到缓冲区(index)，通常我都是
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git add .
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 将所有改动都<code>add</code>到缓冲区，但这只是临时的并没有提交到remote端，也没有被提交到上次提交后的状态下。
 然后就是将缓冲区的内容提交到上次提交的状态(HEAD)下
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git commit -m <span class="p">&amp;</span>ldquo<span class="p">;</span>something to say<span class="p">&amp;</span>rdquo<span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git commit -m <span class="s2">&quot;something to say&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 这些引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git push origin site   <span class="c">#将HEAD push到remote段</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 到此本地的版本已经提交到GitHub。</p>
 
 <h3>Octopress拓展增强</h3>

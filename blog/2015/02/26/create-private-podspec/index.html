@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2015-02-26T16:14:00+08:00" pubdate data-updated="true"></time>
+<time datetime="2015-02-26T16:14:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2015</time>
         
         
       | <a href="#comments">Comments</a>
@@ -133,7 +133,7 @@
 <p>先来说第一步，什么是<code>Spec Repo</code>？他是所有的<code>Pods</code>的一个索引，就是一个容器，所有公开的<code>Pods</code>都在这个里面，他实际是一个<code>Git仓库</code><a href="https://github.com/CocoaPods/Specs"><code>remote端</code>
 </a>在<code>GitHub</code>上，但是当你使用了<code>Cocoapods</code>后他会被<code>clone</code>到本地的<code>~/.cocoapods/repos</code>目录下，可以进入到这个目录看到<code>master</code>文件夹就是这个官方的<code>Spec Repo</code>了。这个<code>master</code>目录的结构是这个样子的</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -151,7 +151,7 @@
 
 <p>创建完成之后在<code>Terminal</code>中执行如下命令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'> <span class="c"># pod repo add [Private Repo Name] [GitHub HTTPS clone URL]</span>
 </span><span class='line'><span class="nv">$ </span>pod repo add WTSpecs https://coding.net/wtlucky/WTSpecs.git
@@ -171,7 +171,7 @@
 <p>现在来说一下这个工具，相关的文档介绍是<a href="http://guides.cocoapods.org/making/using-pod-lib-create">Using Pod Lib Create</a>
 就拿我创建的<code>podTestLibrary</code>为例子具体讲一下这里是如何操作的，先<code>cd</code>到要创建项目的目录然后执行</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib create podTestLibrary
 </span></code></pre></td></tr></table></div></figure>
 
@@ -179,7 +179,7 @@
 <p>之后他会问你四个问题，1.是否需要一个例子工程；2.选择一个测试框架；3.是否基于View测试；4.类的前缀；4个问题的具体介绍可以去看官方文档，我这里选择的是1.yes；2.Specta/Expecta；3.yes；4.PTL。
 问完这4个问题他会自动执行<code>pod install</code>命令创建项目并生成依赖。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -228,7 +228,7 @@
 
 <p>通过<code>Cocoapods</code>创建出来的目录本身就在本地的<code>Git</code>管理下，我们需要做的就是给它添加远端仓库，同样去<code>GitHub</code>或其他的<code>Git</code>服务提供商那里创建一个私有的仓库，拿到<code>SSH</code>地址，然后<code>cd</code>到<code>PodTestLibrary</code>目录</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -241,7 +241,7 @@
 
 <p>因为<code>podspec</code>文件中获取<code>Git</code>版本控制的项目还需要<code>tag</code>号，所以我们要打上一个<code>tag</code>，</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git tag -m <span class="s2">&quot;first release&quot;</span> 0.1.0
 </span><span class='line'><span class="nv">$ </span>git push --tags     <span class="c">#推送tag到远端仓库</span>
@@ -250,7 +250,7 @@
 
 <p>做完这些就可以开始编辑<code>podspec</code>文件了，它是一个<code>Ruby</code>的文件，把编辑器的格式改成<code>Ruby</code>就能看到语法高亮，下面我贴上我的<code>podspec</code>文件，并在后面以注释的形式说明每个字段的含义，没有涉及到的字段可以去<a href="http://guides.cocoapods.org/syntax/podspec.html">官方文档</a>查阅</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -313,14 +313,14 @@
 
 <p>编辑完<code>podspec</code>文件后，需要验证一下这个文件是否可用，如果有任何<code>WARNING</code>或者<code>ERROR</code>都是不可以的，它就不能被添加到<code>Spec Repo</code>中，不过<code>xcode</code>的<code>WARNING</code>是可以存在的，验证需要执行一下命令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>当你看到</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'> -&gt; PodTestLibrary <span class="o">(</span>0.1.0<span class="o">)</span>
@@ -335,14 +335,14 @@
 
 <p>如果从第二步过来，已经有了现成的项目，那么就需要给这个项目创建一个<code>podspec</code>文件，创建它需要执行<code>Cocoapods</code>的另外一个命令，<a href="http://guides.cocoapods.org/making/specs-and-specs-repo.html">官方文档</a>在这里</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod spec create PodTestLibrary git@coding.net:wtlucky/podTestLibrary.git
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>执行完之后，就创建了一个<code>podspec</code>文件，他其中会包含很多内容，可以按照我之前介绍的进行编辑，没用的删掉。编辑完成之后使用验证命令验证一下</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod lib lint
 </span></code></pre></td></tr></table></div></figure>
 
@@ -354,7 +354,7 @@
 <p>我们可以创建一个新的项目，在这个项目的<code>Podfile</code>文件中直接指定刚才创建编辑好的<code>podspec</code>文件，看是否可用。
 在<code>Podfile</code>中我们可以这样编辑，有两种方式</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -374,14 +374,14 @@
 <p>向<code>Spec Repo</code>提交<code>podspec</code>需要完成两点一个是<code>podspec</code>必须通过验证无误，在一个就是删掉无用的注释（这个不是必须的，为了规范还是删掉吧）。
 向我们的私有<code>Spec Repo</code>提交<code>podspec</code>只需要一个命令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec  <span class="c">#前面是本地Repo名字 后面是podspec名字</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>完成之后这个组件库就添加到我们的私有<code>Spec Repo</code>中了，可以进入到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -400,7 +400,7 @@
 
 <p>至此，我们的这个组件库就已经制作添加完成了，使用<code>pod search</code>命令就可以查到我们自己的库了</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -425,7 +425,7 @@
 
 <p>在完成这一系列步骤之后，我们就可以在正式项目中使用这个私有的<code>Pod</code>了只需要在项目的<code>Podfile</code>里增加以下一行代码即可</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.1.0&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -440,7 +440,7 @@
 
 <p>具体做法是先将源文件添加到<code>Pod/Classes</code>中，然后按照不同的模块对文件目录进行整理，因为我有四个模块，所以在<code>Pod/Classes</code>下有创建了四个子目录，完成之后继续编辑之前的<code>PodTestLibrary.podspec</code>，这次增加了<code>subspec</code>特性</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -557,14 +557,14 @@
 
 <p>最后再次使用<code>pod lib lint</code>验证编辑好的<code>podsepc</code>文件，没有自身的<code>WARNING</code>或者<code>ERROR</code>之后，就可以再次提交到<code>Spec Repo</code>中了，命令跟之前是一样的</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo push WTSpecs PodTestLibrary.podspec
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>之后再次到<code>~/.cocoapods/repos/WTSpecs</code>目录下查看</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -589,7 +589,7 @@
 
 <p>已经有两个版本了，使用<code>pod search</code>查找得到的结果为</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -620,7 +620,7 @@
 
 <p>完成这些之后，在实际项目中我们就可以选择使用整个组件库或者是组件库的某一个部分了，对应的<code>Podfile</code>中添加的内容为</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -637,14 +637,14 @@
 
 <p>最后介绍一下如何删除一个私有<code>Spec Repo</code>，只需要执行一条命令即可</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo remove WTSpecs
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>这样这个<code>Spec Repo</code>就在本地删除了，我们还可以通过</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>pod repo add WTSpecs git@coding.net:wtlucky/WTSpecs.git
 </span></code></pre></td></tr></table></div></figure>
 
@@ -653,14 +653,14 @@
 
 <p>如果我们要删除私有<code>Spec Repo</code>下的某一个<code>podspec</code>怎么操作呢，此时无需借助<code>Cocoapods</code>，只需要<code>cd</code>到<code>~/.cocoapods/repos/WTSpecs</code>目录下，删掉库目录</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>rm -Rf PodTestLibrary
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>然后在将<code>Git</code>的变动<code>push</code>到远端仓库即可</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs<span class="nv">$ </span>git add --all .
@@ -698,12 +698,12 @@
   
 
 
-<time datetime="2015-02-26T16:14:00+08:00" pubdate data-updated="true"></time>
+<time datetime="2015-02-26T16:14:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ios-development/'>ios development</a>
+    <a class='category' href='/blog/categories/ios-development/'>iOS development</a>
   
 </span>
 
@@ -781,7 +781,7 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (8)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -890,24 +890,24 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 131%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 <a style="font-size: 115%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
 
   </ul>
 </section>
