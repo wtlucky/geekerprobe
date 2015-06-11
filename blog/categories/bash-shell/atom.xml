@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Bash Shell | GeekerProbe]]></title>
+  <title><![CDATA[Category: bash shell | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/bash-shell/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-03-03T17:21:40+08:00</updated>
+  <updated>2015-06-11T10:58:35+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -43,11 +43,11 @@
 
 <p>只写一下本次用到的<code>for</code>循环，其他的流程控制以后用到时在学习。
 for-loop表达式查看一个字符串列表 (字符串用空格分隔) 然后将其赋给一个变量：
-for var in ....; do
-　 ....
+for var in &hellip;.; do
+　 &hellip;.
 done
 在下面的例子中，将分别打印ABC到屏幕上：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -58,15 +58,15 @@ done
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
 </span><span class='line'>
-</span><span class='line'>&lt;p&gt;for var in A B C ; <span class="k">do</span>
-</span><span class='line'>　 <span class="nb">echo</span> <span class="s2">&quot;var is $var&quot;</span>
+</span><span class='line'>&lt;p&gt;for var in A B C <span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>　 <span class="nb">echo</span> <span class="p">&amp;</span>ldquo<span class="p">;</span>var is <span class="nv">$var</span><span class="p">&amp;</span>rdquo<span class="p">;</span>
 </span><span class='line'><span class="k">done</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>这里参考的文章是<a href="http://blog.csdn.net/fpmystar/article/details/4183678">Linux shell脚本编写基础</a></p>
 
 <p>在我写的<code>shell</code>脚本中则是使用循环输出当前文件夹下文件的名字：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -74,24 +74,18 @@ done
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
 </span><span class='line'>
-</span><span class='line'>&lt;p&gt;for aFile in *; <span class="k">do</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;tmpFile<span class="o">=</span><span class="sb">`</span>basename <span class="nv">$aFile</span><span class="sb">`</span>
-</span><span class='line'><span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;done
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p&gt;for aFile in *<span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nv">tmpFile</span><span class="o">=</span>&lt;code&gt;basename <span class="nv">$aFile</span>&lt;/code&gt;
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>接下来就是对获取到的每一个文件名的字符串进行截取，删掉不需要的部分：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -101,26 +95,20 @@ done
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
 </span><span class='line'>
-</span><span class='line'>&lt;p&gt;for aFile in *; <span class="k">do</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;tmpFile<span class="o">=</span><span class="sb">`</span>basename <span class="nv">$aFile</span><span class="sb">`</span>
-</span><span class='line'><span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C*-</span><span class="k">}</span>
-</span><span class='line'><span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
-</span><span class='line'><span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;done
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p&gt;for aFile in &lt;em&gt;<span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nv">tmpFile</span><span class="o">=</span>&lt;code&gt;basename <span class="nv">$aFile</span>&lt;/code&gt;
+</span><span class='line'>    <span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C&lt;/em&gt;-</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>这里学习了一下<code>shell</code>字符串的操作知识，<code>:</code>选取子串 <code>#</code>正向截取子串 <code>%</code>逆向截取子串 <code>##</code>正向最长匹配 <code>%%</code>逆向最长匹配。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -141,33 +129,33 @@ done
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">str</span><span class="o">=</span><span class="s2">&quot;abcdef&quot;</span>
-</span><span class='line'>expr substr <span class="s2">&quot;$str&quot;</span> 1 3  <span class="c"># 从第一个位置开始取3个字符， abc</span>
-</span><span class='line'>expr substr <span class="s2">&quot;$str&quot;</span> 2 5  <span class="c"># 从第二个位置开始取5个字符， bcdef</span>
-</span><span class='line'>expr substr <span class="s2">&quot;$str&quot;</span> 4 5  <span class="c"># 从第四个位置开始取5个字符， def&lt;/p&gt;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">str</span><span class="o">=</span><span class="p">&amp;</span>ldquo<span class="p">;</span>abcdef<span class="p">&amp;</span>rdquo<span class="p">;</span>
+</span><span class='line'>expr substr <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">$str</span><span class="p">&amp;</span>rdquo<span class="p">;</span> <span class="m">1</span> <span class="m">3</span>  <span class="c"># 从第一个位置开始取3个字符， abc</span>
+</span><span class='line'>expr substr <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">$str</span><span class="p">&amp;</span>rdquo<span class="p">;</span> <span class="m">2</span> <span class="m">5</span>  <span class="c"># 从第二个位置开始取5个字符， bcdef</span>
+</span><span class='line'>expr substr <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">$str</span><span class="p">&amp;</span>rdquo<span class="p">;</span> <span class="m">4</span> <span class="m">5</span>  <span class="c"># 从第四个位置开始取5个字符， def&lt;/p&gt;</span>
 </span><span class='line'>
 </span><span class='line'>&lt;p&gt;echo <span class="k">${</span><span class="nv">str</span><span class="p">:</span><span class="nv">2</span><span class="k">}</span>           <span class="c"># 从第二个位置开始提取字符串， bcdef</span>
 </span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:</span><span class="nv">2</span><span class="p">:</span><span class="nv">3</span><span class="k">}</span>         <span class="c"># 从第二个位置开始提取3个字符, bcd</span>
 </span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:(-2)</span><span class="k">}</span>        <span class="c"># 从倒数第二个位置向左提取字符串, abcde</span>
 </span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">:(-2):</span><span class="nv">3</span><span class="k">}</span>      <span class="c"># 从倒数第二个位置向左提取3个字符, cde&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p&gt;str<span class="o">=</span><span class="s2">&quot;abbc,def,ghi,abcjkl&quot;</span>
+</span><span class='line'>&lt;p&gt;str<span class="o">=</span><span class="p">&amp;</span>ldquo<span class="p">;</span>abbc,def,ghi,abcjkl<span class="p">&amp;</span>rdquo<span class="p">;</span>
 </span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#a&lt;em&gt;c</span><span class="k">}</span>         <span class="c"># ,def,ghi,abcjkl  一个井号(#) 表示从左边截取掉最短的匹配 (这里把abbc字串去掉）</span>
 </span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">##a&lt;/em&gt;c</span><span class="k">}</span>        <span class="c"># jkl，             两个井号(##) 表示从左边截取掉最长的匹配 (这里把abbc,def,ghi,abc字串去掉)</span>
-</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#</span><span class="s2">&quot;a&lt;em&gt;c&quot;</span><span class="k">}</span>       <span class="c"># 空,因为str中没有子串&quot;a&lt;/em&gt;c&quot;</span>
-</span><span class='line'><span class="nb">echo</span> <span class="nv">$[</span>str##<span class="s2">&quot;a&lt;em&gt;c&quot;</span><span class="o">}</span>      <span class="c"># 空,同理</span>
+</span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#&amp;ldquo;a&lt;em&gt;c&amp;rdquo;</span><span class="k">}</span>       <span class="c"># 空,因为str中没有子串&quot;a&lt;/em&gt;c&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$[</span>str##<span class="p">&amp;</span>ldquo<span class="p">;</span>a&lt;em&gt;c<span class="p">&amp;</span>rdquo<span class="p">;</span><span class="o">}</span>      <span class="c"># 空,同理</span>
 </span><span class='line'><span class="nb">echo</span> <span class="k">${</span><span class="nv">str</span><span class="p">#d&lt;/em&gt;f)         # abbc,def,ghi,abcjkl,</span>
 </span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">#&lt;em&gt;d&lt;/em&gt;f</span><span class="k">}</span><span class="p">        # ,ghi,abcjkl&lt;/p&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="p">&lt;p&gt;echo </span><span class="k">${</span><span class="nv">str</span><span class="p">%a&lt;em&gt;l</span><span class="k">}</span><span class="p">         # abbc,def,ghi  一个百分号(%)表示从右边截取最短的匹配</span>
 </span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">%%b&lt;/em&gt;l</span><span class="k">}</span><span class="p">        # a             两个百分号表示(%%)表示从右边截取最长的匹配</span>
 </span><span class='line'><span class="p">echo </span><span class="k">${</span><span class="nv">str</span><span class="p">%a*c</span><span class="k">}</span><span class="p">         # abbc,def,ghi,abcjkl&lt;br/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>这里参考的文章<a href="http://my.oschina.net/aiguozhe/blog/41557">Bash Shell字符串操作小结</a></p>
 
 <p>最后就是将文件重命名了：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -178,31 +166,25 @@ done
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
 </span><span class='line'>
-</span><span class='line'>&lt;p&gt;for aFile in *; <span class="k">do</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;tmpFile<span class="o">=</span><span class="sb">`</span>basename <span class="nv">$aFile</span><span class="sb">`</span>
-</span><span class='line'><span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C*-</span><span class="k">}</span>
-</span><span class='line'><span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
-</span><span class='line'><span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
-</span><span class='line'>mv <span class="nv">$tmpFile</span> <span class="nv">$newName</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;done
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p&gt;for aFile in &lt;em&gt;<span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nv">tmpFile</span><span class="o">=</span>&lt;code&gt;basename <span class="nv">$aFile</span>&lt;/code&gt;
+</span><span class='line'>    <span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C&lt;/em&gt;-</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
+</span><span class='line'>    mv <span class="nv">$tmpFile</span> <span class="nv">$newName</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>运行时发现只有部分文件被成功重命名了，其余的都不成功，而这些不成功的文件名中都包含空格，空格是很大一个问题，在获取原文件名时文件名就被空格截断了，导致文件名不全。因而重命名也是失败的，找不到源文件。
 参考这篇文章<a href="http://www.cnblogs.com/cocowool/archive/2013/01/15/2861904.html">SHELL技巧：处理文件名中的那些空格</a>
 找到了解决方法，对变量添加<code>""</code>使空格被正确处理，这不是最好的方法，但是在我这个小小的脚本中完全可以了。</p>
 
 <p>文章中还介绍了一种终极解决方法就是设置<code>IFS(the Internal Field Separator)</code>，但是在设置之前先保存当前的<code>IFS</code>，操作完成之后在设置回去。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -217,17 +199,17 @@ done
 </span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;p&gt;SAVEIFS<span class="o">=</span><span class="nv">$IFS</span>
-</span><span class='line'><span class="nv">IFS</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> -en <span class="s2">&quot;\n\b&quot;</span><span class="k">)</span>&lt;/p&gt;
+</span><span class='line'><span class="nv">IFS</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> -en <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="se">\n\b</span><span class="p">&amp;</span>rdquo<span class="p">;</span><span class="k">)</span>&lt;/p&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;进行操作&lt;/h1&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;p&gt;IFS<span class="o">=</span><span class="nv">$SAVEIFS</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>但是我这样使用之后经过测试发现，并不能解决问题，文件名被读取成其他怪异的形式了，空格是被正常读取了但是<code>-</code>也被读取成空格了，我不知道这是为什么，有知道的欢迎告诉我。</p>
 
 <p>最后附上自己写的完整的<code>shell</code>脚本，虽然很短，但这是第一次写，也算是个入门吧。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -255,9 +237,6 @@ done
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
@@ -268,28 +247,25 @@ done
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;SAVEIFS<span class="o">=</span><span class="nv">$IFS</span>&lt;/h1&gt;
 </span><span class='line'>
-</span><span class='line'>&lt;h1&gt;IFS<span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> -en <span class="s2">&quot;\n\b&quot;</span><span class="k">)</span>&lt;/h1&gt;
+</span><span class='line'>&lt;h1&gt;IFS<span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> -en <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="se">\n\b</span><span class="p">&amp;</span>rdquo<span class="p">;</span><span class="k">)</span>&lt;/h1&gt;
 </span><span class='line'>
-</span><span class='line'>&lt;p&gt;for aFile in *; <span class="k">do</span>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;pre&gt;&lt;code&gt;#对变量加上双引号会避免文件名中有空格的问题
-</span><span class='line'><span class="nv">tmpFile</span><span class="o">=</span><span class="sb">`</span>basename <span class="s2">&quot;$aFile&quot;</span><span class="sb">`</span>
-</span><span class='line'><span class="c">#截取文件名字符串中的前一部分</span>
-</span><span class='line'><span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C*-</span><span class="k">}</span>
-</span><span class='line'><span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
-</span><span class='line'><span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
-</span><span class='line'><span class="c">#对文件进行重命名</span>
-</span><span class='line'>mv <span class="s2">&quot;$tmpFile&quot;</span> <span class="s2">&quot;$newName&quot;</span>
-</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;done&lt;/p&gt;
+</span><span class='line'>&lt;p&gt;for aFile in &lt;em&gt;<span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="c">#对变量加上双引号会避免文件名中有空格的问题</span>
+</span><span class='line'>    <span class="nv">tmpFile</span><span class="o">=</span>&lt;code&gt;basename <span class="s2">&quot;$aFile&quot;</span>&lt;/code&gt;
+</span><span class='line'>    <span class="c">#截取文件名字符串中的前一部分</span>
+</span><span class='line'>    <span class="nv">newName</span><span class="o">=</span><span class="k">${</span><span class="nv">tmpFile</span><span class="p">#C&lt;/em&gt;-</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 原文件名：<span class="k">${</span><span class="nv">tmpFile</span><span class="k">}</span>
+</span><span class='line'>    <span class="nb">echo</span> 新文件名：<span class="k">${</span><span class="nv">newName</span><span class="k">}</span>
+</span><span class='line'>    <span class="c">#对文件进行重命名</span>
+</span><span class='line'>    mv <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">$tmpFile</span><span class="p">&amp;</span>rdquo<span class="p">;</span> <span class="p">&amp;</span>ldquo<span class="p">;</span><span class="nv">$newName</span><span class="p">&amp;</span>rdquo<span class="p">;</span>
+</span><span class='line'><span class="k">done</span>&lt;/p&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;<span class="o">=====</span>将<span class="nv">$IFS</span>恢复为原来的状态&lt;/h1&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;h1&gt;IFS<span class="o">=</span><span class="nv">$SAVEIFS</span>&lt;/h1&gt;
 </span><span class='line'>
 </span><span class='line'>&lt;p&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <h3>总结一下需要注意的地方</h3>
 

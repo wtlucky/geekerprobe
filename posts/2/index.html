@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="本学期开了一门课程叫做《软件体系结构》，讲的主要是设计模式的东西，而我在之前也看过设计模式的书，正好借此机会来整理一下自己所学到的知识，因为自己在做iOS开发，所以基本上这23种设计模式我都通过objective-C来实现了。此系列文章的类图都是来自《设计模式之禅》，有兴趣的同学可以去买这本书看 &hellip;">
+  <meta name="description" content="这次来介绍一下观察者模式，这种模式可以说使用的是最多的，也最常见。我们现在使用的智能手机的应用在本质上也都是观察者模式的一种体现，这些手机应用都是事件驱动机制，只要有事件发生，就会做出一系列的响应处理，在没有事件的时候，什么也不会发生。这就是观察者模式，观察者模式需要一个被观察者， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.wtlucky.com/blog/page/2/">
+  <link rel="canonical" href="http://blog.wtlucky.com/posts/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -84,6 +84,55 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/03/20/observer/">23种设计模式——观察者模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-20T21:04:00+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2013/03/20/observer/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这次来介绍一下观察者模式，这种模式可以说使用的是最多的，也最常见。我们现在使用的智能手机的应用在本质上也都是观察者模式的一种体现，这些手机应用都是事件驱动机制，只要有事件发生，就会做出一系列的响应处理，在没有事件的时候，什么也不会发生。这就是观察者模式，观察者模式需要一个被观察者，和一个或者多个观察者。当被观察者的状态发生改变时，观察者会做出相应的处理。</p>
+
+<h4>观察者模式定义</h4>
+
+<p>观察者模式（Observer Pattern）也叫做发布订阅模式（Publish/subscribe）。
+<code>Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.(定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于他的对象都会得到通知并被自动更新。)</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/20/observer/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/03/19/singleton/">23种设计模式——单例模式</a></h1>
     
     
@@ -100,7 +149,7 @@
   
 
 
-<time datetime="2013-03-19T19:35:00+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
+<time datetime="2013-03-19T19:35:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="/blog/2013/03/19/singleton/#comments">Comments</a>
@@ -152,7 +201,7 @@
   
 
 
-<time datetime="2013-03-04T13:05:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2013</time>
+<time datetime="2013-03-04T13:05:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="/blog/2013/03/04/generate-commentate-with-xcode/#comments">Comments</a>
@@ -169,7 +218,7 @@
 
 <p>先展示个效果：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -232,7 +281,7 @@
   
 
 
-<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="/blog/2013/02/27/apns-ssl-error/#comments">Comments</a>
@@ -266,7 +315,7 @@
 <p>上网Google之，发现很多人遇到此问题，给出的解决方案照做后错误依然存在。
 最终还是自己解决，从问题本身出发吧，自己当初调试时<code>Server</code>是部署在<code>Mac os</code>上的，而现在却要部署在<code>Windows Server 2008</code>上。所以很可能是两边的配置出了问题，而代码的第24行为：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -313,7 +362,7 @@
   
 
 
-<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2013</time>
+<time datetime="2013-02-24T23:02:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="/blog/2013/02/24/create-blog-use-octopress-and-github/#comments">Comments</a>
@@ -359,7 +408,7 @@
   
 
 
-<time datetime="2013-02-23T09:01:00+08:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2013</time>
+<time datetime="2013-02-23T09:01:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="/blog/2013/02/23/my-first-blog/#comments">Comments</a>
@@ -381,7 +430,7 @@
     
     <a href="/blog/archives">Blog Archives</a>
     
-    <a class="next" href="/">Newer &rarr;</a>
+    <a class="next" href="1">Newer &rarr;</a>
     
   </div>
 </div>
@@ -389,17 +438,21 @@
   
     <section>
   <h1>About Me</h1>
-  <p>Hi, I&#8217;m Wang Tao from CangZhou, China. I usually use the name of wtlucky.<br /><br />
+  <p>Hi, I'm Wang Tao from CangZhou, China. I usually use the name of wtlucky.<br /><br />
      An iOS developer and passionate about Internet Technologies.</p>
   <p>This blog used to note and share what I have learn.</p>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (7)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/">Constraints &amp; Transformations 在iOS7和8上的不同</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a>
@@ -415,10 +468,6 @@
     
       <li class="post">
         <a href="/blog/2014/07/25/swift-hexadecimal-conversion/">Swift Hexadecimal conversion</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/28/wax-lua/">Wax Lua—使用lua编写原生ios程序的框架实现原理</a>
       </li>
     
   </ul>
@@ -443,7 +492,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -460,7 +509,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/wtlucky">@wtlucky</a> on GitHub
@@ -500,24 +549,24 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 132%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 116%" href="/tags/git/">git</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
 <a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
 
   </ul>
 </section>

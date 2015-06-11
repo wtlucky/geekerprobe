@@ -98,7 +98,7 @@
   
 
 
-<time datetime="2013-12-28T20:13:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2013</time>
+<time datetime="2013-12-28T20:13:00+08:00" pubdate data-updated="true"></time>
         
         
       | <a href="#comments">Comments</a>
@@ -138,25 +138,25 @@
 
 <p>使用一个类时你会这样使用：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">NSString</span> <span class="c1">-- Returns the NSString class</span>
 </span><span class='line'><span class="n">UIView</span> <span class="c1">-- Returns the UIView class</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这样调用其实一个语法糖，实际上他调用的是wax.class[&#8220;UIView &#8220;]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
+<p>这样调用其实一个语法糖，实际上他调用的是wax.class[&ldquo;UIView &rdquo;]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
 
 <p>当定义一个类的时候会是这样：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span> <span class="n">NSObject</span><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>遵循协议的类：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span><span class="n">NSObject</span><span class="p">,</span><span class="n">protocols</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">UITableViewDelegate&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="s">UITableViewDataSource&quot;</span><span class="p">}}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -164,28 +164,28 @@
 <p>在你定义这个类的脚本文件里缩写的其他function都将作为这个类的实例方法。且这个方法的第一个参数必须是<code>self</code>，这就是Wax模仿Objective-C的面向对象的关键所在。
 因此在Wax中调用方法要使用冒号，类似这样：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">:</span><span class="n">sharedApplication</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>其实他就等同于这样：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">(</span><span class="n">UIApplication</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>在调用含有多个参数的方法时候，使用<code>_</code>来代替OC中的:,例如：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">UIAlertView</span> <span class="nl">initWithTitle:</span><span class="s">@&quot;title&quot;</span> <span class="nl">message:</span><span class="s">@&quot;message&quot;</span> <span class="nl">delegate:</span><span class="nb">nil</span><span class="p">];</span>  <span class="c1">//OC方式</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIAlertView</span><span class="p">:</span><span class="n">initWithTitle_message_delegate</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">title&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">message&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>    <span class="c1">--Wax 方式</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -213,7 +213,7 @@
 
 <p><code>Wax</code>主要是维护了这样的一个结构，基本上所有与对象有关的操作都是在这个基础上完成的：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -262,12 +262,12 @@
   
 
 
-<time datetime="2013-12-28T20:13:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2013</time>
+<time datetime="2013-12-28T20:13:00+08:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/technical-research/'>Technical Research</a>
+    <a class='category' href='/blog/categories/technical-research/'>technical research</a>
   
 </span>
 
@@ -345,7 +345,7 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>Bash Shell (1)</a></li><li><a href='/blog/categories/design-pattern'>Design Pattern (4)</a></li><li><a href='/blog/categories/ios-development'>iOS development (7)</a></li><li><a href='/blog/categories/octopress'>Octopress (1)</a></li><li><a href='/blog/categories/technical-research'>Technical Research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -354,6 +354,10 @@
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/">Constraints &amp; Transformations 在iOS7和8上的不同</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a>
@@ -369,10 +373,6 @@
     
       <li class="post">
         <a href="/blog/2014/07/25/swift-hexadecimal-conversion/">Swift Hexadecimal conversion</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/28/wax-lua/">Wax Lua—使用lua编写原生ios程序的框架实现原理</a>
       </li>
     
   </ul>
@@ -454,24 +454,24 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 132%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
+<a style="font-size: 131%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 116%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
 
   </ul>
 </section>

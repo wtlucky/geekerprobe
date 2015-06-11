@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Lua | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/lua/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-03-03T17:21:40+08:00</updated>
+  <updated>2015-06-11T10:58:35+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -47,39 +47,39 @@
 <p>说一下<code>Wax</code>的特点，它支持你在脚本里使用任何<code>OC</code>的类，同样也支持你创建一个类。</p>
 
 <p>使用一个类时你会这样使用：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">NSString</span> <span class="c1">-- Returns the NSString class</span>
-</span><span class='line'><span class="n">UIView</span> <span class="c1">-- Returns the UIView class</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-这样调用其实一个语法糖，实际上他调用的是wax.class["UIView "]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">NSString</span> <span class="err">&amp;</span><span class="n">ndash</span><span class="p">;</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">NSString</span> <span class="n">class</span>
+</span><span class='line'><span class="n">UIView</span> <span class="err">&amp;</span><span class="n">ndash</span><span class="p">;</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">UIView</span> <span class="n">class</span>
+</span></code></pre></td></tr></table></div></figure>
+这样调用其实一个语法糖，实际上他调用的是wax.class[&ldquo;UIView &rdquo;]，但是我们在使用的时候不需要知道这些，因为在这个框架里已经通过设置元表的方法实现了这一点。</p>
 
 <p>当定义一个类的时候会是这样：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span> <span class="n">NSObject</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="err">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">MyClass</span><span class="err">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">NSObject</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 遵循协议的类：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">MyClass&quot;</span><span class="p">,</span><span class="n">NSObject</span><span class="p">,</span><span class="n">protocols</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;</span><span class="s">UITableViewDelegate&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="s">UITableViewDataSource&quot;</span><span class="p">}}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">waxClass</span><span class="p">{</span><span class="err">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">MyClass</span><span class="err">&amp;</span><span class="n">rdquo</span><span class="p">;,</span><span class="n">NSObject</span><span class="p">,</span><span class="n">protocols</span><span class="o">=</span><span class="p">{</span><span class="err">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UITableViewDelegate</span><span class="err">&amp;</span><span class="n">rdquo</span><span class="p">;,</span><span class="err">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UITableViewDataSource</span><span class="err">&amp;</span><span class="n">rdquo</span><span class="p">;}}</span>
+</span></code></pre></td></tr></table></div></figure>
 在你定义这个类的脚本文件里缩写的其他function都将作为这个类的实例方法。且这个方法的第一个参数必须是<code>self</code>，这就是Wax模仿Objective-C的面向对象的关键所在。
 因此在Wax中调用方法要使用冒号，类似这样：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">:</span><span class="n">sharedApplication</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+</span></code></pre></td></tr></table></div></figure>
 其实他就等同于这样：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">(</span><span class="n">UIApplication</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>在调用含有多个参数的方法时候，使用<code>_</code>来代替OC中的:,例如：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">UIAlertView</span> <span class="nl">initWithTitle:</span><span class="s">@&quot;title&quot;</span> <span class="nl">message:</span><span class="s">@&quot;message&quot;</span> <span class="nl">delegate:</span><span class="nb">nil</span><span class="p">];</span>  <span class="c1">//OC方式</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="bp">UIAlertView</span> <span class="nl">initWithTitle</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">title</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="nl">message</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">message</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="nl">delegate</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>  <span class="c1">//OC方式</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIAlertView</span><span class="p">:</span><span class="n">initWithTitle_message_delegate</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">title&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">message&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>    <span class="c1">--Wax 方式</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lua'><span class='line'><span class="n">UIAlertView</span><span class="p">:</span><span class="n">initWithTitle_message_delegate</span><span class="p">(</span><span class="err">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">title</span><span class="err">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="err">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">message</span><span class="err">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="kc">nil</span><span class="p">)</span>    <span class="err">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">Wax</span> <span class="err">方式</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>使用<code>Wax</code>创建对象不需要你<code>alloc</code>，因为他会帮你实现内存管理，它是怎么实现的稍后再说。</p>
 
@@ -103,25 +103,19 @@
 <p>下面再说一下<code>Wax</code>。<code>Wax</code>的源码中有这样一个文件<code>wax_helpers.h/wax_helpers.m</code>，它提供了一系列的工具方法包括lua与OC的类型之间相互转化，lua中使用_的方法名转化为OC中:的selector，根据lua传递过来的方法名找到对应的<code>selector</code>等方法，有兴趣的同学可以去看看代码。</p>
 
 <p><code>Wax</code>主要是维护了这样的一个结构，基本上所有与对象有关的操作都是在这个基础上完成的：
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_wax_instance_userdata</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">id</span> <span class="n">instance</span><span class="p">;</span>
-</span><span class='line'><span class="n">BOOL</span> <span class="n">isClass</span><span class="p">;</span>
-</span><span class='line'><span class="n">Class</span> <span class="n">isSuper</span><span class="p">;</span> <span class="c1">// isSuper not only stores whether the class is a super, but it also contains the value of the next superClass.</span>
-</span><span class='line'><span class="n">BOOL</span> <span class="n">actAsSuper</span><span class="p">;</span> <span class="c1">// It only acts like a super once, when it is called for the first time.</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="n">wax_instance_userdata</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_wax_instance_userdata</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">id</span> <span class="n">instance</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">BOOL</span> <span class="n">isClass</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">Class</span> <span class="n">isSuper</span><span class="p">;</span> <span class="c1">// isSuper not only stores whether the class is a super, but it also contains the value of the next superClass.</span>
+</span><span class='line'>    <span class="n">BOOL</span> <span class="n">actAsSuper</span><span class="p">;</span> <span class="c1">// It only acts like a super once, when it is called for the first time.</span>
+</span><span class='line'><span class="p">}</span> <span class="n">wax_instance_userdata</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 第一个<code>instance</code>就是OC对象的一个指针，<code>isClass</code>标识这是不是一个类对象，<code>isSuper</code>用来标识他的父对象，类似以OC中的<code>isa</code>指针，这么做是为了在方法调用时子类如果找不到的话就会由此去父类查找，<code>actAsSuper</code>用来标识这个对象是不是被当做父类来使用，<code>Wax</code>中一个对象智能被当做父类一次。</p>
 
 <p><code>Wax</code>中还维护了两个表，一个<code>UserDataTable</code>一个<code>StrongUserDataTable</code>。这两个表中都存储的是<code>Wax_instance_userdata-&gt;instance</code>为<code>key</code>，<code>Wax_instance_userdata</code>为值的键值对。 <code>UserDataTable</code>是一个值为wake的弱表，他用来存储所有创建的对象，是一个弱引用，他其中就存储了通过lua创建的OC对象，因为是弱表，所以当不在使用时会调用<code>__gc</code>这个元方法，进而将该OC对象销毁。<code>StrongUserDataTable</code>是一个强引用表他保存的是所有通过<code>Wax</code>创建的对象，他不是一个弱表所以需要手动管理内存。也就是说使用<code>Wax</code>创建的对象除了会在<code>UserDataTable</code>中保存一份以外还会在<code>StrongUserDataTable</code>保存一份。</p>
