@@ -4,7 +4,7 @@
   <title><![CDATA[Category: design pattern | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/design-pattern/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-06-11T10:58:35+08:00</updated>
+  <updated>2015-10-11T18:09:37+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -36,7 +36,7 @@
 
 <h4>策略模式类图</h4>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2013/03/Strategy.jpg">http://picturemapstore.bcs.duapp.com/2013/03/Strategy.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/7f2860a7f178473f.jpg">http://i13.tietuku.com/7f2860a7f178473f.jpg</a>"></p>
 
 <h4>策略模式说明</h4>
 
@@ -355,7 +355,7 @@
 
 <h4>适配器模式类图</h4>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2013/03/Adapter.jpg">http://picturemapstore.bcs.duapp.com/2013/03/Adapter.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/643d75b493af716d.jpg">http://i13.tietuku.com/643d75b493af716d.jpg</a>"></p>
 
 <h4>适配器模式说明</h4>
 
@@ -612,7 +612,7 @@
 
 <h4>观察者模式类图</h4>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2013/03/Observer.jpg">http://picturemapstore.bcs.duapp.com/2013/03/Observer.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/Observer.jpg">http://imgchr.com/images/Observer.jpg</a>"></p>
 
 <h4>观察者模式说明</h4>
 
@@ -927,7 +927,7 @@
 
 <h4>单例模式类图</h4>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2013/03/singleton.jpg">http://picturemapstore.bcs.duapp.com/2013/03/singleton.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/singleton.jpg">http://imgchr.com/images/singleton.jpg</a>"></p>
 
 <h4>单例模式介绍</h4>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: iOS | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/ios/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-06-11T10:58:35+08:00</updated>
+  <updated>2015-10-11T18:09:37+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -26,7 +26,7 @@
 
 <p>先贴张图说明一下问题:</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/06/autolayout1.jpg">http://picturemapstore.bcs.duapp.com/2015/06/autolayout1.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/1cebfcf0129ca844.png">http://i13.tietuku.com/1cebfcf0129ca844.png</a>"></p>
 
 <p>可以看到<code>iOS7</code>在使用了<code>autolayout</code>之后，进行<code>transform</code>变幻之后<code>view</code>并没有达到预期效果，而在<code>iOS8</code>和和纯<code>frame</code>布局的情况下是正常的。</p>
 
@@ -36,11 +36,11 @@
 
 <p>通过<code>Reveal</code>查看可以看到:</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/06/autolayout2.jpg">http://picturemapstore.bcs.duapp.com/2015/06/autolayout2.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/dc322ed71cc0d21b.png">http://i13.tietuku.com/dc322ed71cc0d21b.png</a>"></p>
 
 <p>使用<code>autolayout</code>的<code>view</code>跟他的参照<code>View</code>相比只移动了<code>（-10，-10）</code>,而且它的布局位置也发生了偏移<code>（10，10）</code>，在<code>iOS8</code>下查看，会发现布局位置并没有移动，跟参照<code>View</code>完全一致</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/06/autolayout3.jpg">http://picturemapstore.bcs.duapp.com/2015/06/autolayout3.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/9274b80b9704dc37.png">http://i13.tietuku.com/9274b80b9704dc37.png</a>"></p>
 
 <p>由此可以得到的结论就是，在<code>iOS7</code>和<code>8</code>上使用<code>autolayout</code>布局的<code>view</code>的<code>center</code>属性的位置发生了改变。</p>
 
@@ -257,7 +257,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="n">s</span><span class="o">.</span><span class="n">homepage</span>         <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://coding.net/u/wtlucky/p/podTestLibrary&quot;</span><span class="o">&gt;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">u</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="nb">p</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">&lt;</span><span class="sr">/a&gt;&amp;rdquo;                           #主页,这里要填写可以访问到的地址，不然验证不通过</span>
 </span><span class='line'><span class="sr">  # s.screenshots     = &amp;ldquo;www.example.com/s</span><span class="n">creenshots_1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">screenshots_2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span>           <span class="c1">#截图</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">license</span>          <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">MIT</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>              <span class="c1">#开源协议</span>
-</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>           <span class="o">=</span> <span class="p">{</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">wtlucky</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#116;&amp;#111;&amp;#58;&amp;#119;&amp;#116;&amp;#x6c;&amp;#117;&amp;#x63;&amp;#x6b;&amp;#121;&amp;#64;&amp;#x66;&amp;#x6f;&amp;#120;&amp;#109;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&quot;</span><span class="o">&gt;&amp;</span><span class="c1">#119;&amp;#x74;&amp;#x6c;&amp;#117;&amp;#x63;&amp;#x6b;&amp;#121;&amp;#x40;&amp;#102;&amp;#111;&amp;#x78;&amp;#109;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#x2e;&amp;#99;&amp;#111;&amp;#x6d;&lt;/a&gt;&amp;rdquo; }                   #作者信息</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>           <span class="o">=</span> <span class="p">{</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">wtlucky</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#108;&amp;#116;&amp;#111;&amp;#x3a;&amp;#119;&amp;#x74;&amp;#x6c;&amp;#x75;&amp;#99;&amp;#107;&amp;#x79;&amp;#x40;&amp;#x66;&amp;#111;&amp;#120;&amp;#x6d;&amp;#97;&amp;#105;&amp;#x6c;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#x6d;&quot;</span><span class="o">&gt;&amp;</span><span class="c1">#x77;&amp;#x74;&amp;#x6c;&amp;#x75;&amp;#99;&amp;#107;&amp;#121;&amp;#x40;&amp;#102;&amp;#111;&amp;#x78;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#x6d;&lt;/a&gt;&amp;rdquo; }                   #作者信息</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>           <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://coding.net/wtlucky/podTestLibrary.git&quot;</span><span class="o">&gt;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">.</span><span class="n">git</span><span class="o">&lt;</span><span class="sr">/a&gt;&amp;rdquo;, :tag =&gt; &amp;ldquo;0.1.0&amp;rdquo; }      #项目地址，这里不支持ssh的地址，验证不通过，只支持HTTP和HTTPS，最好使用HTTPS</span>
 </span><span class='line'><span class="sr">  # s.social_media_url = &amp;lsquo;&lt;a href=&quot;https:/</span><span class="o">/</span><span class="n">twitter</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="s2">&quot;&gt;https://twitter.com/&lt;/a&gt;&lt;TWITTER_USERNAME&gt;&amp;rsquo;                       #多媒体介绍地址&lt;/p&gt;</span>
 </span><span class='line'>
@@ -454,7 +454,7 @@
 </span><span class='line'><span class="sr">&lt;p&gt;  s.homepage         = &amp;ldquo;&lt;a href=&quot;https:/</span><span class="o">/</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">u</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="nb">p</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="s2">&quot;&gt;https://coding.net/u/wtlucky/p/podTestLibrary&lt;/a&gt;&amp;rdquo;</span>
 </span><span class='line'><span class="s2">  # s.screenshots     = &amp;ldquo;www.example.com/screenshots_1&amp;rdquo;, &amp;ldquo;www.example.com/screenshots_2&amp;rdquo;</span>
 </span><span class='line'><span class="s2">  s.license          = &amp;lsquo;MIT&amp;rsquo;</span>
-</span><span class='line'><span class="s2">  s.author           = { &amp;ldquo;wtlucky&amp;rdquo; =&gt; &amp;ldquo;&lt;a href=&quot;</span><span class="o">&amp;</span><span class="c1">#x6d;&amp;#97;&amp;#105;&amp;#x6c;&amp;#116;&amp;#111;&amp;#x3a;&amp;#119;&amp;#116;&amp;#108;&amp;#117;&amp;#99;&amp;#x6b;&amp;#121;&amp;#64;&amp;#x66;&amp;#x6f;&amp;#x78;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&quot;&gt;&amp;#x77;&amp;#x74;&amp;#x6c;&amp;#117;&amp;#x63;&amp;#107;&amp;#121;&amp;#x40;&amp;#x66;&amp;#111;&amp;#x78;&amp;#109;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#x2e;&amp;#99;&amp;#111;&amp;#x6d;&lt;/a&gt;&amp;rdquo; }</span>
+</span><span class='line'><span class="s2">  s.author           = { &amp;ldquo;wtlucky&amp;rdquo; =&gt; &amp;ldquo;&lt;a href=&quot;</span><span class="o">&amp;</span><span class="c1">#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#x74;&amp;#x6f;&amp;#58;&amp;#119;&amp;#116;&amp;#x6c;&amp;#x75;&amp;#x63;&amp;#107;&amp;#x79;&amp;#x40;&amp;#x66;&amp;#x6f;&amp;#x78;&amp;#x6d;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&quot;&gt;&amp;#119;&amp;#x74;&amp;#108;&amp;#117;&amp;#99;&amp;#107;&amp;#121;&amp;#x40;&amp;#x66;&amp;#111;&amp;#x78;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;&lt;/a&gt;&amp;rdquo; }</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>           <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://coding.net/wtlucky/podTestLibrary.git&quot;</span><span class="o">&gt;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">.</span><span class="n">git</span><span class="o">&lt;</span><span class="sr">/a&gt;&amp;rdquo;, :tag =&gt; &amp;ldquo;1.0.0&amp;rdquo; }</span>
 </span><span class='line'><span class="sr">  # s.social_media_url = &amp;lsquo;&lt;a href=&quot;https:/</span><span class="o">/</span><span class="n">twitter</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="s2">&quot;&gt;https://twitter.com/&lt;/a&gt;&lt;TWITTER_USERNAME&gt;&amp;rsquo;&lt;/p&gt;</span>
 </span><span class='line'>
@@ -622,17 +622,17 @@
 
 <p>这个<code>cell</code>本来就是使用<code>AutoLayout</code>做的，但是之前是定高定宽的，图片的宽度被限制死了，即使是在<code>collocation view</code>的代理方法中将<code>cell</code>设大，<code>cell</code>的图片也不会变大。而且还需要把字体一并放大，以及图片左上和右下的两个图片的位置是要成比例设置的，这样之前设置的<code>heading space</code> 和 <code>trailing space</code>是固定值，也不能达到要求。先来看一下这个<code>cell</code>，因为项目的保密性我没有展示全部的内容，只是列举了一部分，但足以说明问题。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-1.jpg">http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-1.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/f775dffce0a50a8b.jpg">http://i13.tietuku.com/f775dffce0a50a8b.jpg</a>"></p>
 
 <p>因为使用的是<code>xcode6</code>，苹果提供了<code>Size Classes</code>这样强大的一个功能，为的是制作<code>adaptive UI</code>。就是只制作一套UI，但是可以适配多个屏幕尺寸以及选装方向，之前没有仔细研究过这个新特性，只是觉得他应该能应付当前的需求，因为使用它可以为每一种<code>size</code>设置一套<code>constraint</code>和字体大小。很好很强大！</p>
 
 <p>但是当开始使用时发现，没有一个<code>size</code>是能够单独区分出<code>6 Plus</code>的<code>portrait</code>模式的，到时能区分出<code>landscape</code>模式。<code>6 Plus</code>的<code>portrait</code>模式使用的是<code>Regular height</code>和<code>Compact width</code>，其他的设备的<code>portrait</code>模式使用的也是<code>Regular height</code>和<code>Compact width</code>。但是<code>Any height</code>和<code>Compact width</code>这个<code>size</code>对应的是<code>6 Plus</code>以外其他设备的<code>portrait</code>和<code>landscape</code>模式。如图所示，</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-3.jpg">http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-3.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/aeca38ae1498eb0b.jpg">http://i13.tietuku.com/aeca38ae1498eb0b.jpg</a>"></p>
 
 <p>这里正好不包括<code>6 Plus</code>，分别设置了这两种<code>size</code>发现不是预期的效果，所有的手机都使用了<code>Regular height</code>和<code>Compact width</code>的这个<code>size</code>。后来有看见了这个优先级的表格，</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-2.jpg">http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-2.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/2dcd34dae7d1d8bb.jpg">http://i13.tietuku.com/2dcd34dae7d1d8bb.jpg</a>"></p>
 
 <p>一旦设置了这个<code>size</code>那么就会优先加载这个<code>size</code>，所以这条路目前是行不通的，我觉得一定有其他的方法来通过<code>Size Classes</code>解决，或者通过代码修改优先级，或者使用某种方法标识<code>6 Plus</code>。由于我时间比较紧急，所以就没有继续使用这种方式，有知道的大神求告知啊，感激不尽！</p>
 
@@ -640,7 +640,7 @@
 
 <p>所以选择第二种开工，自适应很好搞，把最大的那个圆圈与父view的<code>heading</code>和<code>trailing</code>设为<code>0</code>即可，难的是等比例，虽然用<code>AutoLayout</code>有几个月了但是用得都是<code>heading</code>、<code>trailing</code>、<code>vertical</code>、<code>horizontal</code>、<code>top</code>、<code>bottom</code> 还有<code>width</code>和<code>height</code>这几个<code>constraint</code>，他们就能解决我之前遇到的所有布局问题，连<code>alignment</code>的那几个<code>constraint</code>我都很少使用。但是这次需要用到<code>Aspect ratio</code>了，之前一直不知道这咋用，感谢这次需求让我知道了如何用他，最大的那个圆圈是正方形设置了左右间距就确定了宽度，而高度的确定就用<code>Aspect ratio</code>设置为<code>1:1</code>即可，同样圆圈左上和右下的图也是需要等比例放大的，他们的比例也是通过<code>Aspect ratio</code>来设置，这里的比例按照设计图写一下即可。这里发现<code>xcode</code>一个很奇怪的问题，就是按住<code>ctrl</code>从一个view拖向另外一个view选择<code>Aspect ratio</code>的时候，<code>xcode</code>为你生成的是一个view的<code>height</code>与另一个view的<code>width</code>的比，这个我一直不是很理解，虽然如果你在设置<code>Aspect ratio</code>之前把他们的<code>frame</code>设为正确的话，生成的比例是正确的，但是这样真的很奇怪，可读性特别差，为什么要一个高比上另外一个的宽呢？我承认我数学学的不好，这里可能有其他的深刻含义，但是我觉得好奇怪，如果有人知道欢迎留言评论！所以这里我又手动的把一个view的<code>height</code>改为<code>width</code>，即宽比上宽，按照设计图修改一下比例。还有一个问题是圆圈的左上有右下的view的位置是要相应改变的，也是按照比例，设置固定的值肯定是不行的，因为值也是会变得，这里再次感谢这个需求，让我又一次加深的<code>AutoLayout</code>的理解，<code>AutoLayout</code>中的约束其实是一个二元一次方程，如图所示</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-4.jpg">http://picturemapstore.bcs.duapp.com/2015/01/QQ20150129-4.jpg</a>"></p>
+<p><img class="<a" src="href="http://i13.tietuku.com/d6877a02ea1a04f3.jpg">http://i13.tietuku.com/d6877a02ea1a04f3.jpg</a>"></p>
 
 <p><code>First item = Second item * Multiplier + Constant</code>，
 一个值是可以通过另外一个值通过这个方程式计算出来的，而我们所加的约束就是设置了<code>Multiplier</code>和<code>Constant</code>，再加上优先级，两者的属性（上下左右宽高等）以及两者的关系（大于小于等于），这些共同组成了一个<code>constraint</code>。 xcode默认创建的<code>constraint</code>的<code>Multiplier</code>为<code>1</code>，我之前使用的所有<code>constraint</code>也都是使用的是<code>1</code>，从没有改变过他，从方程式来看这里是可以按比例设置的。不得不说<code>AutoLayout</code>真的很强大，自己用到的仅仅是冰山一角。</p>
@@ -718,27 +718,27 @@
 
 <p>首先我们创建一个<code>SingleView</code>的工程，项目使用<code>StoryBoard</code>，（使用<code>Xib</code>也无所谓，因为有些老的项目可能还没有使用到<code>StoryBoard</code>），然后创建一个<code>CustomView</code>作为我们的自定义视图。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-1.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-1.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-1.jpg">http://imgchr.com/images/QQ20140810-1.jpg</a>"></p>
 
 <p>有时对于复杂的界面我们可能会拆分出来对它进行单独处理，又有可能它的界面布局很复杂，这时我们就会用<code>Interface Builder</code>对它的布局进行处理。这里的<code>CustomView</code>就是这样一个视图，所以我们为它创建一个<code>xib</code>文件，我们通常的作法就是把<code>xib</code>中的<code>View</code>的<code>custom class</code>更改为我们的<code>CustomView</code>。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-2.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-2.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-2.jpg">http://imgchr.com/images/QQ20140810-2.jpg</a>"></p>
 
 <p>接下来对我们的界面进行布局，并连接输出口，编写响应逻辑，这里我放了一个<code>ImageView</code>和一个<code>Label</code>在这里，并把<code>View</code>的背景色设置为浅灰色。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-3.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-3.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-3.jpg">http://imgchr.com/images/QQ20140810-3.jpg</a>"></p>
 
 <p>自定义的<code>View</code>制作完成，回到我们<code>ViewController</code>的<code>xib</code>文件，拖入两个<code>View</code>并把他们的<code>custom class</code>更改为<code>CustomView</code>。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-11.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-11.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-11.jpg">http://imgchr.com/images/QQ20140810-11.jpg</a>"></p>
 
 <p>这时，我们算是工作做完了，运行程序，结果悲剧了，怎么不是我们想要的结果，为什么只生成了两个空白的视图，我们视图上的图片和文字哪里去了？</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-5.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-5.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-5.jpg">http://imgchr.com/images/QQ20140810-5.jpg</a>"></p>
 
 <p>在<code>CustomView</code>中的<code>awakeFromeNib</code>方法中增加断点调试发现，在<code>CustomView</code>初始化完成后，<code>ImageView</code>和<code>Label</code>并没有被初始化，他们仍然是<code>nil</code>。这就是在嵌套使用<code>xib</code>自定义视图时非常容易出现的问题，我们觉得被嵌套的视图能够正常显示出来，但是实际上它并没有被按照我们在<code>xib</code>上指定的方式被初始化。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-6.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-6.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-6.jpg">http://imgchr.com/images/QQ20140810-6.jpg</a>"></p>
 
 <h2>Solution</h2>
 
@@ -754,7 +754,7 @@
 
 <p>先来介绍第一种方法，很简单，就是找到<code>xib</code>文件，生成对象，设置属性，<code>addsubview</code>到视图上。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-7.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-7.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-7.jpg">http://imgchr.com/images/QQ20140810-7.jpg</a>"></p>
 
 <h3>NO 2.</h3>
 
@@ -784,11 +784,11 @@
 
 <p>此外，还要这里的输出口以及设置<code>custom class</code>的位置跟第一种方式有所不同，这里需要取消掉<code>xib</code>中<code>view</code>的<code>custom class</code>，再将跟它连接的图片与文字的输出口取消掉，在这里这个<code>view</code>只是被当做一个容器来处理，它跟<code>Customview</code>没有直接关系，它将来会被<code>addSubview</code>到<code>CustomView</code>上，除此之外还要把<code>xib</code>的<code>File's ower</code>的<code>custom class</code>改成<code>CustomView</code>，表示这个<code>xib</code>文件的持有者是<code>CustomView</code>。再把它与图片和文字通过输出口连接起来。</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-8.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-8.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-8.jpg">http://imgchr.com/images/QQ20140810-8.jpg</a>"></p>
 
 <p>这个时候在运行程序就看到了我们想要的结果了。^_^</p>
 
-<p><img class="<a" src="href="http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-10.jpg">http://picturemapstore.bcs.duapp.com/2014/08/QQ20140810-10.jpg</a>"></p>
+<p><img class="<a" src="href="http://imgchr.com/images/QQ20140810-10.jpg">http://imgchr.com/images/QQ20140810-10.jpg</a>"></p>
 
 <p>其实想要实现第二种解决方案所要的效果，还有一种方式，它是通过重载<code>awakeAfterUsingCoder:</code>方法来实现的，这个方法的返回值会替换掉真正的加载对象，所以在具体的加载<code>CustomView</code>的方式又与第一种相同，所以<code>xib</code>的输出口连接与<code>custom class</code>的设置也与第一种解决方案相同。不过这种方式是更复杂也更难于理解的，不推荐使用，因为上一个方法就能很好的解决这个问题了，这里只是贴出这个方法的代码，有想仔细研究的请参看文章底部的参考文章。</p>
 
