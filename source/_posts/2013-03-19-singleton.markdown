@@ -21,7 +21,7 @@ tags: iOS block GCD Design
 
 ####单例模式类图####
 
-{% img http://picturemapstore.bcs.duapp.com/2013/03/singleton.jpg %}
+{% img http://picturemapstore.bj.bcebos.com/2013/03/singleton.jpg %}
 
 ####单例模式介绍####
 

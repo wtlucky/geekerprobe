@@ -18,7 +18,7 @@ tags: iOS Design
 
 ####适配器模式类图####
 
-{% img http://picturemapstore.bcs.duapp.com/2013/03/Adapter.jpg %}
+{% img http://picturemapstore.bj.bcebos.com/2013/03/Adapter.jpg %}
 
 ####适配器模式说明####
 
