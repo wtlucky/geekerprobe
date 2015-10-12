@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/</loc>
+    <lastmod>2015-10-09T21:32:12+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://blog.wtlucky.com/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/</loc>
     <lastmod>2015-06-06T09:03:00+08:00</lastmod>
   </url>
@@ -135,6 +139,9 @@
   </url>
   <url>
     <loc>http://blog.wtlucky.com/tags/cocoapods/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/tags/forkingdog/</loc>
   </url>
   <url>
     <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>

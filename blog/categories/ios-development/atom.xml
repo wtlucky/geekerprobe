@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ios development | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/ios-development/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-10-11T18:44:46+08:00</updated>
+  <updated>2015-10-12T23:16:01+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,410 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[FDStackView —— Downward Compatible UIStackView (Part 1)]]></title>
+    <link href="http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/"/>
+    <updated>2015-10-09T21:32:12+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1</id>
+    <content type="html"><![CDATA[<p>加入百度知道团队也有一段时间了，能跟<a href="http://weibo.com/u/1364395395">@我就叫Sunny怎么了</a>、<a href="http://weibo.com/u/5665046845">@sinojerk</a>等小伙伴一起工作生活是一种极赞的体验。在完成日常业务开发之余，我们也会进行一些技术研究项目，并将研究结果以开源的方式公布出来，自然我也成为了<code>forkingdog</code>开源小组的一员。</p>
+
+<p>近期我们的研究项目是<code>FDStackView</code>，现如今已经完成了<code>Alpha</code>版本的开发工作，并将其开源在了<code>Github</code>上，<a href="https://github.com/forkingdog/FDStackView">项目地址</a>。虽然现在已经完成所有的基本功能，但是仍需要在真实的环境中测试试用，欢迎大家将试用之后的问题反馈给我们，提<code>issue</code>给我们，使我们更好的修复和完善<code>FDStackView</code>，以便于更好的方便开发者们使用。</p>
+
+<!-- More -->
+
+
+<h2>Introduce</h2>
+
+<p><code>FDStackView</code>究竟是什么呢？在介绍<code>FDStackView</code>之前，首先你需要知道<code>UIStackView</code>是什么？<code>UIStackView</code>是苹果在WWDC上发布<code>iOS9</code>的时候新推出的一个<code>UIKit</code>的视图，现在网上可以搜索到很多关于它的资料，关于介绍，如何使用等。简单来说就是可以使用它来做一些流式布局，开发者只需要将需要的视图丢到<code>UIStackView</code>中，然后设置它的一些属性来展现所需要的布局，因此无需自己再去添加各种约束，所有约束不在由开发者自己去管理，这对于一些还不会使用<code>AutoLayout</code>的开发者来说是一个福音。复杂来说，因为<code>UIStackView</code>是可以嵌套使用的，那么再结合上一些简单的约束，那么就可以完成任何复杂的界面了。想想之前需要各种管理约束，而现在有了它只需要将视图丢给它，改几个属性然后界面就做好了，是不是爽到爆，开发效率又提升一个档次啊。下面提供几个介绍<code>UIStackView</code>的文章，使还不太了解的同学可以了解一下，传送门在此：<a href="http://code.tutsplus.com/tutorials/ios-9-getting-started-with-uistackview--cms-24193">iOS 9: Getting Started with UIStackView</a><a href="http://www.cocoachina.com/ios/20150623/12233.html">中文翻译版</a>
+<a href="http://www.appcoda.com/stack-views-intro/">An Introduction to Stack Views in iOS 9 and Xcode 7</a><a href="http://www.cocoachina.com/ios/20150820/13118.html">中文翻译版</a></p>
+
+<p>介绍完<code>UIStackView</code>的优势想必大家都已经雀雀欲试了，我自身对于这个控件都是十分的期待，因为在开发中你可以不用去写大段的创建<code>constraints</code>的代码了，如果你使用<code>xib</code>或者<code>storyboard</code>的话，那么在<code>IB</code>中你也不需要去连接各种约束了，这是多么棒的一种体验，而且在<code>Xcode7</code>的<code>IB</code>中右下角往常用来增加约束，修正视图的位置又新增加了一个<code>stack</code>按钮，可以快速的将所选视图加入到<code>UIStackView</code>中，可见苹果也是推荐开发者使用<code>UIStackView</code>的。但是<code>UIStackView</code>是在<code>iOS9</code>才推出的，最低支持的系统也是<code>iOS9</code>，这就蛋疼了，现在能有几个<code>APP</code>是从<code>iOS9</code>开始支持的，如此一来这个控件就成了鸡肋般的存在，再低版本下根本无法使用。自己在业务开发中经常会想这个需求用<code>UIStackView</code>简直就是妙解，而我却还在这里痛苦的连约束……鉴于这个强烈的需求，<code>FDStackView</code>出现了，它就是为了解决<code>UIStackView</code>在低于<code>iOS9</code>的系统下无法使用的问题。在<code>FDStackView</code>之前也已经有了一些类似的开源项目，比如<code>OAStackView</code>和<code>TZStackView</code>，然而他们都不能满足我们的需求，局限性还是比较大的，比如不支持<code>IB</code>，某些功能还没有实现，类名需要使用非<code>UIStackView</code>，在我们看来这些对开发者来说都是不友好的，开发者需要的是一款功能完善，支持<code>IB</code>，使用时完全无感，在<code>Xcode7</code>上直接使用<code>UIStackView</code>即可，接下来的事情交给<code>FDStackView</code>就好，它负责将<code>UIStackView</code>在低于<code>iOS9</code>的系统上运行。需要注意的是如果使用<code>IB</code>的话，那么<code>IB</code>的<code>Builds for</code>属性需要设置为<code>iOS 9.0 and later</code>。如图所示：
+<img class="<a" src="href="https://raw.githubusercontent.com/forkingdog/FDStackView/master/Snapshots/snapshot0.png">https://raw.githubusercontent.com/forkingdog/FDStackView/master/Snapshots/snapshot0.png</a>"></p>
+
+<h2>Research</h2>
+
+<p>这个技术项目有一大部分的时间，我们都是在做调研工作，首先我们需要把<code>UIStackView</code>玩的很熟练，它的各种属性，各种状态以及他们的组合关系分别是什么样的，其次我们需要解决的问题有：</p>
+
+<ol>
+<li>使用低系统版本的<code>API</code>和控件创建一个和<code>UIStackView</code>一模一样的控件<code>FDStackView</code>;</li>
+<li>在低系统版本运行<code>UIStackView</code>的时候使用我们的<code>FDStackView</code>;</li>
+<li>使<code>FDStackView</code>获得<code>Interface Builder</code>的支持。</li>
+</ol>
+
+
+<p>解决了以上三个问题后，那么这个项目基本上也就算是完成了，第一个是工作量最大的工程，它又可以拆分为以下几个技术点：</p>
+
+<ul>
+<li><code>alignment</code>和<code>distribution</code>的约束如何添加和管理；</li>
+<li><code>spacing</code>和<code>distribution</code>的关系及约束的创建；</li>
+<li>子视图的隐藏显示如何处理；</li>
+<li>子视图的<code>intrinsicContentSize</code>发生变化时如何处理。</li>
+</ul>
+
+
+<p>首先我们假设在第一个难点已经解决的前提下去攻克其他的难点，毕竟有其他开源方案的存在，说明这个不是不可行的。</p>
+
+<p>至于第二个难点，<code>UIStackView</code>在低系统版本编译时会报找不到符号的<code>error</code>，那么解决的思路就是在低系统版本将<code>UIStackView</code>的符号写进去，然后在<code>runtime</code>将符号与我们的<code>FDStackView</code>做关联，从而使低系统版本也能够运行<code>UIStackView</code>，而实际上在起作用的是我们的<code>FDStackView</code>。这里使用到的<code>黑魔法</code>就是汇编语言，网上已经有大神给出了类似的<a href="https://gist.github.com/OliverLetterer/4643294">解决方案</a>，对其进行优化和修改之后应该就能满足我们的需求。</p>
+
+<p>最后一个难点就是使<code>FDStackView</code>获得<code>Interface Builder</code>的支持，因为我们是<code>IB</code>的重度使用者，一个不能在<code>IB</code>上使用的控件一定不是一个好控件。所以一定要让<code>FDStackView</code>能够在<code>IB</code>上使用，有一个方案就是直接使用<code>UIView</code>然后把他的<code>Class</code>指定为<code>FDStackView</code>，将<code>Axis</code>、<code>Alignmen</code>和<code>Distribution</code>等属性通过<code>IBInspectable</code>使其可以在<code>IB</code>中编辑和设置，但是这样一个是<code>IBInspectable</code>在<code>IB</code>中的显示效果很烂，说实话就是不好用，再一个就是用了<code>UIView</code>没有办法像<code>UIStackView</code>那样在<code>IB</code>中可以直接预览布局效果，这就是很差的一种体验了。最好的方案就是在<code>IB</code>中仍然使用<code>UIStackView</code>，使其在<code>IB</code>中有最佳的体验，然后借助上一难点的解决方案，在低系统版本中使用<code>FDStackView</code>代替<code>UIStackView</code>。这样就会带来两个其他问题：</p>
+
+<ol>
+<li><code>IB</code>的构建版本是根据<code>Project</code>的部署版本来的，如果项目不是支持<code>iOS9</code>的话那么会报这样一个<code>error</code>:<code>”UIStackView before iOS 9.0”</code>；</li>
+<li>如何使<code>IB</code>构建出来的<code>FDStackView</code>获得在<code>IB</code>中给<code>UIStackView</code>所设置的各种属性。
+这两个问题，第一个只需要将<code>IB</code>的构建版本设置为<code>iOS9</code>及以后即可，目前来看是没有问题的，但是还不知道其他的控件被<code>IB</code>搞成<code>iOS9</code>的版本，在低系统版本上会不会有问题，这个还需要后续的验证。第二个问题，由于使用<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，因此弄清楚<code>NSCoder</code>的<code>decode</code>过程就能将<code>IB</code>设置的属性赋值给所创建的对象了。</li>
+</ol>
+
+
+<p>解决完以上两个难点，就可以回过头来研究第一个了，就是创建一个和<code>UIStackView</code>一模一样的<code>FDStackView</code>。这里我们对<code>UIStackView</code>进行了详细的研究，包括<code>dump</code>出所有<code>UIStackView</code>的相关私有类，各个类的方法，实例变量等。还需要添加符号断点来跟踪各个方法的调用顺序及各个实例变量的值得变化情况。同时还需要分析各个状态下<code>UIStackView</code>的约束<code>constraints</code>的情况，包括约束的个数，连接的方式，及约束所添加到的视图等。经过以上的各种分析之后，我们又通过在<code>IB</code>中借助<code>UIView</code>手动连接约束的方式，连出每一个<code>UIStackView</code>所对应的状态。经过这一番调查与研究我们已经大概摸清的<code>UIStackView</code>的工作原理与实现方式。</p>
+
+<p>与此同时我们还发现了两个<code>UIStackView</code>的<code>bug</code>，本以为在<code>Xcode7</code>正式发布之后会得到修复，可是遗憾的是从我们开始研究的时候的<code>beta5</code>到后来的<code>beta6</code>、<code>GM</code>和正式版这两个<code>bug</code>依然存在，后面我会介绍一下这两个<code>bug</code>。</p>
+
+<h2>Implementation</h2>
+
+<p>下面介绍一下具体的实现细节，同样还是从第二个点说起，最终起关键作用的代码是这些：
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-</span>
+</span><span class='line'><span class="c1">// Runtime injection start.</span>
+</span><span class='line'><span class="c1">// Assemble codes below are based on:</span>
+</span><span class='line'><span class="c1">// &lt;a href=&quot;https://github.com/0xced/NSUUID/blob/master/NSUUID.m&quot;&gt;https://github.com/0xced/NSUUID/blob/master/NSUUID.m&lt;/a&gt;</span>
+</span><span class='line'><span class="c1">// &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">pragma</span> <span class="n">mark</span> <span class="o">-</span> <span class="n">Runtime</span> <span class="n">Injection</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">asm</span><span class="p">(</span>
+</span><span class='line'>      <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;.</span><span class="n">section</span>        <span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">DATA</span><span class="p">,</span><span class="n">__objc_classrefs</span><span class="p">,</span><span class="n">regular</span><span class="p">,</span><span class="n">no_dead_strip</span><span class="err">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">TARGET_RT_64_BIT</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          3</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="s">&quot;L_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="s">&quot;.quad           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          2</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="s">&quot;_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="s">&quot;.long           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.weak_reference _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// Constructors are called after all classes have been loaded.</span>
+</span><span class='line'><span class="o">&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">attribute</span><span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="p">((</span><span class="n">constructor</span><span class="p">))</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">FDStackViewPatchEntry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="k">@autoreleasepool</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="c1">// &amp;gt;= iOS9.</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">objc_getClass</span><span class="p">(</span><span class="s">&quot;UIStackView&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">Class</span> <span class="o">*</span><span class="n">stackViewClassLocation</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">TARGET_CPU_ARM</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;movw %0, :lower16:(_OBJC_CLASS_UIStackView-(LPC0+4))</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>              <span class="s">&quot;movt %0, :upper16:(_OBJC_CLASS_UIStackView-(LPC0+4))</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>              <span class="s">&quot;LPC0: add %0, pc&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">TARGET_CPU_ARM64</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;adrp %0, L_OBJC_CLASS_UIStackView@PAGE</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>              <span class="s">&quot;add  %0, %0, L_OBJC_CLASS_UIStackView@PAGEOFF&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">TARGET_CPU_X86_64</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;leaq L_OBJC_CLASS_UIStackView(%%rip), %0&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">TARGET_CPU_X86</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kt">void</span> <span class="o">*</span><span class="n">pc</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;calll L0</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>              <span class="s">&quot;L0: popl %0</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>              <span class="s">&quot;leal _OBJC_CLASS_UIStackView-L0(%0), %1&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">pc</span><span class="p">),</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">error</span> <span class="n">Unsupported</span> <span class="n">CPU</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="k">if</span> <span class="p">(</span><span class="n">stackViewClassLocation</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="o">!*</span><span class="n">stackViewClassLocation</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="kt">Class</span> <span class="k">class</span> <span class="o">=</span> <span class="n">objc_allocateClassPair</span><span class="p">(</span><span class="n">FDStackView</span><span class="p">.</span><span class="k">class</span><span class="p">,</span> <span class="s">&quot;UIStackView&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">objc_registerClassPair</span><span class="p">(</span><span class="k">class</span><span class="p">);</span>
+</span><span class='line'>                <span class="o">*</span><span class="n">stackViewClassLocation</span> <span class="o">=</span> <span class="k">class</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>首先说一下<code>__asm</code>:
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Use the asm, _asm, or &lt;strong>asm keyword to place assembly language statements in the middle of your C or C++ source code. Any C++ symbols are replaced by the appropriate assembly language equivalents.
+</span><span class='line'>You can group assembly language statements by beginning the block of statements with the asm keyword, then surrounding the statements with braces ({}).
+</span><span class='line'>Note: The &lt;/strong>asm form is the only one supported by Clang-based C++ compilers.</span></code></pre></td></tr></table></div></figure>
+意思就是说在你的<code>C</code>或<code>C++</code>源代码中放入汇编代码用来替换任何<code>C++</code>的符号。</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kr">__asm</span><span class="p">(</span>
+</span><span class='line'>            <span class="cm">/**</span>
+</span><span class='line'><span class="cm">       this is a data section for objc2 class references with the following attributes:</span>
+</span><span class='line'><span class="cm">       * regular: &amp;ldquo;A regular section may contain any kind of data and gets no special processing from the link editor. This is the default section type. Examples of regular sections include program instructions or initialized data.&amp;rdquo;</span>
+</span><span class='line'><span class="cm">       * no_dead_strip: &amp;ldquo;The no_dead_strip section attribute specifies that a particular section must not be dead-stripped.&amp;rdquo;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">&lt;pre&gt;&lt;code&gt;   Documentation can be found here: https://developer.apple.com/library/mac/#documentation/developertools/Reference/Assembler/040-Assembler_Directives/asm_directives.html</span>
+</span><span class='line'><span class="cm">   */</span>
+</span><span class='line'>  <span class="s">&quot;.section        __DATA,__objc_classrefs,regular,no_dead_strip</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">TARGET_RT_64_BIT</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          3</span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// align the next label to 2^3 bytes = 64 bit for 64 bit platforms</span>
+</span><span class='line'>  <span class="s">&quot;L_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>  <span class="c1">// the L_OBJC_CLASS_UIStackView label will store the _OBJC_CLASS_$_UIStackView label, which is weak referenced (see below)</span>
+</span><span class='line'>  <span class="s">&quot;.quad           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          2</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="s">&quot;_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="s">&quot;.long           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="cm">/**</span>
+</span><span class='line'><span class="cm">   .weak_reference: &quot;The .weak_reference directive causes symbol_name to be a weak undefined symbol present in the output file’s symbol table. This is used by the compiler when referencing a symbol with the weak_import attribute.&quot;</span>
+</span><span class='line'><span class="cm">   */</span>
+</span><span class='line'>  <span class="s">&quot;.weak_reference _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class='line'>  <span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>先来说这一个部分，大神的<a href="https://gist.github.com/OliverLetterer/4643294">解决方案</a>给出了英文注释，尝试着直译了一下：
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>这是一个由regular和no_dead_strip属性所标明的objc2类的数据区间。
+</span><span class='line'>regular:一个regular区间一般包含各种类型的数据而且他们不会被连接器做特殊处理。这是默认的区间类型，包括程序指令和初始化数据是regular区间。
+</span><span class='line'>no_dead_strip:一个no_dead_strip区间标识出那些一定不能dead_strip的特殊区间。</span></code></pre></td></tr></table></div></figure>
+发现还不如不译，就直接说一下大概的意思吧。
+第一行是取得符号所在的区间，之后区分<code>64</code>和<code>32</code>位系统，将<code>_OBJC_CLASS_$_UIStackView</code>这个符号与自定的符号做一个<code>weak</code>类型的关联。</p>
+
+<p>接下来就是<code>__attribute__((constructor))</code>这个黑魔法，这个标识的方法会在所有的类<code>load</code>之后，<code>main</code>函数调用之前调用。所以此时<code>FDStackView</code>已经被<code>load</code>了。再之后就是判断<code>runtime</code>是否存在<code>UIStackView</code>，不存在的话就根据不同的系统平台将指向<code>_OBJC_CLASS_$_UIStackView</code>这个符号的指针存储在<code>stackViewClassLocation</code>中，接下来通过<code>runtime</code>创建<code>UIStackView</code>这个类并作为<code>FDStackView</code>的子类，并注册进<code>runtime</code>，最后将<code>UIStackView</code>作为<code>stackViewClassLocation</code>这个指针的值。如此一来在低系统版本中<code>UIStackView</code>就能作为<code>FDStackView</code>的子类使用了。它没有重载任何方法，因此就跟使用直接<code>FDStackView</code>一模一样。</p>
+
+<p>接下来的问题是<code>IB</code>加载出来的<code>UIStackView</code>如何将属性值设置到我们的<code>FDStackView</code>上，这个在前面研究是已经有结论，首先需要将<code>IB</code>的<code>build for</code>做下修改，然后<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，所以所有的信息都在<code>NSCoder</code>这个对象中，<code>NSCoder</code>提供了一系列的<code>decode</code>方法，由于<code>key</code>是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个<code>key</code>。</p>
+
+<p><img class="<a" src="href="http://i13.tietuku.com/78279ae5a3ad97b2.jpg">http://i13.tietuku.com/78279ae5a3ad97b2.jpg</a>">
+<img class="<a" src="href="http://i13.tietuku.com/c1604a785aacbab9.jpg">http://i13.tietuku.com/c1604a785aacbab9.jpg</a>"></p>
+
+<p>如此一来就可以直接在<code>FDStackView</code>的<code>initWithCoder:</code>方法中取到值，再将这几个值赋值即可
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="bp">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">decoder</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">initWithCoder</span><span class="p">:</span><span class="n">decoder</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Attributes of UIStackView in interface builder that archived.</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span> <span class="nl">commonInitializationWithArrangedSubviews</span><span class="p">:[</span><span class="n">decoder</span> <span class="nl">decodeObjectForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewArrangedSubviews</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;]];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeIntegerForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewAxis</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeIntegerForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewDistribution</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeIntegerForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewAlignment</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeDoubleForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewSpacing</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">baselineRelativeArrangement</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeBoolForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewBaselineRelative</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">layoutMarginsRelativeArrangement</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeBoolForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewLayoutMarginsRelative</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>最后就是通过系统的<code>API</code>创建<code>constraints</code>来实现<code>FDStackView</code>了，这里涉及的内容比较多，包括几个辅助的私有类，及<code>Alignment</code>和<code>Distribution</code>方向上的约束创建，子视图隐藏，<code>intrinsicContentSize</code>改变如何处理等。这里我们都尽可能的与猜测到的<code>UIStackView</code>的实现保持一致。这些内容将会在后续的另一篇文章中介绍。</p>
+
+<h2>UIStackView Bugs</h2>
+
+<p>现在来说一下我们在调研<code>UIStackView</code>时发现的两个<code>bug</code>，<a href="https://github.com/wtlucky/UIStackViewBugDemo">测试的<code>Demo</code></a>已经放在<code>Github</code>上。</p>
+
+<p>这个测试<code>Demo</code>会借助我们的<code>FDStackView</code>来演示对比出<code>UIStackView</code>的<code>bug</code>，上面是系统原生的<code>UIStackView</code>，下面是我们的<code>FDStackView</code>，两者的参数设置是完全相同的。</p>
+
+<p>先来看第一个，当<code>Distribution</code>设置为<code>UIStackViewDistributionFillProportionally</code>时，并且存在<code>spacing</code>时就会出现问题，如图所示：</p>
+
+<p><img class="<a" src="href="http://i13.tietuku.com/22c9f3dc8b429bdd.jpg">http://i13.tietuku.com/22c9f3dc8b429bdd.jpg</a>"></p>
+
+<p><code>UIStackViewDistributionFillProportionally</code>这个属性的意思是子视图的宽度会根据他们内容的宽度比例而在<code>UIStackView</code>中占据对应的宽度，即他们的实际的宽度比应该是他们的内容固有宽度（<code>intrinsicContentSize</code>）的比例，<code>Demo</code>中三个<code>Label</code>的固有宽度即汉字的宽度是<code>4:1:2</code>，那么在<code>UIStackView</code>中他们所占据的宽度也应该是<code>4:1:2</code>，这在<code>spacing</code>为<code>0</code>的情况下是ok的。</p>
+
+<p>如果存在<code>spacing</code>的话，那么<code>UIStackView</code>应该先减去子视图之间的<code>spacing</code>，然后再去按比例分布子视图的宽度。这里可以看到<code>UIStackView</code>的布局是烂的了，而<code>FDStackView</code>的布局是ok的。</p>
+
+<p>这里我们通过分析<code>UIStackView</code>身上的<code>constraints</code>大概得出<code>UIStackView</code>出现这个<code>bug</code>的原因是，他们的算法出了问题，他们这一部分的约束是这样添加的，每一个子视图的宽度等于<code>UIStackView</code>的宽度乘上一个比例系数，即<code>AutoLayout</code>计算公式<code>y  = m * x + c</code>中的<code>m</code>系数，<code>c</code>的值一直为<code>0</code>。他们在计算<code>m</code>的时候出了问题，忽略了<code>spacing</code>的存在，也就是在计算中没有计算上<code>spacing</code>的值。</p>
+
+<p>具体拿<code>Demo</code>来看的话，<code>UIStackView</code>的最左边的<code>Label</code>的宽度应该是这样计算的<code>label.width = 4 * UIStackView.width / (4 + 1 + 2)</code>，这时<code>spacing</code>为<code>0</code>时，<code>m</code>的值就是<code>4 / (4 + 1 + 2)</code>，这没有问题 ，但是如果有<code>spacing</code>的话，他们把<code>spacing</code>也作为了分母的一部分，任务<code>spacing</code>也是可以按比例显示宽度的，所以<code>m</code>的值就成为了<code>4 / (4 + 1 + 2 + spacing)</code>，这里的<code>spacing</code>不是<code>UIStackView</code>设置<code>spacing</code>的值，而应该是实际<code>UIStackView</code>中出现的所有<code>spacing</code>的和，因为<code>spacing</code>被当作分母计算了进去，那么在布局的时候<code>spacing</code>也应该按照计算出的系数乘上<code>UIStackView</code>的宽度来显示，但实际上他们是把<code>spacing</code>按固定值来显示了，这样就会导致所有子视图计算出的<code>m</code>偏小，显示的也就会偏小，到了最后一个试图时，由于约束优先级的缘故这个宽度的约束不在起作用，而导致被拉长，出现了上图的效果。</p>
+
+<p>所以这里<code>UIStackView</code>是算法出了问题而显示时又按正确的样式来显示的，所以布局就烂了，其实在有<code>spacing</code>的状态下就不应该忽略<code>c</code>的值了，而且<code>spacing</code>也不应该参与到分母中去计算，正确的约束应该是这个样子的<code>label.width = 4 * UIStackView.width / (4 + 1 + 2) - 4 * spacing / (4 + 1 + 2)</code>，这时<code>c</code>就有值了，不再是<code>0</code>而是<code>-4 * spacing / (4 + 1 + 2)</code>。</p>
+
+<p>整体来说<code>UIStackView</code>在处理<code>UIStackViewDistributionFillProportionally</code>这个属性的时候采取的约束添加方式不是最好的，处理起来是比较复杂的，这样处理会出现很多非整数情况，一个是计算复杂，在一个也会丢失精度。所以我们在<code>FDStackView</code>中没有使用这种连接方式，而是使用了另外一种方法，后面的文章会介绍到。</p>
+
+<p>另外一个<code>bug</code>是当<code>Alignment</code>属性设置为<code>UIStackViewAlignmentFill</code>时，当一个最高的子视图隐藏掉了时，<code>UIStackView</code>的高度并没有变化，这时它应该变为第二高的子视图的高度，具体如图所示：</p>
+
+<p><img class="<a" src="href="http://imgchr.com/images/hidingBug.gif">http://imgchr.com/images/hidingBug.gif</a>"></p>
+
+<p>这种情况只有在属性设置为<code>UIStackViewAlignmentFill</code>时才会出现，具体的出现原因我们也有分析出来的结论，但是涉及到<code>Alignment</code>方向上约束添加的问题，这个会在后一篇文章中提到，所以这里就先不做解释，之后在说。我们的<code>FDStackView</code>修复了这个问题，但是在一种情况下也会失去作用就是给这个要隐藏的视图收到添加了一个高优先级的高度约束的情况下，不过一般情况下我们使用<code>UIStackView</code>基本都不会再给子视图添加约束了。</p>
+
+<p>第一篇文章就介绍这么多，后面我会找时间把第二篇文章（Part 2）整理出来。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Constraints &amp; Transformations 在iOS7和8上的不同]]></title>
@@ -257,7 +661,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="n">s</span><span class="o">.</span><span class="n">homepage</span>         <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://coding.net/u/wtlucky/p/podTestLibrary&quot;</span><span class="o">&gt;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">u</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="nb">p</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">&lt;</span><span class="sr">/a&gt;&amp;rdquo;                           #主页,这里要填写可以访问到的地址，不然验证不通过</span>
 </span><span class='line'><span class="sr">  # s.screenshots     = &amp;ldquo;www.example.com/s</span><span class="n">creenshots_1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">screenshots_2</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span>           <span class="c1">#截图</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">license</span>          <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">MIT</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>              <span class="c1">#开源协议</span>
-</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>           <span class="o">=</span> <span class="p">{</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">wtlucky</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;&amp;#x6d;&amp;#97;&amp;#105;&amp;#108;&amp;#x74;&amp;#111;&amp;#x3a;&amp;#x77;&amp;#x74;&amp;#x6c;&amp;#x75;&amp;#99;&amp;#107;&amp;#x79;&amp;#x40;&amp;#102;&amp;#111;&amp;#120;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6c;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&quot;</span><span class="o">&gt;&amp;</span><span class="c1">#x77;&amp;#116;&amp;#x6c;&amp;#x75;&amp;#99;&amp;#107;&amp;#x79;&amp;#64;&amp;#102;&amp;#111;&amp;#120;&amp;#109;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&lt;/a&gt;&amp;rdquo; }                   #作者信息</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>           <span class="o">=</span> <span class="p">{</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">wtlucky</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#x61;&amp;#x69;&amp;#108;&amp;#116;&amp;#x6f;&amp;#58;&amp;#119;&amp;#x74;&amp;#108;&amp;#117;&amp;#99;&amp;#x6b;&amp;#x79;&amp;#x40;&amp;#102;&amp;#x6f;&amp;#120;&amp;#109;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&quot;</span><span class="o">&gt;&amp;</span><span class="c1">#x77;&amp;#116;&amp;#108;&amp;#x75;&amp;#99;&amp;#107;&amp;#121;&amp;#x40;&amp;#x66;&amp;#111;&amp;#120;&amp;#x6d;&amp;#97;&amp;#105;&amp;#x6c;&amp;#46;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;&amp;rdquo; }                   #作者信息</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>           <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://coding.net/wtlucky/podTestLibrary.git&quot;</span><span class="o">&gt;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">.</span><span class="n">git</span><span class="o">&lt;</span><span class="sr">/a&gt;&amp;rdquo;, :tag =&gt; &amp;ldquo;0.1.0&amp;rdquo; }      #项目地址，这里不支持ssh的地址，验证不通过，只支持HTTP和HTTPS，最好使用HTTPS</span>
 </span><span class='line'><span class="sr">  # s.social_media_url = &amp;lsquo;&lt;a href=&quot;https:/</span><span class="o">/</span><span class="n">twitter</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="s2">&quot;&gt;https://twitter.com/&lt;/a&gt;&lt;TWITTER_USERNAME&gt;&amp;rsquo;                       #多媒体介绍地址&lt;/p&gt;</span>
 </span><span class='line'>
@@ -454,7 +858,7 @@
 </span><span class='line'><span class="sr">&lt;p&gt;  s.homepage         = &amp;ldquo;&lt;a href=&quot;https:/</span><span class="o">/</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">u</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="nb">p</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="s2">&quot;&gt;https://coding.net/u/wtlucky/p/podTestLibrary&lt;/a&gt;&amp;rdquo;</span>
 </span><span class='line'><span class="s2">  # s.screenshots     = &amp;ldquo;www.example.com/screenshots_1&amp;rdquo;, &amp;ldquo;www.example.com/screenshots_2&amp;rdquo;</span>
 </span><span class='line'><span class="s2">  s.license          = &amp;lsquo;MIT&amp;rsquo;</span>
-</span><span class='line'><span class="s2">  s.author           = { &amp;ldquo;wtlucky&amp;rdquo; =&gt; &amp;ldquo;&lt;a href=&quot;</span><span class="o">&amp;</span><span class="c1">#109;&amp;#97;&amp;#105;&amp;#108;&amp;#x74;&amp;#x6f;&amp;#x3a;&amp;#x77;&amp;#x74;&amp;#108;&amp;#x75;&amp;#99;&amp;#x6b;&amp;#x79;&amp;#x40;&amp;#x66;&amp;#x6f;&amp;#120;&amp;#109;&amp;#97;&amp;#105;&amp;#x6c;&amp;#46;&amp;#99;&amp;#111;&amp;#109;&quot;&gt;&amp;#x77;&amp;#x74;&amp;#x6c;&amp;#x75;&amp;#x63;&amp;#x6b;&amp;#x79;&amp;#x40;&amp;#x66;&amp;#111;&amp;#x78;&amp;#109;&amp;#x61;&amp;#105;&amp;#108;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;&amp;rdquo; }</span>
+</span><span class='line'><span class="s2">  s.author           = { &amp;ldquo;wtlucky&amp;rdquo; =&gt; &amp;ldquo;&lt;a href=&quot;</span><span class="o">&amp;</span><span class="c1">#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#x74;&amp;#111;&amp;#58;&amp;#119;&amp;#x74;&amp;#108;&amp;#x75;&amp;#x63;&amp;#107;&amp;#x79;&amp;#x40;&amp;#x66;&amp;#111;&amp;#120;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6c;&amp;#46;&amp;#99;&amp;#x6f;&amp;#109;&quot;&gt;&amp;#x77;&amp;#116;&amp;#108;&amp;#x75;&amp;#99;&amp;#x6b;&amp;#x79;&amp;#x40;&amp;#x66;&amp;#111;&amp;#x78;&amp;#x6d;&amp;#97;&amp;#105;&amp;#108;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;&lt;/a&gt;&amp;rdquo; }</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>           <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://coding.net/wtlucky/podTestLibrary.git&quot;</span><span class="o">&gt;</span><span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">coding</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">wtlucky</span><span class="o">/</span><span class="n">podTestLibrary</span><span class="o">.</span><span class="n">git</span><span class="o">&lt;</span><span class="sr">/a&gt;&amp;rdquo;, :tag =&gt; &amp;ldquo;1.0.0&amp;rdquo; }</span>
 </span><span class='line'><span class="sr">  # s.social_media_url = &amp;lsquo;&lt;a href=&quot;https:/</span><span class="o">/</span><span class="n">twitter</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="s2">&quot;&gt;https://twitter.com/&lt;/a&gt;&lt;TWITTER_USERNAME&gt;&amp;rsquo;&lt;/p&gt;</span>
 </span><span class='line'>
@@ -841,375 +1245,6 @@
 <blockquote><p><a href="https://blog.compeople.eu/apps/?p=142">Embedding custom-view Nibs in another Nib: Towards the holy grail</a></p>
 
 <p><a href="http://blog.yangmeyer.de/blog/2012/07/09/an-update-on-nested-nib-loading">An Update on Nested Nib Loading</a></p></blockquote>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift Hexadecimal conversion]]></title>
-    <link href="http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion/"/>
-    <updated>2014-07-25T15:11:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2014/07/25/swift-hexadecimal-conversion</id>
-    <content type="html"><![CDATA[<p>自己的<code>Blog</code>好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的<code>Blog</code>增添新的血液了。<code>APPLE</code>在<code>WWDC 2014</code>上公布了一门新的编程语言<a href="https://developer.apple.com/swift/">Swift</a>，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进，这是一个集合了N多语言优秀特性于一身的全新语言，它将成为开发<code>iOS</code>和<code>MAC</code>的新的选择。并且据说他将会取代<code>Objective-C</code>，但是我觉得并不是这样，不过这也仅仅是一家之谈，至于会不会这样，我们走着瞧。<!-- More --></p>
-
-<p>既然苹果放出了这样一个利器，身为<code>iOS开发者</code>的我也不能落下，<code>APPLE</code>为我们提供了两个文档<a href="https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/index.html">The Swift Programming Language</a>和<a href="https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/index.html">Using Swift with Cocoa and Objective-C</a>。他们一个是纯语言角度的介绍<code>Swift</code>，包括各种细节语法，另一个则是介绍怎么它怎么与<code>Cocoa</code>交互，如何使用它开发<code>iOS</code>和<code>MAC</code>应用，以及如何与现有的程序兼容。学习这样一门全新的技术我还是建议读第一手资料的，虽然现在网络上有好多中文版的资料了吧，但是苹果的文档写的很是通俗易懂，读起来也没有什么困难。而起自己之前有过脚本语言的经验，所以看起来也是很快。</p>
-
-<p>读完两个文档，就做一些实战的内容，先从小程序开始，之前自己写过一个<code>进制转换器</code>，没啥功能，就是提供一个十进制和十六进制互相转换的功能，主要还是为了方便自己在写一些颜色值的时候使用。之前的版本是用<code>Objective-C</code>写的，那么这次就用<code>Swift</code>重写一遍。</p>
-
-<p>这个程序最主要的部分也就是两个进制相互转换的算法了，用<code>Objective-C</code>实现起来很简单，通过一下字符<code>char</code>的运算就能搞定。代码如下：
-<figure class='code'><figcaption><span>Hexdecimal To Decimal </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="bp">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">decimalConvertedFromHexdecimal:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">hexdecimal</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">hexdecimal</span> <span class="nl">characterAtIndex</span><span class="p">:</span><span class="n">i</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="sc">&#39;A&#39;</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">c</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="sc">&#39;F&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;A&#39;</span> <span class="o">+</span> <span class="mi">10</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="sc">&#39;a&#39;</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">c</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="sc">&#39;f&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;a&#39;</span> <span class="o">+</span> <span class="mi">10</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="sc">&#39;0&#39;</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">c</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="sc">&#39;9&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;0&#39;</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>  <span class="bp">UIAlertView</span> <span class="o">*</span><span class="n">alert</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIAlertView</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithTitle</span><span class="p">:</span><span class="s">@&quot;错误&quot;</span>
-</span><span class='line'>  <span class="nl">message</span><span class="p">:</span><span class="s">@&quot;你提供了非法字符&quot;</span> <span class="nl">delegate</span><span class="p">:</span><span class="nb">nil</span>
-</span><span class='line'>  <span class="nl">cancelButtonTitle</span><span class="p">:</span><span class="s">@&quot;知道了&quot;</span>
-</span><span class='line'>  <span class="nl">otherButtonTitles</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
-</span><span class='line'>  <span class="p">[</span><span class="n">alert</span> <span class="n">show</span><span class="p">];</span>
-</span><span class='line'>  <span class="nb">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@&quot;&quot;</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span> <span class="n">becomeFirstResponder</span><span class="p">];</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">sum</span> <span class="o">+=</span> <span class="n">num</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="p">[</span><span class="bp">NSString</span> <span class="nl">stringWithFormat</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">d</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">sum</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p><figure class='code'><figcaption><span>Decimal To Hexdecimal </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="bp">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">hexdecimalConvertedFromDecimal:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">decimal</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="n">decimal</span> <span class="n">intValue</span><span class="p">];</span>
-</span><span class='line'>  <span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithCapacity</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">16</span><span class="p">;</span>
-</span><span class='line'>    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mi">0</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;;</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">a</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">-</span> <span class="mi">10</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mi">0</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span> <span class="o">+</span> <span class="n">tmp</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">character</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSString</span> <span class="nl">stringWithFormat</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">c</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">c</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">result</span> <span class="nl">insertString</span><span class="p">:</span><span class="n">character</span> <span class="nl">atIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">num</span> <span class="o">/=</span> <span class="mi">16</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>但是当我使用<code>Swift</code>重写的时候，我进入到了一个很深的坑里，发现这项任务是如此的难做，我定义了这样两个方法，注意方法的参数和返回值：
-<figure class='code'><figcaption><span>Swift Code </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">func</span> <span class="n">decimalConvertedFromHexdecimal</span><span class="p">(</span><span class="nl">hexdecimal:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="n">func</span> <span class="n">hexdecimalConvertedFromDecimal</span><span class="p">(</span><span class="nl">decimal:</span> <span class="n">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-我使用的是Swift提供的<code>String</code>类型，它是由一系列的<code>Character</code>类型的字符组成的，但是这种<code>Character</code>并不是<code>char</code>，他们在处理进制转换这个问题上让我无从下手，也有可能是我还不够熟悉，不知道正确的用法，如果有人知道欢迎告诉我。下面来说一说我遇到的问题，首先在<code>Swift</code>中是没有<code>‘A’</code>这种字符表示方法的，更不用说用它去进行运算了，其次<code>Character</code>不能进行大小比较，只能进行想等或者不等的比较，这样一来在判断一个字符所在的区间上就遇到了很大的问题。</p>
-
-<p><code>Swift</code>的<code>String</code>提供了<code>uft8</code>和<code>uft16</code>方法，返回值为<code>UTF8View</code>或者<code>UFT16View</code>，这是一个<code>Array</code>，使用<code>for-in</code>遍历他们可以输出他们的数字值，但是这个值也仅仅是能进行输出使用，他们不是<code>Int</code>也不能进行加减运算。不能进行运算在转换上就无能为力。单单从这里看来，<code>Swift</code>确实蛋疼，连这么一个小小的问题都不能搞定。</p>
-
-<p>不过还好，<code>Swift</code>对<code>Cocoa</code>做了兼容使得<code>String</code>与<code>NSString</code>可以无缝转化，在使用了<code>NSString</code>后，问题的处理就变得简单多了，在<code>Swift</code>中<code>NSString</code>使用一系列的<code>unichar</code>组成的，查看声明可以看到他其实就是<code>UInt</code>，那么他就可以进行运算，所以把<code>String</code>改成<code>NSString</code>完成这两个方法。即使这样，<code>Swift</code>不支持<code>‘A’</code>这种字符的特性，也使得我们必须自己把字符转化为数值来运算，使得程序的可读性很差，还就是<code>Swift</code>的内置类型不支持隐式转换，所以在类型不一致的地方都需要强制转换一下。</p>
-
-<p>这两个方法的实现在文末的代码中有，这个代码虽然完成了功能，但是还有很多需要改进和优化的地方，其次在代码风格上也需要改一下，<a href="https://github.com/raywenderlich/swift-style-guide">Raywenderlich</a>的<code>Swift</code>的代码风格就很不错，非常值得套用。</p>
-
-<p>最后说一下，在<code>iOS8</code>中<code>UIAlertView</code>和<code>UIActionSheet</code>被废除了，而引入的是<code>UIAlertController</code>，通过<code>preferredStyle</code>来确定类型，通过<code>UIAlertAction</code>来增加事件，然后通过<code>presentViewController</code>来显示出来，在使用上做到了统一，还是蛮方便的。</p>
-
-<p>下面附上完全的代码，
-<figure class='code'><figcaption><span> (HexConverterViewController.m)</span> <a href='/downloads/code/swift/HexConverterViewController.m'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//  ViewController.swift</span>
-</span><span class='line'><span class="c1">//  HexConverter_swift</span>
-</span><span class='line'><span class="c1">//</span>
-</span><span class='line'><span class="c1">//  Created by taowang on 7/24/14.</span>
-</span><span class='line'><span class="c1">//  Copyright (c) 2014 Meilishuo. All rights reserved.</span>
-</span><span class='line'><span class="c1">//</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">import</span> <span class="n">UIKit</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">class</span> <span class="nl">ViewController:</span> <span class="n">UIViewController</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="err">@</span><span class="kt">IBOutlet</span> <span class="n">var</span> <span class="nl">beforeConvertTextField:</span> <span class="n">UITextField</span>
-</span><span class='line'>    <span class="err">@</span><span class="kt">IBOutlet</span> <span class="n">var</span> <span class="nl">afterConvertTextField:</span> <span class="n">UITextField</span>
-</span><span class='line'>    <span class="err">@</span><span class="kt">IBOutlet</span> <span class="n">var</span> <span class="nl">segmentControl:</span> <span class="n">UISegmentedControl</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">override</span> <span class="n">func</span> <span class="n">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">super</span><span class="p">.</span><span class="n">viewDidLoad</span><span class="p">()</span>
-</span><span class='line'>        <span class="c1">// Do any additional setup after loading the view, typically from a nib.</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">segmentControl</span><span class="p">.</span><span class="n">addTarget</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="nl">action:</span> <span class="n">Selector</span><span class="p">(</span><span class="s">&quot;setTextFieldKeyboardType&quot;</span><span class="p">),</span> <span class="nl">forControlEvents:</span> <span class="n">UIControlEvents</span><span class="p">.</span><span class="n">ValueChanged</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">override</span> <span class="n">func</span> <span class="n">didReceiveMemoryWarning</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">super</span><span class="p">.</span><span class="n">didReceiveMemoryWarning</span><span class="p">()</span>
-</span><span class='line'>        <span class="c1">// Dispose of any resources that can be recreated.</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">func</span> <span class="n">decimalConvertedFromHexdecimal</span><span class="p">(</span><span class="nl">hexdecimal:</span> <span class="n">NSString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NSString</span><span class="o">?</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">var</span> <span class="nl">sum:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="nl">i:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">var</span> <span class="nl">c:</span> <span class="n">unichar</span> <span class="o">=</span> <span class="n">hexdecimal</span><span class="p">.</span><span class="n">characterAtIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">var</span> <span class="nl">num:</span> <span class="n">unichar</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">65</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">70</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">55</span><span class="p">;</span>
-</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">97</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">102</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">87</span><span class="p">;</span>
-</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">48</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">57</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="n">num</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="mi">48</span><span class="p">;</span>
-</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>                <span class="n">let</span> <span class="n">alert</span> <span class="o">=</span> <span class="n">UIAlertController</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;错误&quot;</span><span class="p">,</span> <span class="nl">message:</span> <span class="s">&quot;你提供了非法字符&quot;</span><span class="p">,</span> <span class="nl">preferredStyle:</span> <span class="p">.</span><span class="n">Alert</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">alert</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">UIAlertAction</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;知道了&quot;</span><span class="p">,</span> <span class="nl">style:</span> <span class="p">.</span><span class="n">Cancel</span><span class="p">,</span> <span class="nl">handler:</span> <span class="nb">nil</span><span class="p">))</span>
-</span><span class='line'>                <span class="n">self</span><span class="p">.</span><span class="n">presentViewController</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nl">animated:</span> <span class="n">true</span><span class="p">,</span> <span class="nl">completion:</span> <span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-</span><span class='line'>                <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">becomeFirstResponder</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">return</span> <span class="nb">nil</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">let</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">CDouble</span><span class="p">(</span><span class="n">hexdecimal</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">Int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">*</span> <span class="n">tmp</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">NSString</span><span class="p">(</span><span class="nl">format:</span> <span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">func</span> <span class="n">hexdecimalConvertedFromDecimal</span><span class="p">(</span><span class="nl">decimal:</span> <span class="n">NSString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NSString</span><span class="o">?</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">var</span> <span class="nl">num:</span> <span class="n">Int</span> <span class="o">=</span> <span class="n">decimal</span><span class="p">.</span><span class="n">integerValue</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">var</span> <span class="nl">result:</span> <span class="n">NSMutableString</span> <span class="o">=</span> <span class="n">NSMutableString</span><span class="p">(</span><span class="nl">capacity:</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">var</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">16</span><span class="p">;</span>
-</span><span class='line'>            <span class="n">var</span> <span class="nl">c:</span> <span class="n">unichar</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">c</span> <span class="o">=</span> <span class="mi">97</span> <span class="o">+</span> <span class="n">unichar</span><span class="p">(</span><span class="n">tmp</span> <span class="o">-</span> <span class="mi">10</span><span class="p">);</span>
-</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>                <span class="n">c</span> <span class="o">=</span> <span class="mi">48</span> <span class="o">+</span> <span class="n">unichar</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="n">let</span> <span class="nl">character:</span> <span class="n">NSString</span> <span class="o">=</span> <span class="n">NSString</span><span class="p">(</span><span class="nl">format:</span><span class="s">&quot;%c&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">result</span><span class="p">.</span><span class="n">insertString</span><span class="p">(</span><span class="n">character</span><span class="p">,</span> <span class="nl">atIndex:</span> <span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">num</span> <span class="o">/=</span> <span class="mi">16</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">func</span> <span class="n">setTextFieldKeyboardType</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">resignFirstResponder</span><span class="p">()</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">segmentControl</span><span class="p">.</span><span class="n">selectedSegmentIndex</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">keyboardType</span> <span class="o">=</span> <span class="p">.</span><span class="n">ASCIICapable</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">keyboardType</span> <span class="o">=</span> <span class="p">.</span><span class="n">NumberPad</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">becomeFirstResponder</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="err">@</span><span class="kt">IBAction</span> <span class="n">func</span> <span class="n">endEditing</span><span class="p">(</span><span class="nl">sender:</span> <span class="n">AnyObject</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">endEditing</span><span class="p">(</span><span class="n">true</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="err">@</span><span class="kt">IBAction</span> <span class="n">func</span> <span class="n">convertButtonPressed</span><span class="p">(</span><span class="nl">sender:</span> <span class="n">AnyObject</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="s">&quot;&quot;</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>  <span class="p">{</span>
-</span><span class='line'>            <span class="n">var</span> <span class="n">alert</span> <span class="o">=</span> <span class="n">UIAlertController</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;提示&quot;</span><span class="p">,</span> <span class="nl">message:</span> <span class="s">&quot;你还没有填写被转换数字&quot;</span><span class="p">,</span> <span class="nl">preferredStyle:</span> <span class="p">.</span><span class="n">Alert</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">alert</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">UIAlertAction</span><span class="p">(</span><span class="nl">title:</span> <span class="s">&quot;知道了&quot;</span><span class="p">,</span> <span class="nl">style:</span> <span class="p">.</span><span class="n">Cancel</span><span class="p">,</span> <span class="nl">handler:</span> <span class="nb">nil</span><span class="p">))</span>
-</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">presentViewController</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nl">animated:</span> <span class="n">true</span><span class="p">,</span> <span class="nl">completion:</span> <span class="nb">nil</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">return</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">resignFirstResponder</span><span class="p">()</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">segmentControl</span><span class="p">.</span><span class="n">selectedSegmentIndex</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">afterConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">decimalConvertedFromHexdecimal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">afterConvertTextField</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">hexdecimalConvertedFromDecimal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">beforeConvertTextField</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
 ]]></content>
   </entry>
   

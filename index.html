@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="使用AutoLayout时，在iOS7和iOS8上两者会有很大的不同，iOS8苹果优化了很多。最近看了一篇bolg，是Reveal的工程师写的介绍使用Constraints以及transform变幻之后在iOS78上的异同。">
+  <meta name="description" content="加入百度知道团队也有一段时间了，能跟@我就叫Sunny怎么了、@sinojerk等小伙伴一起工作生活是一种极赞的体验。在完成日常业务开发之余，我们也会进行一些技术研究项目，并将研究结果以开源的方式公布出来，自然我也成为了forkingdog开源小组的一员。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,8 +26,8 @@
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="GeekerProbe" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"> -->
 
   
   <script type="text/javascript">
@@ -78,6 +78,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-09T21:32:12+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>加入百度知道团队也有一段时间了，能跟<a href="http://weibo.com/u/1364395395">@我就叫Sunny怎么了</a>、<a href="http://weibo.com/u/5665046845">@sinojerk</a>等小伙伴一起工作生活是一种极赞的体验。在完成日常业务开发之余，我们也会进行一些技术研究项目，并将研究结果以开源的方式公布出来，自然我也成为了<code>forkingdog</code>开源小组的一员。</p>
+
+<p>近期我们的研究项目是<code>FDStackView</code>，现如今已经完成了<code>Alpha</code>版本的开发工作，并将其开源在了<code>Github</code>上，<a href="https://github.com/forkingdog/FDStackView">项目地址</a>。虽然现在已经完成所有的基本功能，但是仍需要在真实的环境中测试试用，欢迎大家将试用之后的问题反馈给我们，提<code>issue</code>给我们，使我们更好的修复和完善<code>FDStackView</code>，以便于更好的方便开发者们使用。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -510,56 +556,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/23/adapter/">23种设计模式——适配器模式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-23T14:13:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2013/03/23/adapter/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今天要介绍的是<code>适配器模式（Adapter Pattern）</code>，适配器模式又叫做<code>变压器模式</code>，也叫做<code>包装模式（Wrapper）</code>，但是<code>包装模式</code>却不止一个，<code>装饰模式</code>也是<code>包装模式</code>，以后会介绍到。适配器模式是一种补救模式，他可以让你从因业务扩展而系统无法迅速适应的苦恼中解脱出来。我们在进行系统开发时，不管之前的可行性分析、需求分析、系统设计处理的多么完美，总会在关键时候、关键场合出现一些“意外”。这些“意外”，该来的还是要来，躲是躲不过的，而这时就是我们的<code>适配器模式</code>的用武之地。<code>适配器模式</code>最好在设计阶段不要考虑它，它不是为了解决还处在开发阶段的问题，而是解决正在服役的项目问题，没有一个系统分析师会再做详细设计时考虑使用<code>适配器模式</code>。</p>
-
-<p><code>适配器模式</code>包含两种，一种是<code>类适配器</code>，另一种是<code>对象适配器</code>。<code>类适配器</code>是通过类的继承实现的适配，而<code>对象适配器</code>是通过对象间的关联关系，组合关系实现的适配。二者在实际项目中都会经常用到，由于<code>对象适配器</code>是通过类间的关联关系进行耦合的，因此在设计时就可以做到比较灵活，而<code>类适配器</code>就只能通过覆写源角色的方法进行拓展，在实际项目中，<code>对象适配器</code>使用到的场景相对较多。在<code>iOS</code>开发中也推荐多使用组合关系，而尽量减少继承关系，这是一种很好的编程习惯，因此我在这里只介绍<code>对象适配器</code>，想了解更多的关于<code>类适配器</code>的话，请自行<code>Google</code>之。</p>
-
-<h4>适配器模式定义</h4>
-
-<p><code>Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.(将一个类的接口变成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。)</code></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/23/adapter/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -578,11 +574,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (8)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (9)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/">Constraints &amp; Transformations 在iOS7和8上的不同</a>
@@ -598,10 +598,6 @@
     
       <li class="post">
         <a href="/blog/2014/08/10/nested-xib-views/">Nested Xib Views - 使用XIB实现嵌套自定义视图</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/25/swift-hexadecimal-conversion/">Swift Hexadecimal conversion</a>
       </li>
     
   </ul>
@@ -683,24 +679,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 131%" href="/tags/design/">Design</a>
-<a style="font-size: 115%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 115%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 124%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 115%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 130%" href="/tags/design/">Design</a>
 
   </ul>
 </section>
