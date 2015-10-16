@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2015-10-13T00:03:48+08:00</updated>
+  <updated>2015-10-16T12:07:55+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -676,10 +676,14 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">source</span> <span class="s1">&#39;https://github.com/CocoaPods/Specs.git&#39;</span>  <span class="c1"># 官方库</span>
+</span><span class='line'><span class="n">source</span> <span class="s1">&#39;https://git.coding.net/wtlucky/WTSpecs.git&#39;</span>   <span class="c1"># 私有库</span>
+</span><span class='line'><span class="n">platform</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;7.0&#39;</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="ss">:path</span> <span class="o">=&gt;</span> <span class="s1">&#39;~/code/Cocoapods/podTest/PodTestLibrary&#39;</span>      <span class="c1">#指定路径</span>
-</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="ss">:podspec</span> <span class="o">=&gt;</span> <span class="s1">&#39;~/code/Cocoapods/podTest/PodTestLibrary/PodTestLibrary.podspec&#39;</span>  <span class="c1">#指定podspec文件</span>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="ss">:path</span> <span class="o">=&gt;</span> <span class="s1">&#39;~/code/Cocoapods/podTest/PodTestLibrary&#39;</span>      <span class="c1"># 指定路径</span>
+</span><span class='line'><span class="n">pod</span> <span class="s1">&#39;PodTestLibrary&#39;</span><span class="p">,</span> <span class="ss">:podspec</span> <span class="o">=&gt;</span> <span class="s1">&#39;~/code/Cocoapods/podTest/PodTestLibrary/PodTestLibrary.podspec&#39;</span>  <span class="c1"># 指定podspec文件</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
