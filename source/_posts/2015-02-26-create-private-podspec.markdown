@@ -166,10 +166,12 @@ $ pod lib lint
 在`Podfile`中我们可以这样编辑，有两种方式
 
 {% codeblock lang:ruby %}
+source 'https://github.com/CocoaPods/Specs.git'  # 官方库
+source 'https://git.coding.net/wtlucky/WTSpecs.git'   # 私有库
 platform :ios, '7.0'
 
-pod 'PodTestLibrary', :path => '~/code/Cocoapods/podTest/PodTestLibrary'      #指定路径
-pod 'PodTestLibrary', :podspec => '~/code/Cocoapods/podTest/PodTestLibrary/PodTestLibrary.podspec'  #指定podspec文件
+pod 'PodTestLibrary', :path => '~/code/Cocoapods/podTest/PodTestLibrary'      # 指定路径
+pod 'PodTestLibrary', :podspec => '~/code/Cocoapods/podTest/PodTestLibrary/PodTestLibrary.podspec'  # 指定podspec文件
 {% endcodeblock %}
 
 然后执行`pod install`命令安装依赖，打开项目工程，可以看到库文件都被加载到`Pods`子项目中了，不过它们并没有在`Pods`目录下，而是跟测试项目一样存在于`Development Pods/PodTestLibrary`中，这是因为我们是在本地测试，而没有把`podspec`文件添加到`Spec Repo`中的缘故。

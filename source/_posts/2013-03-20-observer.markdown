@@ -18,7 +18,7 @@ tags: iOS Design
 
 ####观察者模式类图####
 
-{% img http://picturemapstore.bj.bcebos.com/2013/03/Observer.jpg %}
+{% img http://imgchr.com/images/Observer.jpg %}
 
 ####观察者模式说明####
 
