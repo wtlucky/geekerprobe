@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>FDStackView —— Downward Compatible UIStackView (Part 3) - GeekerProbe</title>
+  <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
+
+  
+  <meta name="description" content="上一篇Part 2只介绍了第一个技术点alignment和distribution的约束如何添加和管理的alignment这一部分的内容，这一篇继续介绍distribution的约束添加和管理。 同样的在介绍实现之前，我先介绍一下StackView的各种distribution模式都是什么效果的 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.wtlucky.com/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="GeekerProbe" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"> -->
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38777768-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">GeekerProbe</a></h1>
+  
+    <h2>水滴石穿 Keeping faith.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--- wtlucky's Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.wtlucky.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories & Tags</a></li>
+  <li><a href="/blog/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">FDStackView —— Downward Compatible UIStackView (Part 3)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-04T15:24:55+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>上一篇<a href="http://blog.wtlucky.com/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/"><code>Part 2</code></a>只介绍了第一个技术点<strong><code>alignment</code>和<code>distribution</code>的约束如何添加和管理</strong>的<code>alignment</code>这一部分的内容，这一篇继续介绍<code>distribution</code>的约束添加和管理。</p>
+
+<p>同样的在介绍实现之前，我先介绍一下<code>StackView</code>的各种<code>distribution</code>模式都是什么效果的：</p>
+
+<!-- More -->
+
+
+<ul>
+<li><strong>UIStackViewDistributionFill</strong>：这种应该是目前最常用的了，它就是将<code>arrangedSubviews</code>填充满整个<code>StackView</code>，如果设置了spacing，那么这些<code>arrangedSubviews</code>之间的间距就是spacing。如果减去所有的spacing，所有的<code>arrangedSubview</code>的固有尺寸(<code>intrinsicContentSize</code>)不能填满或者超出<code>StackView</code>的尺寸，那就会按照<code>Hugging</code>或者<code>CompressionResistance</code>的优先级来拉伸或压缩一些<code>arrangedSubview</code>。如果出现优先级相同的情况，就按排列顺序来拉伸或压缩。</li>
+</ul>
+
+
+<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fill_2x.png" alt="image" /></p>
+
+<ul>
+<li><strong>UIStackViewDistributionFillEqually</strong>：这种就是<code>StackView</code>的尺寸减去所有的spacing之后均分给<code>arrangedSubviews</code>，每个<code>arrangedSubview</code>的尺寸是相同的。</li>
+</ul>
+
+
+<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fillequally_2x.png" alt="image" /></p>
+
+<ul>
+<li><strong>UIStackViewDistributionFillProportionally</strong>：这种跟FillEqually差不多，只不过这个不是讲尺寸均分给<code>arrangedSubviews</code>，而是根据<code>arrangedSubviews</code>的<code>intrinsicContentSize</code>按比例分配。</li>
+</ul>
+
+
+<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fillroportionally_2x.png" alt="image" /></p>
+
+<ul>
+<li><strong>UIStackViewDistributionEqualSpacing</strong>：这种是使<code>arrangedSubview</code>之间的spacing相等，但是这个spacing是有可能大于<code>StackView</code>所设置的spacing，但是绝对不会小于。这个类型的布局可以这样理解，先按所有的<code>arrangedSubview</code>的<code>intrinsicContentSize</code>布局，然后余下的空间均分为spacing，如果大约<code>StackView</code>设置的spacing那这样就OK了，如果小于就按照<code>StackView</code>设置的spacing，然后按照<code>CompressionResistance</code>的优先级来压缩一个<code>arrangedSubview</code>。</li>
+</ul>
+
+
+<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_equalspacing_2x.png" alt="image" /></p>
+
+<ul>
+<li><strong>UIStackViewDistributionEqualCentering</strong>：这种是使<code>arrangedSubview</code>的中心点之间的距离相等，这样没两个<code>arrangedSubview</code>之间的spacing就有可能不是相等的，但是这个spacing仍然是大于等于<code>StackView</code>设置的spacing的，不会是小于。这个类型布局仍然是如果<code>StackView</code>有多余的空间会均分给<code>arrangedSubviews</code>之间的spacing，如果空间不够那就按照<code>CompressionResistance</code>的优先级压缩<code>arrangedSubview</code>。</li>
+</ul>
+
+
+<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_equalcentering_2x.png" alt="image" /></p>
+
+<p>在介绍<code>distribution</code>的约束创建和管理的过程中也涉及到了第二个知识点<strong><code>spacing</code>和<code>distribution</code>的关系及约束的创建</strong>的内容，所以这两部都在这里介绍了。</p>
+
+<p><code>distribution</code>方向同样也包括4种约束，这4种约束也都是添加到<code>canvas</code>上的，除此之外它还包括一组通过<code>NSMapTable</code>维护的<code>FDGapLayoutGuide</code>。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">FDStackViewDistributionLayoutArrangement</span> : <span class="nc">FDStackViewLayoutArrangement</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">NSMutableArray</span><span class="o">&lt;</span><span class="bp">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">canvasConnectionConstraints</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">NSMapTable</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*</span><span class="p">,</span> <span class="bp">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">edgeToEdgeConstraints</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">NSMapTable</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*</span><span class="p">,</span> <span class="bp">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">relatedDimensionConstraints</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">NSMapTable</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*</span><span class="p">,</span> <span class="bp">NSLayoutConstraint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">hiddingDimensionConstraints</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="bp">NSMapTable</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*</span><span class="p">,</span> <span class="n">FDGapLayoutGuide</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">spacingOrCenteringGuides</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><strong>canvasConnectionConstraints</strong>：它管路的是<code>arrangedSubviews</code>与<code>canvas</code>之间的约束；</li>
+<li><strong>edgeToEdgeConstraints</strong>：它管理的是<code>arrangedSubviews</code>之间一个接一个的约束，这里需要注意这些约束的常量是<code>StackView</code>的spacing，但是关系却不一定是相等。还有就是如果有个<code>arrangedSubview</code>被<code>hidden</code>了那么它仍然参与到<code>edgeToEdge</code>的约束创建及布局中，只不过是把它与后一个<code>arrangedSubview</code>之间的<code>edgeToEdgeConstraint</code>的常量由spacing设置为<code>0</code>。</li>
+<li><strong>relatedDimensionConstraints</strong>：它管理的是<code>arrangedSubviews</code>之间<code>distribution</code>各种相等关系的约束，这里面的管理的约束是<code>StackView</code>的<code>distribution</code>布局的精髓所在。如果是<code>UIStackViewDistributionFill</code>模式的话，是没有<code>relatedDimensionConstraint</code>的。<code>UIStackViewDistributionFillEqually</code>与<code>UIStackViewDistributionFillProportionally</code>使用的是一种类型的约束，而<code>UIStackViewDistributionEqualCentering</code>与<code>UIStackViewDistributionEqualSpacing</code>使用的却是另一种类型的约束，后面在详细介绍。</li>
+<li><strong>hiddingDimensionConstraints</strong>：它管理的是当<code>arrangedSubviews</code>有<code>hidden</code>的时候，该<code>arrangedSubview</code>的有关<code>dimensionAttribute</code>的约束；</li>
+<li><strong>spacingOrCenteringGuides</strong>：这个管理的就不是约束了，它是一组<code>FDGapLayoutGuide</code>，只用在<code>UIStackViewDistributionEqualCentering</code>和<code>UIStackViewDistributionEqualSpacing</code>这两种模式中，<code>FDGapLayoutGuide</code>用来连接左右两个<code>arrangedSubView</code>，作为一个辅助view来约束左右两个view的位置关系。<code>spacingOrCenteringGuides</code>的key是<code>FDGapLayoutGuide</code>连接的左边的<code>arrangedSubview</code>。</li>
+</ul>
+
+
+<p>最后说明的就是<code>FDGapLayoutGuide</code>与<code>arrangedSubView</code>相连接的约束没有被<code>NSMapTable</code>所管理，它们就只是被加到了<code>canvas</code>上。因为当模式改变时，所有的<code>FDGapLayoutGuide</code>会被移除或者重建，所以跟它们相关的约束也会被一并清楚。</p>
+
+<p>那么以上几种约束的创建顺序是怎样的呢？</p>
+
+<ol>
+<li>首先是<code>canvasConnectionConstraints</code>；</li>
+<li>其次是每一种模式都会涉及到的<code>edgeToEdgeConstraints</code>；</li>
+<li>然后再遍历所有<code>arrangedSubviews</code>，如果有<code>arrangedSubview</code>被<code>hidden</code>了，那么就会创建<code>hiddingDimensionConstraints</code>；</li>
+<li>最后是<code>relatedDimensionConstraints</code>，这里如果是<code>UIStackViewDistributionEqualCentering</code>和<code>UIStackViewDistributionEqualSpacing</code>这两种模式的话，会先创建出<code>spacingOrCenteringGuides</code>。</li>
+</ol>
+
+
+<p>下面具体来看，首先<code>canvasConnectionConstraints</code>：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">resetCanvasConnectionsEffect</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">removeConstraints</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">canvasConnectionConstraints</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">count</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">canvasConnectionConstraints</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSLayoutAttribute</span> <span class="n">minAttribute</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">minAttributeForCanvasConnections</span><span class="p">];</span>
+</span><span class='line'>    <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minAttribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">NSLayoutRelationEqual</span> <span class="nl">toItem</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">firstObject</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minAttribute</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">canvasConnectionConstraints</span> <span class="nl">addObject</span><span class="p">:</span><span class="n">head</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">head</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-canvas-connection&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">end</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minAttribute</span> <span class="o">+</span> <span class="mi">1</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">NSLayoutRelationEqual</span> <span class="nl">toItem</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">lastObject</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minAttribute</span> <span class="o">+</span> <span class="mi">1</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">canvasConnectionConstraints</span> <span class="nl">addObject</span><span class="p">:</span><span class="n">end</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">end</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-canvas-connection&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nb">self</span><span class="p">.</span><span class="n">canvasConnectionConstraints</span> <span class="o">=</span> <span class="n">canvasConnectionConstraints</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraints</span><span class="p">:</span><span class="n">canvasConnectionConstraints</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>比较简单，先判断一下不需要创建的情况，然后就是根据<code>axis</code>选用不同的<code>NSLayoutAttribute</code>，将第一个和最后一个<code>arrangedSubview</code>分别与<code>StackView</code>创建相等的约束。这样一来再加上<code>FDStackViewAlignmentLayoutArrangement</code>中创建的两个<code>canvasConnectionConstraints</code>，整个<code>canvas</code>的上下左右四个方向的约束就都有了，满足了<code>canvas</code>布局的基本条件。</p>
+
+<p>接下来是<code>edgeToEdgeConstraints</code>：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">resetFillEffect</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// spacing - edge to edge</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">removeConstraints</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">edgeToEdgeConstraints</span><span class="p">.</span><span class="n">fd_allObjects</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">edgeToEdgeConstraints</span> <span class="n">removeAllObjects</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">removeConstraints</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">hiddingDimensionConstraints</span><span class="p">.</span><span class="n">fd_allObjects</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">hiddingDimensionConstraints</span> <span class="n">removeAllObjects</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">UIView</span> <span class="o">*</span><span class="n">offset</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">car</span><span class="p">;</span>
+</span><span class='line'>    <span class="bp">UIView</span> <span class="o">*</span><span class="n">last</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">lastObject</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="bp">UIView</span> <span class="o">*</span><span class="n">view</span> <span class="k">in</span> <span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">cdr</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLayoutAttribute</span> <span class="n">attribute</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">minAttributeForGapConstraint</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutRelation</span> <span class="n">relation</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">edgeToEdgeRelation</span><span class="p">];</span>
+</span><span class='line'>        <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">spacing</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="n">view</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">attribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">relation</span> <span class="nl">toItem</span><span class="p">:</span><span class="n">offset</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">attribute</span> <span class="o">+</span> <span class="mi">1</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">spacing</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">spacing</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-spacing&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraint</span><span class="p">:</span><span class="n">spacing</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">edgeToEdgeConstraints</span> <span class="nl">setObject</span><span class="p">:</span><span class="n">spacing</span> <span class="nl">forKey</span><span class="p">:</span><span class="n">offset</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">offset</span><span class="p">.</span><span class="n">hidden</span> <span class="o">||</span> <span class="p">(</span><span class="n">view</span> <span class="o">==</span> <span class="n">last</span> <span class="o">&amp;&amp;</span> <span class="n">view</span><span class="p">.</span><span class="n">hidden</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">spacing</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">offset</span> <span class="o">=</span> <span class="n">view</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">// hidding dimensions</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="bp">UIView</span> <span class="o">*</span><span class="n">view</span> <span class="k">in</span> <span class="nb">self</span><span class="p">.</span><span class="n">items</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">hidden</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">NSLayoutAttribute</span> <span class="n">dimensionAttribute</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">dimensionAttributeForCurrentAxis</span><span class="p">];</span>
+</span><span class='line'>            <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">dimensionConstraint</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="n">view</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">dimensionAttribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">NSLayoutRelationEqual</span> <span class="nl">toItem</span><span class="p">:</span><span class="nb">nil</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">NSLayoutAttributeNotAnAttribute</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>            <span class="n">dimensionConstraint</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-hiding&quot;</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraint</span><span class="p">:</span><span class="n">dimensionConstraint</span><span class="p">];</span>
+</span><span class='line'>            <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">hiddingDimensionConstraints</span> <span class="nl">setObject</span><span class="p">:</span><span class="n">dimensionConstraint</span> <span class="nl">forKey</span><span class="p">:</span><span class="n">view</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>先移去旧的相关约束，然后将<code>arrangedSubviews</code>依次迭代遍历，根据<code>axis</code>选择正确的<code>NSLayoutAttribute</code>创建首尾相接的约束，常量为<code>StackView</code>的spacing，关系则根据<code>distribution</code>的不同而或等于或大于等于。</p>
+
+<p>这里如前面介绍的一样，如果这个<code>arrangedSubview</code>是<code>hidden</code>的那么它仍然参与<code>edgeToEdgeConstraints</code>的创建，只不过它与后一个<code>arrangedSubview</code>的约束常量不再是spacing而是<code>0</code>。还有一个特殊的就是如果是最后一个<code>arrangedSubview</code>被<code>hidden</code>了，那么它与前一个<code>arrangedSubview</code>的约束的常量也同样是<code>0</code>。</p>
+
+<p>最后再遍历所有<code>arrangedSubviews</code>，如果有<code>arrangedSubview</code>被<code>hidden</code>了，那就根据<code>axis</code>给这个<code>arrangedSubview</code>创建一个常量为<code>0</code>的<code>dimensionConstraint</code>。</p>
+
+<p>如果是<code>UIStackViewDistributionFill</code>的话，那么到这里所有<code>distribution</code>的约束就已经创建完了，已经满足需求了。但是其他几种还要有后续的步骤。</p>
+
+<hr />
+
+<p>先来看<code>UIStackViewDistributionFillEqually</code>和<code>UIStackViewDistributionFillProportionally</code>这两种类型：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">resetEquallyEffect</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">removeConstraints</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">relatedDimensionConstraints</span><span class="p">.</span><span class="n">fd_allObjects</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">relatedDimensionConstraints</span> <span class="n">removeAllObjects</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="bp">NSArray</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">visiableViews</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">visiableItems</span><span class="p">;</span>
+</span><span class='line'>    <span class="bp">UIView</span> <span class="o">*</span><span class="n">offset</span> <span class="o">=</span> <span class="n">visiableViews</span><span class="p">.</span><span class="n">car</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">CGFloat</span> <span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="bp">UIView</span> <span class="o">*</span><span class="n">view</span> <span class="k">in</span> <span class="n">visiableViews</span><span class="p">.</span><span class="n">cdr</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLayoutAttribute</span> <span class="n">attribute</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">dimensionAttributeForCurrentAxis</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutRelation</span> <span class="n">relation</span> <span class="o">=</span> <span class="n">NSLayoutRelationEqual</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">CGFloat</span> <span class="n">multiplier</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">distribution</span> <span class="o">==</span> <span class="n">UIStackViewDistributionFillEqually</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">({</span>
+</span><span class='line'>            <span class="bp">CGSize</span> <span class="n">size1</span> <span class="o">=</span> <span class="n">offset</span><span class="p">.</span><span class="n">intrinsicContentSize</span><span class="p">;</span>
+</span><span class='line'>            <span class="bp">CGSize</span> <span class="n">size2</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">intrinsicContentSize</span><span class="p">;</span>
+</span><span class='line'>            <span class="n">CGFloat</span> <span class="n">multiplier</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">attribute</span> <span class="o">==</span> <span class="n">NSLayoutAttributeWidth</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">multiplier</span> <span class="o">=</span> <span class="n">size1</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="n">size2</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">multiplier</span> <span class="o">=</span> <span class="n">size1</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="n">size2</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="n">multiplier</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'>        <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">equally</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="n">offset</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">attribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">relation</span> <span class="nl">toItem</span><span class="p">:</span><span class="n">view</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">attribute</span> <span class="nl">multiplier</span><span class="p">:</span><span class="n">multiplier</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">equally</span><span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">UILayoutPriorityRequired</span> <span class="o">-</span> <span class="p">(</span><span class="o">++</span><span class="n">order</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">equally</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">distribution</span> <span class="o">==</span> <span class="n">UIStackViewDistributionFillEqually</span> <span class="o">?</span> <span class="s">@&quot;FDSV-fill-equally&quot;</span> <span class="o">:</span> <span class="s">@&quot;FDSV-fill-proportionally&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraint</span><span class="p">:</span><span class="n">equally</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">relatedDimensionConstraints</span> <span class="nl">setObject</span><span class="p">:</span><span class="n">equally</span> <span class="nl">forKey</span><span class="p">:</span><span class="n">offset</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">offset</span> <span class="o">=</span> <span class="n">view</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>仍然是先干掉旧的约束，然后跟前面不同的是要取出所有的<strong>非hidden</strong>的<code>arrangedSubview</code>添加约束，而不是所有<code>arrangedSubview</code>。</p>
+
+<p>这两个<code>distribution</code>类型是将当前<code>axis</code>所对应的<code>dimensionAttribute</code>的约束作用在<code>arrangedSubviews</code>上，如果是<code>UIStackViewDistributionFillEqually</code>，那么约束的比例(<code>multiplier</code>)就是<code>1</code>，如果是<code>UIStackViewDistributionFillProportionally</code>，那<code>multiplier</code>就需要通过计算得出，是通过两个<code>arrangedSubview</code>的<code>intrinsicContentSize</code>做比值，这样就能保证<code>arrangedSubview</code>最终会按照<code>intrinsicContentSize</code>的比例来分配<code>StackView</code>的空间布局。</p>
+
+<p>再来看<code>UIStackViewDistributionEqualCentering</code>和<code>UIStackViewDistributionEqualSpacing</code>这两种类型：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">resetSpacingOrCenteringGuides</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">spacingOrCenteringGuides</span><span class="p">.</span><span class="n">fd_allObjects</span> <span class="nl">makeObjectsPerformSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">removeFromSuperview</span><span class="p">)];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">spacingOrCenteringGuides</span> <span class="n">removeAllObjects</span><span class="p">];</span>
+</span><span class='line'>    <span class="bp">NSArray</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">visiableItems</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">visiableItems</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">visiableItems</span><span class="p">.</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[[</span><span class="n">visiableItems</span> <span class="nl">subarrayWithRange</span><span class="p">:(</span><span class="n">NSRange</span><span class="p">){</span><span class="mi">0</span><span class="p">,</span> <span class="n">visiableItems</span><span class="p">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">}]</span> <span class="nl">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="bp">UIView</span> <span class="o">*</span><span class="n">item</span><span class="p">,</span> <span class="bp">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">FDGapLayoutGuide</span> <span class="o">*</span><span class="n">guide</span> <span class="o">=</span> <span class="p">[</span><span class="n">FDGapLayoutGuide</span> <span class="n">new</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addSubview</span><span class="p">:</span><span class="n">guide</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">guide</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+</span><span class='line'>        <span class="bp">UIView</span> <span class="o">*</span><span class="n">relatedToItem</span> <span class="o">=</span> <span class="n">visiableItems</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">NSLayoutAttribute</span> <span class="n">minGapAttribute</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">minAttributeForGapConstraint</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">NSLayoutAttribute</span> <span class="n">minContentAttribute</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">NSLayoutAttribute</span> <span class="n">maxContentAttribute</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">.</span><span class="n">distribution</span> <span class="o">==</span> <span class="n">UIStackViewDistributionEqualCentering</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">minContentAttribute</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">axis</span> <span class="o">==</span> <span class="n">UILayoutConstraintAxisHorizontal</span> <span class="o">?</span> <span class="nl">NSLayoutAttributeCenterX</span> <span class="p">:</span> <span class="n">NSLayoutAttributeCenterY</span><span class="p">;</span>
+</span><span class='line'>            <span class="n">maxContentAttribute</span> <span class="o">=</span> <span class="n">minContentAttribute</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">minContentAttribute</span> <span class="o">=</span> <span class="n">minGapAttribute</span><span class="p">;</span>
+</span><span class='line'>            <span class="n">maxContentAttribute</span> <span class="o">=</span> <span class="n">minGapAttribute</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">beginGap</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="n">guide</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minGapAttribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">NSLayoutRelationEqual</span> <span class="nl">toItem</span><span class="p">:</span><span class="n">item</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">maxContentAttribute</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">beginGap</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-distributing-edge&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">endGap</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="n">relatedToItem</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minContentAttribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">NSLayoutRelationEqual</span> <span class="nl">toItem</span><span class="p">:</span><span class="n">guide</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">minGapAttribute</span> <span class="o">+</span> <span class="mi">1</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">endGap</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-distributing-edge&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraint</span><span class="p">:</span><span class="n">beginGap</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraint</span><span class="p">:</span><span class="n">endGap</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">spacingOrCenteringGuides</span> <span class="nl">setObject</span><span class="p">:</span><span class="n">guide</span> <span class="nl">forKey</span><span class="p">:</span><span class="n">item</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">resetSpacingOrCenteringGuideRelatedDimensionConstraints</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">removeConstraints</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">relatedDimensionConstraints</span><span class="p">.</span><span class="n">fd_allObjects</span><span class="p">];</span>
+</span><span class='line'>    <span class="bp">NSArray</span><span class="o">&lt;</span><span class="bp">UIView</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">visiableItems</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">visiableItems</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">visiableItems</span><span class="p">.</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">FDGapLayoutGuide</span> <span class="o">*</span><span class="n">firstGapGuide</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">spacingOrCenteringGuides</span> <span class="nl">objectForKey</span><span class="p">:</span><span class="n">visiableItems</span><span class="p">.</span><span class="n">car</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">spacingOrCenteringGuides</span><span class="p">.</span><span class="n">fd_allObjects</span> <span class="nl">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="bp">UIView</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="bp">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">firstGapGuide</span> <span class="o">==</span> <span class="n">obj</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">NSLayoutAttribute</span> <span class="n">dimensionAttribute</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="n">dimensionAttributeForCurrentAxis</span><span class="p">];</span>
+</span><span class='line'>        <span class="bp">NSLayoutConstraint</span> <span class="o">*</span><span class="n">related</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSLayoutConstraint</span> <span class="nl">constraintWithItem</span><span class="p">:</span><span class="n">firstGapGuide</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">dimensionAttribute</span> <span class="nl">relatedBy</span><span class="p">:</span><span class="n">NSLayoutRelationEqual</span> <span class="nl">toItem</span><span class="p">:</span><span class="n">obj</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">dimensionAttribute</span> <span class="nl">multiplier</span><span class="p">:</span><span class="mi">1</span> <span class="nl">constant</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">related</span><span class="p">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="s">@&quot;FDSV-fill-equally&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">relatedDimensionConstraints</span> <span class="nl">setObject</span><span class="p">:</span><span class="n">related</span> <span class="nl">forKey</span><span class="p">:</span><span class="n">obj</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">canvas</span> <span class="nl">addConstraint</span><span class="p">:</span><span class="n">related</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>先创建<code>spacingOrCenteringGuides</code>，开始是干掉旧的<code>spacingOrCenteringGuides</code>。这里使用的仍然是<strong>visiableItems</strong>。
+<code>FDGapLayoutGuide</code>用来连接左右相连的两个可见<code>arrangedSubview</code>。</p>
+
+<p>这两个<code>distribution</code>不同的地方就是<code>UIStackViewDistributionEqualSpacing</code>的<code>FDGapLayoutGuide</code>连接的是<code>arrangedSubview</code>的<code>minAttribute</code>和<code>maxAttribute</code>，而<code>UIStackViewDistributionEqualCentering</code>的<code>FDGapLayoutGuide</code>连接的却是<code>arrangedSubview</code>的<code>centerAttribute</code>。</p>
+
+<p>接下来就是创建<code>relatedDimensionConstraints</code>，就是根据<code>axis</code>不同给对应的<code>dimensionAttribute</code>创建相等的约束即可，这些约束是作用在<code>FDGapLayoutGuide</code>上的，而与前面那两种<code>distribution</code>类型不同。这就是一开始说的<code>relatedDimensionConstraints</code>中的两种类型的约束。</p>
+
+<p>到此整个<code>distribution</code>方向的约束也都创建完了。加上<code>alignment</code>方向创建的约束，<code>StackView</code>已经可以使用了。</p>
+
+<hr />
+
+<p>介绍完这些再回过头来看<a href="http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">本文章<code>Part 1</code></a>中后面提到的<code>UIStackView</code>的第一个bug，当存在spacing的时候<code>UIStackViewDistributionFillProportionally</code>这个类型的<code>StackView</code>是烂掉的。我刚才看了一下，苹果仍然没有修复这个bug。</p>
+
+<p>具体的原因那篇文章中已经解释了，现在说下为什么<code>FDStackView</code>没有这个问题，相信看完前面创建约束的过程，读者朋友应该就能发现我们并没有像<code>UIStackView</code>那样将<code>canvas</code>的<code>dimensionAttribute</code>乘以一个系数作为<code>arrangedSubview</code>的<code>dimensionConstraint</code>。我们的<code>arrangedSubview</code>的<code>dimensionConstraint</code>是与<code>canvas</code>无关的，是<code>arrangedSubviews</code>之间的比例关系，而且spacing在之前的<code>edgeToEdgeConstraints</code>中就已经创建了，这两者是分开创建的，所以算法不同，自然也就不会出现这个bug。</p>
+
+<hr />
+
+<p>下面看其余的知识点：</p>
+
+<h3>子视图的隐藏显示如何处理</h3>
+
+<p>如果一个已经布好局的<code>StackView</code>，在一个<code>arrangedSubview</code>被<code>hidden</code>或者<code>show</code>之后，那么其余的<code>arrangedSubviews</code>也要做出相应变化，来相应这种变化。</p>
+
+<p>在<code>FDStackView</code>这里我们是通过<code>KVO</code>监测每一个<code>arrangedSubview</code>的<code>hidden</code>属性，当任何一个<code>arrangedSubview</code>属性发生变化后，我们就通过<code>rebuild</code>的方式重新创建整个<code>StackView</code>的约束，就是重新布局一遍。这是目前<code>1.0</code>版本的处理方式，这样势必会带来性能的损失，这也是我们后续优化性能的关键。</p>
+
+<h3>子视图的<code>intrinsicContentSize</code>发生变化时如何处理</h3>
+
+<p>什么叫子视图的<code>intrinsicContentSize</code>发生变化呢？举个例子，一个已经布好局的<code>StackView</code>，其中有一个<code>arrangedSubview</code>是一个<code>UILabel</code>，但是这个<code>UILabel</code>被重新<code>setText</code>了，那么它的<code>intrinsicContentSize</code>就会发生变化，自然<code>StackView</code>的布局如果不发生变化的话就是错误的。所以在这种情况下<code>StackView</code>也要做出处理。</p>
+
+<p>这里我们研究了<code>UIStackView</code>的实现方式，一个<code>arrangedSubview</code>的<code>intrinsicContentSize</code>发生变化如何被捕捉到，是我们未知的，<code>UIKit</code>并没有暴露任何方法给我们，我们只能通过下符号断点的方式给dump出来的<code>UIStackView</code>的私有类。</p>
+
+<p>研究发现当一个<code>arrangedSubview</code>的<code>intrinsicContentSize</code>发生变化时，<code>UIStackView</code>总会调用到<code>_intrinsicContentSizeInvalidatedForChildView:</code>这个私有方法，参数为发生变化的<code>arrangedSubview</code>。所以我们就把这一私有方法给替换了，借助<code>UIKit</code>内部的机制来帮我们通知一个<code>arrangedSubview</code>的<code>intrinsicContentSize</code>发生变化的这种情况。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// Use non-public API in UIView directly is dangerous, so we inject at runtime.</span>
+</span><span class='line'><span class="p">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">load</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="kt">SEL</span> <span class="n">selector</span> <span class="o">=</span> <span class="n">NSSelectorFromString</span><span class="p">(</span><span class="s">@&quot;_intrinsicContentSizeInvalidatedForChildView:&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">class_getInstanceMethod</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">intrinsicContentSizeInvalidatedForChildView</span><span class="p">:));</span>
+</span><span class='line'>        <span class="n">class_addMethod</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">method_getImplementation</span><span class="p">(</span><span class="n">method</span><span class="p">),</span> <span class="n">method_getTypeEncoding</span><span class="p">(</span><span class="n">method</span><span class="p">));</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接到这种通知之后，我们目前也是通过<code>rebuild</code>的方式来重建<code>StackView</code>的约束的。其实对于这种情况以及上面提到的<code>hidden</code>的情况，我们都能得到具体发生变化的那个<code>arrangedSubview</code>，这也将会是后续优化的突破口。</p>
+
+<hr />
+
+<p>到此整个<code>FDStackView</code>的设计实现过程都介绍完了，当然还有一些零零碎碎的点没有说，都在源码里了。后续版本会增加<code>Layout Margins</code>的支持，以及性能优化。</p>
+
+<p>最后在附一张<code>UIStackView</code>及<code>FDStackView</code>在不同<code>iOS</code>系统上加载运行图：</p>
+
+<p><img src="http://i13.tietuku.com/b9e1b58c1529f278.png" alt="image" /></p>
+
+<p>全文完，转载请注明出处，谢谢阅读。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">wtlucky <chinawtlucky@gmail.com></span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-04T15:24:55+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios-development/'>ios development</a>
+  
+</span>
+
+
+      
+
+<span class="tags">
+  
+    <a class='tag' href='/tags/autolayout/'>AutoLayout</a>, <a class='tag' href='/tags/forkingdog/'>forkingdog</a>, <a class='tag' href='/tags/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+	
+	<div class="bshare-custom icon-medium" style="float: left;width: 270px;">
+		<div class="bsPromo bsPromo1"></div>
+	<a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+	<a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a>
+	<a title="分享到百度空间" class="bshare-baiduhi"></a><a title="分享到豆瓣" class="bshare-douban"></a>
+	<a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/button.js#style=-1&amp;uuid=8a9d6a89-3205-46e4-bb74-e9bcea7e61f7&amp;pophcol=2&amp;lang=zh"></script>
+	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+	
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.wtlucky.com/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/" data-via="cz_wtlucky" data-counturl="http://blog.wtlucky.com/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/" >Tweet</a>
+  
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+<hr style="border-bottom:1px dotted #bdbabd;height:1px;border-top:0px;border-left:0px;border-right:0px;" />
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/" title="Previous Post: FDStackView —— Downward Compatible UIStackView (Part 2)">&laquo; FDStackView —— Downward Compatible UIStackView (Part 2)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<!-- <div class="ds-thread" data-thread-key="http://blog.wtlucky.com/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/" data-title="FDStackView —— Downward Compatible UIStackView (Part 3)" ></div> -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"shuidishichuan"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (11)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+</section>
+<section>
+<h1>Recent Comments</h1>
+<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-time="0" data-show-title="0" data-show-admin="0" data-excerpt-length="18"></ul>
+
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">FDStackView —— Downward Compatible UIStackView (Part 3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/">Constraints &amp; Transformations 在iOS7和8上的不同</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>新浪微博</h1>
+  <ul id="weibo">
+    <li>
+      <iframe 
+        width="100%" 
+        height="120" 
+        class="share_self" 
+        frameborder="0" 
+        scrolling="no" 
+        src="http://widget.weibo.com/weiboshow/index.php?width=0&height=550&ptype=1&speed=0&skin=&isTitle=0&noborder=1&isWeibo=0&isFans=&uid=2381129390&verifier=4d52a72a">
+      </iframe>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cz_wtlucky", 2, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cz_wtlucky" class="twitter-follow-button" data-show-count="false">Follow @cz_wtlucky</a>
+  
+</section>
+
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wtlucky">@wtlucky</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wtlucky',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/chinawtlucky@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Tags</h1>
+  <ul class="tag-cloud">
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 114%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 133%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 128%" href="/tags/design/">Design</a>
+<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - wtlucky <chinawtlucky@gmail.com> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>&nbsp;&nbsp;&nbsp;&nbsp;<img src = "http://wtlucky.github.com/geekerprobe/images/wt_s_r.png" style="float:right" /><br/>
+  <a title="Web Analytics" href="http://clicky.com/100584144"><img alt="Web Analytics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+<script type="text/javascript">
+var clicky_site_ids = clicky_site_ids || [];
+clicky_site_ids.push(100584144);
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = '//static.getclicky.com/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100584144ns.gif" /></p></noscript>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

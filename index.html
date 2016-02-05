@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="加入百度知道团队也有一段时间了，能跟@我就叫Sunny怎么了、@sinojerk等小伙伴一起工作生活是一种极赞的体验。在完成日常业务开发之余，我们也会进行一些技术研究项目，并将研究结果以开源的方式公布出来，自然我也成为了forkingdog开源小组的一员。 &hellip;">
+  <meta name="description" content="上一篇Part 2只介绍了第一个技术点alignment和distribution的约束如何添加和管理的alignment这一部分的内容，这一篇继续介绍distribution的约束添加和管理。 同样的在介绍实现之前，我先介绍一下StackView的各种distribution模式都是什么效果的： ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">FDStackView —— Downward Compatible UIStackView (Part 3)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-04T15:24:55+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上一篇<a href="http://blog.wtlucky.com/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/"><code>Part 2</code></a>只介绍了第一个技术点<strong><code>alignment</code>和<code>distribution</code>的约束如何添加和管理</strong>的<code>alignment</code>这一部分的内容，这一篇继续介绍<code>distribution</code>的约束添加和管理。</p>
+
+<p>同样的在介绍实现之前，我先介绍一下<code>StackView</code>的各种<code>distribution</code>模式都是什么效果的：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-19T14:44:53+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>写完了<code>Part 1</code>就被接踵而至的新项目和新版本忙的不可开交，转眼间一个季度就已经过去了，而这篇<code>Part 2</code>却迟迟还没有出现。实在是抱歉没有及时更新。不过有一个好消息就是<code>FDStackView</code>已经被使用在我们自己的项目中，并且我们的项目也已经经过了两个版本的迭代，<code>FDStackView</code>可以说还是相当稳定的，并且可以顺利的通过苹果的审核机制，对这方面有顾虑的小伙伴们可以放心大胆的使用了。同时我们也将它的版本号从<code>1.0-alpha</code>升级到<code>1.0</code>。在此感谢一下各位热心的小伙伴们在<code>Github</code>上提出的<code>issue</code>,以及着重感谢下<a href="http://weibo.com/ljc1986?is_all=1">@里脊串</a>对<code>FDStackView</code>的重度使用及提出的各种隐晦的<code>bug</code>。后续我们将会对性能的优化做出改进，以及对<code>Layout Margins</code>的支持。</p>
+
+<p>回到主题，这篇文章主要介绍<code>StackView</code>的实现，即如何通过现有<code>AutoLayout</code>技术实现<code>StackView</code>这样的一个控件。这里说明一下，当初我们编写<code>FDStackView</code>的时候，<code>UIStackView</code>还没有支持<code>Layout Margins</code>，所以我们也没有添加<code>Layout Margins</code>的支持，不过目前的<code>iOS SDK</code>已经增加了这一部分的支持，所以在打开<code>layoutMarginsRelativeArrangement</code>属性的情况下，<code>StackView</code>创建出的约束会与我后面所介绍的内容有一些出入，不过问题不大，仅仅是部分约束的<code>firstItem</code>由<code>StackView</code>本身变成<code>UILayoutGuide</code>的区别。</p>
+
+<p> 实现<code>StackView</code>主要包括这几个技术点：</p>
+
+<ul>
+<li><strong><code>alignment</code>和<code>distribution</code>的约束如何添加和管理；</strong></li>
+<li><strong><code>spacing</code>和<code>distribution</code>的关系及约束的创建；</strong></li>
+<li><strong>子视图的隐藏显示如何处理；</strong></li>
+<li><strong>子视图的<code>intrinsicContentSize</code>发生变化时如何处理。</strong></li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -450,112 +552,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/31/strategy/">23种设计模式——策略模式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-31T20:46:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2013/03/31/strategy/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>这次介绍一下<code>策略模式（Strategy Pattern）</code>，相比之下是一种比较简单的模式。它也叫<code>政策模式（Policy Pattern）</code>。
-<code>策略模式</code>使用的就是面向对象的<code>继承</code>和<code>多态</code>机制，其他的没有什么玄机。<code>策略模式</code>适合使用在：
-1. 多个类只有在算法或行为上稍有不同的场景。
-2. 算法需要自由切换的场景。
-3. 需要屏蔽算法规则的场景。
-使用<code>策略模式</code>当然也有需要注意的地方，那么就是策略类不要太多，如果一个策略家族的具体策略数量超过4个，则需要考虑<code>混合模式</code>，解决策略类膨胀和对外暴露问题。在实际项目中，我们一般通过<code>工厂方法模式</code>来实现策略类的声明。</p>
-
-<p>下面我们就来具体讲解一下<code>策略模式</code>。</p>
-
-<h4>策略模式定义</h4>
-
-<p><code>Define a family of algorithms, encapsulate each one, and make them interchangeable.(定义一组算法，将每个算法都封装起来，并且是它们之间可以互换。)</code></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/31/strategy/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/23/deviceuniqueidentifier/">苹果禁止使用UDID的解决方案</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-23T16:42:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2013/03/23/deviceuniqueidentifier/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><code>UDID</code>之前在<code>iOS</code>开发中广泛使用的一串字符串，用来标示唯一的设备，它本身并不包含用户信息，但是广告商却可以利用他获取到个人信息，从而发送广告，因为他涉及到隐私问题，所以苹果早在2011年就提出了将不再使用它。然而就在前天，苹果的开发者网站，发出新闻：</p>
-
-<blockquote><p>Starting May 1, the App Store will no longer accept new apps or app updates that access UDIDs. Please update your apps and servers to associate users with the Vendor or Advertising identifiers introduced in iOS 6. You can find more details in the <a href="https://developer.apple.com/library/ios/#documentation/uikit/reference/UIDevice_Class/DeprecationAppendix/AppendixADeprecatedAPI.html">UIDevice Class Reference</a>.</p></blockquote>
-
-<p>“自5月1日起，App Store将不再接受任何使用UDID的app，苹果建议开发者转用iOS 6 引进的Vendor 或者 Adverstising Identifier（‘广告标识符’）”
-这次苹果打出了强制通知，再使用<code>UDID</code>的话，那么应用将不会审核通过，也就无法发布。</p>
-
-<p>不过俗话说的好“上有政策，下有对策”。虽然苹果自己也给出了替代的方法，但他们都不是最好的，<code>UUID</code>每次获取都不同，所以使用时必须要把他们存文件，存数据库或者存<code>UserDefault</code>。当应用被删除重装，那么这个<code>UUID</code>也就不同了。<code>Vendor</code>更是同一个设备上的同一个开发商的应用的<code>id</code>都是相同的，也没有办法使用。<code>Advertising identifier</code>也并不是固定的。那要如何才能达到我们的需求呢，既能方便获取又能保证唯一呢？</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/23/deviceuniqueidentifier/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -574,11 +570,19 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (9)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (11)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">FDStackView —— Downward Compatible UIStackView (Part 3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a>
@@ -590,14 +594,6 @@
     
       <li class="post">
         <a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/29/adapt-view-for-iphone6-plus/">一个特殊的iPhone6 Plus适配问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/08/10/nested-xib-views/">Nested Xib Views - 使用XIB实现嵌套自定义视图</a>
       </li>
     
   </ul>
@@ -679,25 +675,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 124%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
 <a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 130%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 115%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 133%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 114%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 128%" href="/tags/design/">Design</a>
 
   </ul>
 </section>
@@ -708,7 +704,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - wtlucky <chinawtlucky@gmail.com> -
+  Copyright &copy; 2016 - wtlucky <chinawtlucky@gmail.com> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>&nbsp;&nbsp;&nbsp;&nbsp;<img src = "http://wtlucky.github.com/geekerprobe/images/wt_s_r.png" style="float:right" /><br/>
   <a title="Web Analytics" href="http://clicky.com/100584144"><img alt="Web Analytics" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
 <script type="text/javascript">

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://blog.wtlucky.com/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/</loc>
+    <lastmod>2016-02-04T15:24:55+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/</loc>
+    <lastmod>2016-01-19T14:44:53+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/</loc>
     <lastmod>2015-10-09T21:32:12+08:00</lastmod>
   </url>
@@ -87,6 +95,21 @@
     <loc>http://blog.wtlucky.com/archives/tags.html</loc>
   </url>
   <url>
+    <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/ios-development/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/design-pattern/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/bash-shell/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/technical-research/</loc>
+  </url>
+  <url>
     <loc>http://blog.wtlucky.com/tags/github/</loc>
   </url>
   <url>
@@ -144,18 +167,6 @@
     <loc>http://blog.wtlucky.com/tags/forkingdog/</loc>
   </url>
   <url>
-    <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/ios-development/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/design-pattern/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/bash-shell/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/technical-research/</loc>
+    <loc>http://blog.wtlucky.com/posts/2/</loc>
   </url>
 </urlset>
