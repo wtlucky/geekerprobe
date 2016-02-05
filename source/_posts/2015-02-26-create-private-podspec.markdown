@@ -166,8 +166,6 @@ $ pod lib lint
 在`Podfile`中我们可以这样编辑，有两种方式
 
 {% codeblock lang:ruby %}
-source 'https://github.com/CocoaPods/Specs.git'  # 官方库
-source 'https://git.coding.net/wtlucky/WTSpecs.git'   # 私有库
 platform :ios, '7.0'
 
 pod 'PodTestLibrary', :path => '~/code/Cocoapods/podTest/PodTestLibrary'      # 指定路径
@@ -321,6 +319,8 @@ $ pod search PodTestLibrary
 
 完成这些之后，在实际项目中我们就可以选择使用整个组件库或者是组件库的某一个部分了，对应的`Podfile`中添加的内容为
 {% codeblock lang:ruby %}
+source 'https://github.com/CocoaPods/Specs.git'  # 官方库
+source 'https://git.coding.net/wtlucky/WTSpecs.git'   # 私有库
 platform :ios, '7.0'
 
 pod 'PodTestLibrary/NetWorkEngine', '1.0.0'  #使用某一个部分
