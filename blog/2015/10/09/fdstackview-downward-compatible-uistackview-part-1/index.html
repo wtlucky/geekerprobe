@@ -379,8 +379,8 @@
 
 <p>接下来的问题是<code>IB</code>加载出来的<code>UIStackView</code>如何将属性值设置到我们的<code>FDStackView</code>上，这个在前面研究是已经有结论，首先需要将<code>IB</code>的<code>build for</code>做下修改，然后<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，所以所有的信息都在<code>NSCoder</code>这个对象中，<code>NSCoder</code>提供了一系列的<code>decode</code>方法，由于<code>key</code>是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个<code>key</code>。</p>
 
-<p><img src="http://i13.tietuku.com/78279ae5a3ad97b2.jpg">
-<img src="http://i13.tietuku.com/c1604a785aacbab9.jpg"></p>
+<p><img src="http://i3.piimg.com/78279ae5a3ad97b2.jpg">
+<img src="http://i3.piimg.com/c1604a785aacbab9.jpg"></p>
 
 <p>如此一来就可以直接在<code>FDStackView</code>的<code>initWithCoder:</code>方法中取到值，再将这几个值赋值即可</p>
 
@@ -425,7 +425,7 @@
 
 <p>先来看第一个，当<code>Distribution</code>设置为<code>UIStackViewDistributionFillProportionally</code>时，并且存在<code>spacing</code>时就会出现问题，如图所示：</p>
 
-<p><img src="http://i13.tietuku.com/22c9f3dc8b429bdd.jpg"></p>
+<p><img src="http://i3.piimg.com/22c9f3dc8b429bdd.jpg"></p>
 
 <p><code>UIStackViewDistributionFillProportionally</code>这个属性的意思是子视图的宽度会根据他们内容的宽度比例而在<code>UIStackView</code>中占据对应的宽度，即他们的实际的宽度比应该是他们的内容固有宽度（<code>intrinsicContentSize</code>）的比例，<code>Demo</code>中三个<code>Label</code>的固有宽度即汉字的宽度是<code>4:1:2</code>，那么在<code>UIStackView</code>中他们所占据的宽度也应该是<code>4:1:2</code>，这在<code>spacing</code>为<code>0</code>的情况下是ok的。</p>
 
@@ -661,25 +661,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 128%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 133%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 114%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 128%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 133%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 114%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
 
   </ul>
 </section>

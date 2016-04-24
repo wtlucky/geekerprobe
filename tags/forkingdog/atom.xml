@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: forkingdog | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/forkingdog/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-02-05T16:55:26+08:00</updated>
+  <updated>2016-04-24T17:44:25+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -472,7 +472,7 @@
 
 <p>最后在附一张<code>UIStackView</code>及<code>FDStackView</code>在不同<code>iOS</code>系统上加载运行图：</p>
 
-<p><img src="http://i13.tietuku.com/b9e1b58c1529f278.png" alt="image" /></p>
+<p><img src="http://i3.piimg.com/b9e1b58c1529f278.png" alt="image" /></p>
 
 <p>全文完，转载请注明出处，谢谢阅读。</p>
 ]]></content>
@@ -1314,8 +1314,8 @@
 
 <p>接下来的问题是<code>IB</code>加载出来的<code>UIStackView</code>如何将属性值设置到我们的<code>FDStackView</code>上，这个在前面研究是已经有结论，首先需要将<code>IB</code>的<code>build for</code>做下修改，然后<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，所以所有的信息都在<code>NSCoder</code>这个对象中，<code>NSCoder</code>提供了一系列的<code>decode</code>方法，由于<code>key</code>是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个<code>key</code>。</p>
 
-<p><img class="<a" src="href="http://i13.tietuku.com/78279ae5a3ad97b2.jpg">http://i13.tietuku.com/78279ae5a3ad97b2.jpg</a>">
-<img class="<a" src="href="http://i13.tietuku.com/c1604a785aacbab9.jpg">http://i13.tietuku.com/c1604a785aacbab9.jpg</a>"></p>
+<p><img class="<a" src="href="http://i3.piimg.com/78279ae5a3ad97b2.jpg">http://i3.piimg.com/78279ae5a3ad97b2.jpg</a>">
+<img class="<a" src="href="http://i3.piimg.com/c1604a785aacbab9.jpg">http://i3.piimg.com/c1604a785aacbab9.jpg</a>"></p>
 
 <p>如此一来就可以直接在<code>FDStackView</code>的<code>initWithCoder:</code>方法中取到值，再将这几个值赋值即可
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1358,7 +1358,7 @@
 
 <p>先来看第一个，当<code>Distribution</code>设置为<code>UIStackViewDistributionFillProportionally</code>时，并且存在<code>spacing</code>时就会出现问题，如图所示：</p>
 
-<p><img class="<a" src="href="http://i13.tietuku.com/22c9f3dc8b429bdd.jpg">http://i13.tietuku.com/22c9f3dc8b429bdd.jpg</a>"></p>
+<p><img class="<a" src="href="http://i3.piimg.com/22c9f3dc8b429bdd.jpg">http://i3.piimg.com/22c9f3dc8b429bdd.jpg</a>"></p>
 
 <p><code>UIStackViewDistributionFillProportionally</code>这个属性的意思是子视图的宽度会根据他们内容的宽度比例而在<code>UIStackView</code>中占据对应的宽度，即他们的实际的宽度比应该是他们的内容固有宽度（<code>intrinsicContentSize</code>）的比例，<code>Demo</code>中三个<code>Label</code>的固有宽度即汉字的宽度是<code>4:1:2</code>，那么在<code>UIStackView</code>中他们所占据的宽度也应该是<code>4:1:2</code>，这在<code>spacing</code>为<code>0</code>的情况下是ok的。</p>
 
