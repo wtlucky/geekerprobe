@@ -173,8 +173,8 @@ no_dead_strip:一个no_dead_strip区间标识出那些一定不能dead_strip的�
 
 接下来的问题是`IB`加载出来的`UIStackView`如何将属性值设置到我们的`FDStackView`上，这个在前面研究是已经有结论，首先需要将`IB`的`build for`做下修改，然后`IB`创建的`UIKit`控件都会由`initWithCoder:`进行初始化，所以所有的信息都在`NSCoder`这个对象中，`NSCoder`提供了一系列的`decode`方法，由于`key`是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个`key`。
 
-{% img http://i13.tietuku.com/78279ae5a3ad97b2.jpg %}
-{% img http://i13.tietuku.com/c1604a785aacbab9.jpg %}
+{% img http://i3.piimg.com/78279ae5a3ad97b2.jpg %}
+{% img http://i3.piimg.com/c1604a785aacbab9.jpg %}
 
 如此一来就可以直接在`FDStackView`的`initWithCoder:`方法中取到值，再将这几个值赋值即可
 {% codeblock lang:objc %}
@@ -204,7 +204,7 @@ no_dead_strip:一个no_dead_strip区间标识出那些一定不能dead_strip的�
 
 先来看第一个，当`Distribution`设置为`UIStackViewDistributionFillProportionally`时，并且存在`spacing`时就会出现问题，如图所示：
 
-{% img http://i13.tietuku.com/22c9f3dc8b429bdd.jpg %}
+{% img http://i3.piimg.com/22c9f3dc8b429bdd.jpg %}
 
 `UIStackViewDistributionFillProportionally`这个属性的意思是子视图的宽度会根据他们内容的宽度比例而在`UIStackView`中占据对应的宽度，即他们的实际的宽度比应该是他们的内容固有宽度（`intrinsicContentSize`）的比例，`Demo`中三个`Label`的固有宽度即汉字的宽度是`4:1:2`，那么在`UIStackView`中他们所占据的宽度也应该是`4:1:2`，这在`spacing`为`0`的情况下是ok的。
 

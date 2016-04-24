@@ -4,7 +4,7 @@ title: "FDStackView —— Downward Compatible UIStackView (Part 3)"
 date: 2016-02-04 15:24:55 +0800
 comments: true
 categories: [iOS development]
-tags: iOS AutoLayout forkingdog 
+tags: iOS AutoLayout forkingdog
 ---
 
 上一篇[`Part 2`](http://blog.wtlucky.com/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/)只介绍了第一个技术点**`alignment`和`distribution`的约束如何添加和管理**的`alignment`这一部分的内容，这一篇继续介绍`distribution`的约束添加和管理。
@@ -73,13 +73,13 @@ tags: iOS AutoLayout forkingdog
 - (void)resetCanvasConnectionsEffect {
     [self.canvas removeConstraints:self.canvasConnectionConstraints];
     if (!self.items.count) return;
-    
+
     NSMutableArray *canvasConnectionConstraints = [NSMutableArray new];
     NSLayoutAttribute minAttribute = [self minAttributeForCanvasConnections];
     NSLayoutConstraint *head = [NSLayoutConstraint constraintWithItem:self.canvas attribute:minAttribute relatedBy:NSLayoutRelationEqual toItem:self.items.firstObject attribute:minAttribute multiplier:1 constant:0];
     [canvasConnectionConstraints addObject:head];
     head.identifier = @"FDSV-canvas-connection";
-    
+
     NSLayoutConstraint *end = [NSLayoutConstraint constraintWithItem:self.canvas attribute:minAttribute + 1 relatedBy:NSLayoutRelationEqual toItem:self.items.lastObject attribute:minAttribute + 1 multiplier:1 constant:0];
     [canvasConnectionConstraints addObject:end];
     end.identifier = @"FDSV-canvas-connection";
@@ -142,7 +142,7 @@ tags: iOS AutoLayout forkingdog
 - (void)resetEquallyEffect {
     [self.canvas removeConstraints:self.relatedDimensionConstraints.fd_allObjects];
     [self.relatedDimensionConstraints removeAllObjects];
-    
+
     NSArray<UIView *> *visiableViews = self.visiableItems;
     UIView *offset = visiableViews.car;
     CGFloat order = 0;
@@ -165,7 +165,7 @@ tags: iOS AutoLayout forkingdog
         equally.identifier = self.distribution == UIStackViewDistributionFillEqually ? @"FDSV-fill-equally" : @"FDSV-fill-proportionally";
         [self.canvas addConstraint:equally];
         [self.relatedDimensionConstraints setObject:equally forKey:offset];
-        
+
         offset = view;
     }
 }
@@ -184,13 +184,13 @@ tags: iOS AutoLayout forkingdog
     if (visiableItems.count <= 1) {
         return;
     }
-    
+
     [[visiableItems subarrayWithRange:(NSRange){0, visiableItems.count - 1}] enumerateObjectsUsingBlock:^(UIView *item, NSUInteger idx, BOOL *stop) {
         FDGapLayoutGuide *guide = [FDGapLayoutGuide new];
         [self.canvas addSubview:guide];
         guide.translatesAutoresizingMaskIntoConstraints = NO;
         UIView *relatedToItem = visiableItems[idx+1];
-        
+
         NSLayoutAttribute minGapAttribute = [self minAttributeForGapConstraint];
         NSLayoutAttribute minContentAttribute;
         NSLayoutAttribute maxContentAttribute;
@@ -201,14 +201,14 @@ tags: iOS AutoLayout forkingdog
             minContentAttribute = minGapAttribute;
             maxContentAttribute = minGapAttribute + 1;
         }
-        
+
         NSLayoutConstraint *beginGap = [NSLayoutConstraint constraintWithItem:guide attribute:minGapAttribute relatedBy:NSLayoutRelationEqual toItem:item attribute:maxContentAttribute multiplier:1 constant:0];
         beginGap.identifier = @"FDSV-distributing-edge";
         NSLayoutConstraint *endGap = [NSLayoutConstraint constraintWithItem:relatedToItem attribute:minContentAttribute relatedBy:NSLayoutRelationEqual toItem:guide attribute:minGapAttribute + 1 multiplier:1 constant:0];
         endGap.identifier = @"FDSV-distributing-edge";
         [self.canvas addConstraint:beginGap];
         [self.canvas addConstraint:endGap];
-        
+
         [self.spacingOrCenteringGuides setObject:guide forKey:item];
     }];
 }
@@ -282,6 +282,6 @@ tags: iOS AutoLayout forkingdog
 
 最后在附一张`UIStackView`及`FDStackView`在不同`iOS`系统上加载运行图：
 
-![image](http://i13.tietuku.com/b9e1b58c1529f278.png)
+![image](http://i3.piimg.com/b9e1b58c1529f278.png)
 
 全文完，转载请注明出处，谢谢阅读。

@@ -23,7 +23,7 @@ tags: iOS Design
 
 ####策略模式类图####
 
-{% img http://i13.tietuku.com/7f2860a7f178473f.jpg %}
+{% img http://i3.piimg.com/7f2860a7f178473f.jpg %}
 
 ####策略模式说明####
 
