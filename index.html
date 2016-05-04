@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="上一篇Part 2只介绍了第一个技术点alignment和distribution的约束如何添加和管理的alignment这一部分的内容，这一篇继续介绍distribution的约束添加和管理。 同样的在介绍实现之前，我先介绍一下StackView的各种distribution模式都是什么效果的： ">
+  <meta name="description" content="SafeKit一般指那些被用来防止App crash的类库或者方案，常见的方式有通过method swizzling替换系统方法，或者通过消息转发机制将无法响应的方法都转发给一个可以handle任何消息的对象身上等。通过这些方式都可以将·常见数组越界、unrecognized selector &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/04/24/be-careful-with-safekit/">慎用SafeKit类似物</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-04-24T21:06:13+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2016/04/24/be-careful-with-safekit/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SafeKit一般指那些被用来防止App crash的类库或者方案，常见的方式有通过<code>method swizzling</code>替换系统方法，或者通过消息转发机制将无法响应的方法都转发给一个可以handle任何消息的对象身上等。通过这些方式都可以将·常见数组越界、<code>unrecognized selector sent to instante 0xXXXXXXXX</code>等crash类型在App内部自身得到消化处理，从而将程序的crash率降到一个可以接受的范围内。</p>
+
+<p>在我刚刚开始写Objective-C代码的时候，觉得这是一种非常好的编程方式，应该大力推崇，能够极大地降低crash率，想怎么写代码就怎么写代码，妈妈再也不担心我的程序会crash了。<strong>但是</strong>，后来渐渐发现这并不是一种很好的解决方案，它其实是一把双刃剑。在给我们带来便利的同时也给我们带来了一些不利的地方。这就是本次讨论的主题<code>慎用或者不用SafeKit类似物</code>。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/04/24/be-careful-with-safekit/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -504,54 +550,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/02/start-write-shell/">入门bash Shell脚本</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-02T15:15:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2013/05/02/start-write-shell/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在进行批量的操作，或者繁琐的操作时，可以使用<code>shell</code>编写脚本来简化操作。我使用过众多别人编写的脚本，但是自己从来没有写过。今天正好碰到一个问题，不想繁琐的去挨个操作，那么就尝试着写一个脚本来方便操作一下吧。</p>
-
-<p>首先说一下自己遇到的问题，今年去参加了<code>CocoaChina开发者大会</code>，会上的<code>PPT</code>很好，今天在网上把他们下载了下来，但是问题是，他们的命名很长而且前一部分都是一样的，类似于"CocoaChina2013开发者大会-……"，前一部分都是重的，在<code>Finder</code>里看起来很是不方便，根本看不到有用的文件名信息，所以我决定要把这十多个文件重命名去掉前缀。</p>
-
-<p>从来没有编写过<code>shell</code>脚本，向来都是使用<code>shell</code>命令的我，先从学习编写<code>shell</code>脚本文件开始吧！</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/05/02/start-write-shell/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -570,11 +568,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (11)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (12)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/04/24/be-careful-with-safekit/">慎用SafeKit类似物</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">FDStackView —— Downward Compatible UIStackView (Part 3)</a>
@@ -590,10 +592,6 @@
     
       <li class="post">
         <a href="/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/">Constraints &amp; Transformations 在iOS7和8上的不同</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/26/create-private-podspec/">使用Cocoapods创建私有podspec</a>
       </li>
     
   </ul>
@@ -675,25 +673,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
 <a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 114%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 132%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
 <a style="font-size: 128%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 114%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 133%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
 
   </ul>
 </section>
