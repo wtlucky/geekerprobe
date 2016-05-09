@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-05-04T16:58:16+08:00</updated>
+  <updated>2016-05-09T16:12:50+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Support for IPv6]]></title>
+    <link href="http://blog.wtlucky.com/blog/2016/05/09/support-for-ipv6/"/>
+    <updated>2016-05-09T15:41:22+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2016/05/09/support-for-ipv6</id>
+    <content type="html"><![CDATA[<p>苹果于2016年5月4日告知开发者应用需要在6月1日前支持IPv6-only,也就是说在 6 月 1 日后发布的新版本是需要支持 IPv6-only。</p>
+
+<p>原文地址：<a href="https://developer.apple.com/news/?id=05042016a">https://developer.apple.com/news/?id=05042016a</a></p>
+
+<p>首先看下图</p>
+
+<p><img src="https://developer.apple.com/library/ios/documentation/NetworkingInternetWeb/Conceptual/NetworkingOverview/art/NetworkingFrameworksAndAPIs_2x.png" alt="image" /></p>
+
+<p>其中蓝色部分的高级API，其实都已经帮我们做好了IPv6的支持，我们使用的大多数第三方网络库也都是基于这些高级API的，所以这里我们不需要做什么改动。
+需要注意的是下面的红色部分的底层的socket API需要做出适配支持。</p>
+
+<!-- More -->
+
+
+<h2>适配支持方案</h2>
+
+<ul>
+<li>不要使用硬编码的IPv4的地址，取而代之应该使用域名;</li>
+<li>搜一下是否有用到下面的这些API，这些API都是只针对IPv4做处理的，删除掉就可以：
+
+<blockquote><ul>
+<li>inet_addr()</li>
+<li>inet_aton()</li>
+<li>inet_lnaof()</li>
+<li>inet_makeaddr()</li>
+<li>inet_netof()</li>
+<li>inet_network()</li>
+<li>inet_ntoa()</li>
+<li>inet_ntoa_r()</li>
+<li>bindresvport()</li>
+<li>getipv4sourcefilter()</li>
+<li>setipv4sourcefilter()</li>
+</ul>
+</blockquote></li>
+<li>如果项目中用到了以下的IPv4的类型，那么也要支持相应的IPv6类型</li>
+</ul>
+
+
+<p> <img src="http://i2.buimg.com/bf442d424debe2fa.jpg" alt="Image" /></p>
+
+<ul>
+<li>如果强制需要使用IPv4的地址，苹果官方的适配方法给出了解决方式。<a href="https://developer.apple.com/library/ios/documentation/NetworkingInternetWeb/Conceptual/NetworkingOverview/UnderstandingandPreparingfortheIPv6Transition/UnderstandingandPreparingfortheIPv6Transition.html">Use System APIs to Synthesize IPv6 Addresses</a></li>
+</ul>
+
+
+<h2>适配支持验证方法</h2>
+
+<p>测试验证方式就是通过Mac的共享网络共享一个IPv6的无线网，跟已往创建方式不同的是进入共享时需要按住<code>Option</code>键，不然<code>Create NAT64 Network</code>的选项不会出现</p>
+
+<p><img src="http://i4.buimg.com/ae223a48f5345f80.jpg" alt="image" /></p>
+
+<p>然后开启无线共享，使iPhone连接上分享出来的热点即可
+注：需要将iPhone的蜂窝网络数据关掉，以保证只有通过WiFi在连接网络。</p>
+
+<h2>适配经验</h2>
+
+<p>在自己的项目中检查了一下，需要做出修改的都是集中在网路库的<code>Reachability</code>相关操作中。如<code>AFNetworking</code>的<code>AFNetworkReachabilityManager</code>，它已经支持了IPv6，但是在他的支持中加了个一个条件编译的选项，判断了系统的版本，一直不明白它这么做的原因是什么，因此我也提交了一个<a href="https://github.com/AFNetworking/AFNetworking/issues/3498">issue</a>询问了下，等待大神给出解释。</p>
+
+<p>除此之外，我们自己也用到了一个<code>Reachability</code>的类似物，这就需要对它单独做出IPv6的支持，具体方法可以参照<code>Apple</code>自己官方提供的<a href="https://developer.apple.com/library/ios/samplecode/Reachability/Listings/Reachability_Reachability_h.html"><code>Reachability</code>Demo</a>，这个Demo中的ReadMe中也介绍了一些很有用的信息。</p>
+
+<blockquote><h5>IPv6 Support</h5>
+
+<p>Reachability fully supports IPv6.  More specifically, each of the APIs handles IPv6 in the following way:</p>
+
+<ul>
+<li><p>reachabilityWithHostName and SCNetworkReachabilityCreateWithName:  Internally, this API works be resolving the host name to a set of IP addresses (this can be any combination of IPv4 and IPv6 addresses) and establishing separate monitors on all available addresses.</p></li>
+<li><p>reachabilityWithAddress and SCNetworkReachabilityCreateWithAddress:  To monitor an IPv6 address, simply pass in an IPv6 <code>sockaddr_in6 struct</code> instead of the IPv4 <code>sockaddr_in struct</code>.</p></li>
+<li><p>reachabilityForInternetConnection:  This monitors the address 0.0.0.0, which reachability treats as a special token that causes it to actually monitor the general routing status of the device, both IPv4 and IPv6.</p></li>
+</ul>
+
+
+<h5>Removal of reachabilityForLocalWiFi</h5>
+
+<p>Older versions of this sample included the method reachabilityForLocalWiFi. As originally designed, this method allowed apps using Bonjour to check the status of &ldquo;local only&rdquo; Wi-Fi (Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse.</p>
+
+<p>However, the additional peer-to-peer APIs that have since been added to iOS and OS X have rendered it largely obsolete.  Because of the narrow use case for this API and the large potential for misuse, reachabilityForLocalWiFi has been removed from Reachability.</p>
+
+<p>Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).</p>
+
+<p>Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.  For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.</p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[慎用SafeKit类似物]]></title>
@@ -6502,15 +6590,6 @@ done
 <a href="http://yanping.me/cn/blog/2012/01/07/theming-and-customization/">自定义样式</a><br />
 <a href="http://ihavanna.org/Internet/2013-02/add-duoshuo-commemt-system-into-octopress.html">添加多说评论</a><br />
 <a href="http://blog.log4d.com/2012/05/tag-cloud/">添加标签云与category list</a><br /></p></blockquote>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[My First Blog]]></title>
-    <link href="http://blog.wtlucky.com/blog/2013/02/23/my-first-blog/"/>
-    <updated>2013-02-23T09:01:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2013/02/23/my-first-blog</id>
-    <content type="html"><![CDATA[<h2>Hello octopress!</h2>
 ]]></content>
   </entry>
   

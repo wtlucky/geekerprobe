@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="SafeKit一般指那些被用来防止App crash的类库或者方案，常见的方式有通过method swizzling替换系统方法，或者通过消息转发机制将无法响应的方法都转发给一个可以handle任何消息的对象身上等。通过这些方式都可以将·常见数组越界、unrecognized selector &hellip;">
+  <meta name="description" content="苹果于2016年5月4日告知开发者应用需要在6月1日前支持IPv6-only,也就是说在 6 月 1 日后发布的新版本是需要支持 IPv6-only。 原文地址：https://developer.apple.com/news/?id=05042016a 首先看下图 其中蓝色部分的高级API， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/09/support-for-ipv6/">Support for IPv6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-05-09T15:41:22+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2016/05/09/support-for-ipv6/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>苹果于2016年5月4日告知开发者应用需要在6月1日前支持IPv6-only,也就是说在 6 月 1 日后发布的新版本是需要支持 IPv6-only。</p>
+
+<p>原文地址：<a href="https://developer.apple.com/news/?id=05042016a">https://developer.apple.com/news/?id=05042016a</a></p>
+
+<p>首先看下图</p>
+
+<p><img src="https://developer.apple.com/library/ios/documentation/NetworkingInternetWeb/Conceptual/NetworkingOverview/art/NetworkingFrameworksAndAPIs_2x.png" alt="image" /></p>
+
+<p>其中蓝色部分的高级API，其实都已经帮我们做好了IPv6的支持，我们使用的大多数第三方网络库也都是基于这些高级API的，所以这里我们不需要做什么改动。
+需要注意的是下面的红色部分的底层的socket API需要做出适配支持。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/05/09/support-for-ipv6/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -489,67 +542,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/28/wax-lua/">Wax Lua—使用lua编写原生ios程序的框架实现原理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-28T20:13:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2013/12/28/wax-lua/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>Wax Lua是什么？</h3>
-
-<p><code>Lua</code>我就不介绍了，我们都在使用的脚本语言，游戏开发的神器。
-而<code>Wax</code>就是使用<code>Lua</code>脚本语言来编写<code>ios原生应用</code>的一个框架，它把Lua脚本语言和原生<code>Objective-C</code>应用编程接口(API)结合起来。这意味着，你可以从Lua里面，使用任何和全部的<code>Objective-C</code>类及框架。</p>
-
-<h3>为什么要使用Wax Lua？</h3>
-
-<p>苹果在2010年9月就修改条款允许开发者使用脚本语言，不再是只限定开发者只能使用<code>Objective-C</code>和<code>javascript</code>两种语言，这也就导致了<code>Wax Lua</code>的出现。</p>
-
-<pre><code>Wax Lua的优势：
-1.  开源、免费，遵循MIT协议。项目地址：[Wax Lua](https://github.com/probablycorey/wax)
-2.  可以使用原生API，可以访问所有ios的框架。
-3.  Lua类型和OC类型自动转化。
-4.  自动内存管理。
-5.  便捷的Lua模块，使得HTTP请求和JSON解析容易且快速。
-6.  简洁的代码，不再有头文件，数组和字典等语句。
-7.  Lua支持闭包，相当强大的功能。
-</code></pre>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/12/28/wax-lua/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -568,11 +560,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (12)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (13)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/05/09/support-for-ipv6/">Support for IPv6</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/04/24/be-careful-with-safekit/">慎用SafeKit类似物</a>
@@ -588,10 +584,6 @@
     
       <li class="post">
         <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/">Constraints &amp; Transformations 在iOS7和8上的不同</a>
       </li>
     
   </ul>
@@ -673,25 +665,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 114%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 127%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
 <a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 132%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 128%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 122%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 113%" href="/tags/git/">git</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
 
   </ul>
 </section>

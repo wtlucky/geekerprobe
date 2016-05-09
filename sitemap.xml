@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://blog.wtlucky.com/blog/2016/05/09/support-for-ipv6/</loc>
+    <lastmod>2016-05-09T15:41:22+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://blog.wtlucky.com/blog/2016/04/24/be-careful-with-safekit/</loc>
     <lastmod>2016-04-24T21:06:13+08:00</lastmod>
   </url>
@@ -169,5 +173,11 @@
   </url>
   <url>
     <loc>http://blog.wtlucky.com/tags/forkingdog/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/posts/2/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/posts/3/</loc>
   </url>
 </urlset>

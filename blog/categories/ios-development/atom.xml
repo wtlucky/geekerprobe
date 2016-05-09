@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ios development | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/ios-development/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-05-04T16:58:16+08:00</updated>
+  <updated>2016-05-09T16:12:50+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Support for IPv6]]></title>
+    <link href="http://blog.wtlucky.com/blog/2016/05/09/support-for-ipv6/"/>
+    <updated>2016-05-09T15:41:22+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2016/05/09/support-for-ipv6</id>
+    <content type="html"><![CDATA[<p>苹果于2016年5月4日告知开发者应用需要在6月1日前支持IPv6-only,也就是说在 6 月 1 日后发布的新版本是需要支持 IPv6-only。</p>
+
+<p>原文地址：<a href="https://developer.apple.com/news/?id=05042016a">https://developer.apple.com/news/?id=05042016a</a></p>
+
+<p>首先看下图</p>
+
+<p><img src="https://developer.apple.com/library/ios/documentation/NetworkingInternetWeb/Conceptual/NetworkingOverview/art/NetworkingFrameworksAndAPIs_2x.png" alt="image" /></p>
+
+<p>其中蓝色部分的高级API，其实都已经帮我们做好了IPv6的支持，我们使用的大多数第三方网络库也都是基于这些高级API的，所以这里我们不需要做什么改动。
+需要注意的是下面的红色部分的底层的socket API需要做出适配支持。</p>
+
+<!-- More -->
+
+
+<h2>适配支持方案</h2>
+
+<ul>
+<li>不要使用硬编码的IPv4的地址，取而代之应该使用域名;</li>
+<li>搜一下是否有用到下面的这些API，这些API都是只针对IPv4做处理的，删除掉就可以：
+
+<blockquote><ul>
+<li>inet_addr()</li>
+<li>inet_aton()</li>
+<li>inet_lnaof()</li>
+<li>inet_makeaddr()</li>
+<li>inet_netof()</li>
+<li>inet_network()</li>
+<li>inet_ntoa()</li>
+<li>inet_ntoa_r()</li>
+<li>bindresvport()</li>
+<li>getipv4sourcefilter()</li>
+<li>setipv4sourcefilter()</li>
+</ul>
+</blockquote></li>
+<li>如果项目中用到了以下的IPv4的类型，那么也要支持相应的IPv6类型</li>
+</ul>
+
+
+<p> <img src="http://i2.buimg.com/bf442d424debe2fa.jpg" alt="Image" /></p>
+
+<ul>
+<li>如果强制需要使用IPv4的地址，苹果官方的适配方法给出了解决方式。<a href="https://developer.apple.com/library/ios/documentation/NetworkingInternetWeb/Conceptual/NetworkingOverview/UnderstandingandPreparingfortheIPv6Transition/UnderstandingandPreparingfortheIPv6Transition.html">Use System APIs to Synthesize IPv6 Addresses</a></li>
+</ul>
+
+
+<h2>适配支持验证方法</h2>
+
+<p>测试验证方式就是通过Mac的共享网络共享一个IPv6的无线网，跟已往创建方式不同的是进入共享时需要按住<code>Option</code>键，不然<code>Create NAT64 Network</code>的选项不会出现</p>
+
+<p><img src="http://i4.buimg.com/ae223a48f5345f80.jpg" alt="image" /></p>
+
+<p>然后开启无线共享，使iPhone连接上分享出来的热点即可
+注：需要将iPhone的蜂窝网络数据关掉，以保证只有通过WiFi在连接网络。</p>
+
+<h2>适配经验</h2>
+
+<p>在自己的项目中检查了一下，需要做出修改的都是集中在网路库的<code>Reachability</code>相关操作中。如<code>AFNetworking</code>的<code>AFNetworkReachabilityManager</code>，它已经支持了IPv6，但是在他的支持中加了个一个条件编译的选项，判断了系统的版本，一直不明白它这么做的原因是什么，因此我也提交了一个<a href="https://github.com/AFNetworking/AFNetworking/issues/3498">issue</a>询问了下，等待大神给出解释。</p>
+
+<p>除此之外，我们自己也用到了一个<code>Reachability</code>的类似物，这就需要对它单独做出IPv6的支持，具体方法可以参照<code>Apple</code>自己官方提供的<a href="https://developer.apple.com/library/ios/samplecode/Reachability/Listings/Reachability_Reachability_h.html"><code>Reachability</code>Demo</a>，这个Demo中的ReadMe中也介绍了一些很有用的信息。</p>
+
+<blockquote><h5>IPv6 Support</h5>
+
+<p>Reachability fully supports IPv6.  More specifically, each of the APIs handles IPv6 in the following way:</p>
+
+<ul>
+<li><p>reachabilityWithHostName and SCNetworkReachabilityCreateWithName:  Internally, this API works be resolving the host name to a set of IP addresses (this can be any combination of IPv4 and IPv6 addresses) and establishing separate monitors on all available addresses.</p></li>
+<li><p>reachabilityWithAddress and SCNetworkReachabilityCreateWithAddress:  To monitor an IPv6 address, simply pass in an IPv6 <code>sockaddr_in6 struct</code> instead of the IPv4 <code>sockaddr_in struct</code>.</p></li>
+<li><p>reachabilityForInternetConnection:  This monitors the address 0.0.0.0, which reachability treats as a special token that causes it to actually monitor the general routing status of the device, both IPv4 and IPv6.</p></li>
+</ul>
+
+
+<h5>Removal of reachabilityForLocalWiFi</h5>
+
+<p>Older versions of this sample included the method reachabilityForLocalWiFi. As originally designed, this method allowed apps using Bonjour to check the status of &ldquo;local only&rdquo; Wi-Fi (Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse.</p>
+
+<p>However, the additional peer-to-peer APIs that have since been added to iOS and OS X have rendered it largely obsolete.  Because of the narrow use case for this API and the large potential for misuse, reachabilityForLocalWiFi has been removed from Reachability.</p>
+
+<p>Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).</p>
+
+<p>Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.  For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.</p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[慎用SafeKit类似物]]></title>
@@ -1444,66 +1532,6 @@
 <p>这种情况只有在属性设置为<code>UIStackViewAlignmentFill</code>时才会出现，具体的出现原因我们也有分析出来的结论，但是涉及到<code>Alignment</code>方向上约束添加的问题，这个会在后一篇文章中提到，所以这里就先不做解释，之后在说。我们的<code>FDStackView</code>修复了这个问题，但是在一种情况下也会失去作用就是给这个要隐藏的视图收到添加了一个高优先级的高度约束的情况下，不过一般情况下我们使用<code>UIStackView</code>基本都不会再给子视图添加约束了。</p>
 
 <p>第一篇文章就介绍这么多，后面我会找时间把第二篇文章（Part 2）整理出来。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Constraints &amp; Transformations 在iOS7和8上的不同]]></title>
-    <link href="http://blog.wtlucky.com/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong/"/>
-    <updated>2015-06-06T09:03:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2015/06/06/constraints-and-transformations-zai-ios7he-8shang-de-bu-tong</id>
-    <content type="html"><![CDATA[<p>使用<code>AutoLayout</code>时，在<code>iOS7</code>和<code>iOS8</code>上两者会有很大的不同，<code>iOS8</code>苹果优化了很多。最近看了一篇<code>bolg</code>，是<code>Reveal</code>的工程师写的介绍使用<code>Constraints</code>以及<code>transform</code>变幻之后在<code>iOS78</code>上的异同。<!-- More --></p>
-
-<p><a href="http://revealapp.com/blog/constraints-and-transforms.html">原文链接</a></p>
-
-<hr />
-
-<p>先贴张图说明一下问题:</p>
-
-<p><img class="<a" src="href="http://i3.piimg.com/1cebfcf0129ca844.png">http://i3.piimg.com/1cebfcf0129ca844.png</a>"></p>
-
-<p>可以看到<code>iOS7</code>在使用了<code>autolayout</code>之后，进行<code>transform</code>变幻之后<code>view</code>并没有达到预期效果，而在<code>iOS8</code>和和纯<code>frame</code>布局的情况下是正常的。</p>
-
-<p><code>autolayout</code>使用的是<code>Top</code>和<code>leading</code>与灰色的<code>view</code>进行约束，而<code>frame</code>是通过<code>setCenter</code>来设置位置的。</p>
-
-<p>这种错误的现象会发生在<code>iOS7</code>及以前的版本中，在<code>iOS8</code>之后得到了修复。</p>
-
-<p>通过<code>Reveal</code>查看可以看到:</p>
-
-<p><img class="<a" src="href="http://i3.piimg.com/dc322ed71cc0d21b.png">http://i3.piimg.com/dc322ed71cc0d21b.png</a>"></p>
-
-<p>使用<code>autolayout</code>的<code>view</code>跟他的参照<code>View</code>相比只移动了<code>（-10，-10）</code>,而且它的布局位置也发生了偏移<code>（10，10）</code>，在<code>iOS8</code>下查看，会发现布局位置并没有移动，跟参照<code>View</code>完全一致</p>
-
-<p><img class="<a" src="href="http://i3.piimg.com/9274b80b9704dc37.png">http://i3.piimg.com/9274b80b9704dc37.png</a>"></p>
-
-<p>由此可以得到的结论就是，在<code>iOS7</code>和<code>8</code>上使用<code>autolayout</code>布局的<code>view</code>的<code>center</code>属性的位置发生了改变。</p>
-
-<p>通过设置断点和重写<code>setFrame</code>和<code>setCenter</code>方法研究发现，在<code>iOS7</code>和<code>8</code>上<code>setFrame</code>方法都没有被<code>UIKit</code>调用到，而只有<code>setCenter</code>方法被调用。</p>
-
-<blockquote><p>“If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.”<br/>
-                           ————UIView&rsquo;s Class Reference</p></blockquote>
-
-<p>如果<code>transform</code>属性不是<code>identity</code>的，那么他的值就是不确定的而且应该被忽略。因此可以断定<code>setFrame</code>方法没有没调用，因而<code>view</code>的<code>transform</code>属性也就不是<code>identity</code>的，所以会出现问题。</p>
-
-<p>至于具体的<code>iOS7</code>和<code>8</code>在<code>NSISLayoutEngine</code>里面做了什么改变，可以查看<a href="http://revealapp.com/blog/constraints-and-transforms.html">博客原文</a>。</p>
-
-<p>最后说一下结论：如果我们的<code>app</code>是使用<code>iOS8</code>或者以后的<code>SDK</code>编译链接的并且还要支持<code>iOS7</code>，并在没有<code>identity</code>的<code>transform</code>的<code>view</code>上使用了<code>AutoLayout</code>。那么就应该注意一下几点：</p>
-
-<ol>
-<li>如果只使用旋转和缩放的<code>transform</code>变换，那么就要使用<code>CenterX/CenterY</code>约束，来替代<code>Top/Bottom/Left/Right/Trailing/Leading</code>约束，因为如果<code>transform</code>的<code>view</code>是通过它的<code>centre</code>布局的话，那么结果就有可能是正确的。</li>
-<li>将要变换的<code>view</code>放到一个<code>containerView</code>里，然后用约束约束<code>containerView</code>好过直接约束变换的<code>view</code>。变换的<code>view</code>可以直接用代码布局，也可以用<code>CentreX/CenterY</code>约束。但是使用等宽等高与<code>containerView</code>建立约束将不会达到预期效果</li>
-<li>不要使用<code>constraint</code>来约束这些<code>View</code>，使用<code>autosizingMask</code>，然后设置这些<code>View</code>的<code>translatesAutoresizingMaskIntoConstraints</code>为<code>YES</code>。</li>
-</ol>
-
-
-<hr />
-
-<p>PS:
-最后算是做个广告吧，<a href="http://revealapp.com/"><code>Reveal</code></a>这个工具真的是很<code>NB</code>很好用，当你使用了之后就会爱不释手。它可以查看<code>view</code>的层级关系，动态的改变<code>UI</code>属性，在最近的版本还支持对<code>autolayout</code>的支持，可以查看<code>constraints</code>已经对他们进行修改，我们做<code>iOS</code>开发的更多的是做界面开发工作，那么有了这样一个神器在手，那么必然会达到事半功倍的效果，工欲善其事，必先利其器！</p>
-
-<p><code>Reveal</code>还能做更NB的事情就是当你手机越狱后，然后你就可以查看任何<code>app</code>的视图层级关系了。就说到这里了，至于接下来怎样大家自己脑补吧。</p>
-
-<p>既然这个工具这么强大，我们还是支持一下作者吧，同为开发者，都知道这行挺不容易的还是支持下正版吧，好消息是Reveal对中国的开发者们有个特惠价格：<code>RMB249</code>就可以拿下了，<a href="http://item.taobao.com/item.htm?spm=a230r.1.14.1.kpBX7S&amp;id=45630069705&amp;ns=1&amp;abbucket=4#detail">购买地址</a>，比半价还优惠，我在知道这个消息后第一时间拿下了它，因为之前的价格确实有点贵，对我来说还是有压力的。</p>
 ]]></content>
   </entry>
   
