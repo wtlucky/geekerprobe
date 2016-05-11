@@ -165,6 +165,10 @@
 
 <p>在自己的项目中检查了一下，需要做出修改的都是集中在网路库的<code>Reachability</code>相关操作中。如<code>AFNetworking</code>的<code>AFNetworkReachabilityManager</code>，它已经支持了IPv6，但是在他的支持中加了个一个条件编译的选项，判断了系统的版本，一直不明白它这么做的原因是什么，因此我也提交了一个<a href="https://github.com/AFNetworking/AFNetworking/issues/3498">issue</a>询问了下，等待大神给出解释。</p>
 
+<blockquote><p><strong>UPDATE：2016年05月11日：</strong></p>
+
+<p>后来发现<code>Reachability</code>在iOS9以下的系统上如果适配了IPv6的话则会导致失效，网络监测状态不准，应该是苹果自身的bug，所以在这些系统上还需要使用IPv4的数据结构，<code>AFNetworking</code>的大神也对我的<a href="https://github.com/AFNetworking/AFNetworking/issues/3498">issue</a>给出了解答，同时在<code>Alamofire</code>中也有对这个bug描述的<a href="https://github.com/Alamofire/Alamofire/issues/1228">issue</a>。</p></blockquote>
+
 <p>除此之外，我们自己也用到了一个<code>Reachability</code>的类似物，这就需要对它单独做出IPv6的支持，具体方法可以参照<code>Apple</code>自己官方提供的<a href="https://developer.apple.com/library/ios/samplecode/Reachability/Listings/Reachability_Reachability_h.html"><code>Reachability</code>Demo</a>，这个Demo中的ReadMe中也介绍了一些很有用的信息。</p>
 
 <blockquote><h5>IPv6 Support</h5>
@@ -400,25 +404,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 127%" href="/tags/design/">Design</a>
 <a style="font-size: 113%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 127%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
 <a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 
   </ul>
 </section>
