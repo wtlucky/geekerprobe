@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ios development | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/blog/categories/ios-development/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-05-11T11:52:56+08:00</updated>
+  <updated>2016-06-04T16:54:12+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,157 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[__bridge_retain __bridge_transfer]]></title>
+    <link href="http://blog.wtlucky.com/blog/2016/06/04/bridge-retain-bridge-transfer/"/>
+    <updated>2016-06-04T16:34:46+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2016/06/04/bridge-retain-bridge-transfer</id>
+    <content type="html"><![CDATA[<h3>CF对象与NS对象互转</h3>
+
+<p>在ARC下，如果我们需要操作一些底层的库，有时会用到Core Foundation的对象，简称CF对象，例如Core Graphic、Core Text。在ARC下，这些CF的对象的内存是不会被自动管理的，而是需要我们在它的生命周期结束的时候调用CFRelease()释放它。</p>
+
+<p>CF对象与NS对象之间如何相互转换呢？系统提供了<strong>bridge,</strong>bridge_retained,__bridge_transfer 三个关键字给我们使用。</p>
+
+<!-- More -->
+
+
+<h4>__bridge</h4>
+
+<p>__bridge只是单纯的对象类型的转换，并没有涉及到对象所有权的转移，所以需要把握好对象的生命周期，否则会出项野指针的情况。</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">void</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIActivity</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="kt">void</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>  <span class="c1">// 出了作用域，obj被释放。</span>
+</span><span class='line'><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">foo</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSObject</span> <span class="n">new</span><span class="p">];</span>  <span class="c1">// 为了切实将释放的内存被占用。</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="k">class</span><span class="o">=%</span><span class="p">@</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="p">[(</span><span class="k">__bridge</span> <span class="kt">id</span><span class="p">)</span><span class="n">p</span> <span class="k">class</span><span class="p">]);</span>  <span class="c1">// p为野指针，crash</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p><img src="http://i3.buimg.com/4dab14936f590b88.jpg" alt="image" /></p>
+
+<p>NS对象转为CF对象会出项野指针，逆过来CF转NS对象则有可能会出现内存泄露的问题，具体见下面的<strong>bridge_transfer的介绍。简单来说</strong>bridge就是类型强制转换。</p>
+
+<h4>__bridge_retained</h4>
+
+<p>__bridge_retained用于将NS对象转为CF对象，这其中有所有权的转移，NS对象会被retain一次再交给CF处理，这样即使原始的NS的对象在被ARC自动处理release一次之后，它的retainCount也不会为0，从而不会被销毁。</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">void</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIActivity</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">__bridge_retained</span> <span class="kt">void</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>  <span class="c1">// 出了作用域，obj被释放。p同时也有了所有权’&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">foo</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSObject</span> <span class="n">new</span><span class="p">];</span>  <span class="c1">// 为了切实将释放的内存被占用。</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="k">class</span><span class="o">=%</span><span class="p">@</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="p">[(</span><span class="k">__bridge</span> <span class="kt">id</span><span class="p">)</span><span class="n">p</span> <span class="k">class</span><span class="p">]);</span>  <span class="c1">// 正确打印UIActivity</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>看一下引用计数的变化</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">foo</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSString</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">((</span><span class="o">&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">bridge</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">foo</span><span class="p">));</span> <span class="c1">// 1152921504606846975</span>
+</span><span class='line'><span class="n">CFTypeRef</span> <span class="n">rfoo</span> <span class="o">=</span> <span class="p">(</span><span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">bridge_retained</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">foo</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">rfoo</span><span class="p">));</span> <span class="c1">// 1152921504606846975</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>可以看到引用计数是一个超级大的整数，这是因为在arc下直接创建的Foundation对象的引用计数都被处理过了，无法看到具体的数值。</p>
+
+<p>这一操作系统给我们提供了一个内联函数来干这件事CFBridgingRetain，</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NS_INLINE</span> <span class="n">CF_RETURNS_RETAINED</span> <span class="n">CFTypeRef</span> <span class="o">&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">nullable</span> <span class="n">CFBridgingRetain</span><span class="p">(</span><span class="kt">id</span> <span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">nullable</span> <span class="n">X</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="n">__bridge_retained</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">X</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h4>__bridge_transfer</h4>
+
+<p>__bridge_transfer用于将CF对象转为NS对象，同样的这其中也有所有权的转移，CF对象会在转换为NS对象后进行一次release操作，即把所有权完全移交给NS对象来处理，看一下引用计数的变化：</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CFStringRef</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">CFStringCreateMutable</span><span class="p">(</span><span class="n">kCFAllocatorDefault</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span> <span class="c1">// 1&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="bp">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge_transfer</span> <span class="bp">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">ref</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span>  <span class="c1">// 1</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">((</span><span class="k">__bridge</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">string</span><span class="p">));</span> <span class="c1">// 1</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>这里的对象是由Core Foundation创建的，所以它的引用计数可以被打印出来，可以看到在ARC环境下，string会被声明成strong类型，所以这个对象的retainCount会被加1，但是转换之后仍然为1，即CF对象已经放弃了它的所有权。</p>
+
+<p>如果是__bridge的话</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CFStringRef</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">CFStringCreateMutable</span><span class="p">(</span><span class="n">kCFAllocatorDefault</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span> <span class="c1">// 1&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="bp">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="bp">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">ref</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span>  <span class="c1">// 2</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">%</span><span class="n">lu</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="n">CFGetRetainCount</span><span class="p">((</span><span class="k">__bridge</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">string</span><span class="p">));</span> <span class="c1">// 2</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>转换之后的引用计数是2，即CF和NS对象同时有着持有权，这样在出了当前的作用域后，ARC会自动给NS对象做release，但是CF对象需要手动调用CFRelease()，如果忘记了的话，那就是内存泄露。</p>
+
+<p>同样，这一操作系统给也我们提供了一个内联函数来干这件事CFBridgingRetain，
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NS_INLINE</span> <span class="kt">id</span> <span class="o">&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">nullable</span> <span class="n">CFBridgingRelease</span><span class="p">(</span><span class="n">CFTypeRef</span> <span class="n">CF_CONSUMED</span> <span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">nullable</span> <span class="n">X</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="k">__bridge_transfer</span> <span class="kt">id</span><span class="p">)</span><span class="n">X</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h3>总结</h3>
+
+<p>这其中的关系可以用下图来直接说明，记住这张图就可以了：</p>
+
+<p><img src="http://i4.buimg.com/bb1f63613160279c.jpg" alt="Image" /></p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Support for IPv6]]></title>
@@ -102,6 +253,10 @@
 <p>Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).</p>
 
 <p>Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.  For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.</p></blockquote>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -167,6 +322,10 @@
 所以要么是<code>method swizzling</code>替换了实现，要么是通过<code>category</code>重写覆盖了原始的系统方法。</p>
 
 <p>所以回到主题上来，SafeKit这种东西还是慎用或者别用的好，一方面把本应该暴露出的问题给隐藏了起来，这会导致开发者过于依赖SafeKit，没有了它，代码的质量将急剧下降。另一方面，如果你的代码还会融入到其他的工程中去的话，例如产品自身是一个SDK，那么使用SafeKit或者runtime Hook了系统方法，那么带来的将是毁灭性的灾难。因为这对使用你SDK的宿主方的开发带来极大的不变。因为这是侵染性的处理方式，不仅仅是在你自己的SDK中SafeKit会起作用，同样的在整个宿主App内都会起作用。如此一来不出问题还好，一旦出了问题，那排查起来简直让人崩溃。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -632,6 +791,10 @@
 <p><img src="http://i3.piimg.com/b9e1b58c1529f278.png" alt="image" /></p>
 
 <p>全文完，转载请注明出处，谢谢阅读。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -1124,418 +1287,10 @@
 <p>现在解释一下<a href="http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">本文章<code>Part 1</code></a>中最后提到的<code>UIStackView</code>当<code>alignment</code>为<code>UIStackViewAlignmentFill</code>时，最高视图隐藏掉，而其余视图没有变成第二个的视图的高度的<code>bug</code>。原因就是在<code>UIStackView</code>的中实现中<code>AlignmentLayoutArrangement</code>是没有管理<code>hiddingDimensionConstraints</code>的，所以当视图被隐藏了后，那个视图被添加了一个宽为<code>0</code>的约束，视觉上看不到了，但是高方向的约束仍然存在，所以仍然会撑开<code>StackView</code>，所以在<code>FDStackView</code>中我们在<code>alignment</code>方向上同时增加了<code>hiddingDimensionConstraints</code>，视图被<code>hidden</code>后，会在高度方向上也给他加上一个高<code>0</code>为的约束，而且这个优先级也很有讲究需要跟它的<code>contentCompressionResistancePriority</code>设为一样，这样才不会在<code>AutoLayout</code>布局系统中当用户人为添加一个高度约束后产生冲突。</p>
 
 <p>写了这么多，才写完第一个技术点的第一部分，内容确实比较多，我写的也比较乱，时间比较紧所以写作时间是间断的，所以思维也是间断跳跃的，还麻烦各位看官多多包涵。本来打算一篇写完的，但是这么长，还是有必要在分一下的，<code>Part 2</code>就到这吧，其余的内容就在<code>Part 3</code>吧。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[FDStackView —— Downward Compatible UIStackView (Part 1)]]></title>
-    <link href="http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/"/>
-    <updated>2015-10-09T21:32:12+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1</id>
-    <content type="html"><![CDATA[<p>加入百度知道团队也有一段时间了，能跟<a href="http://weibo.com/u/1364395395">@我就叫Sunny怎么了</a>、<a href="http://weibo.com/u/5665046845">@sinojerk</a>等小伙伴一起工作生活是一种极赞的体验。在完成日常业务开发之余，我们也会进行一些技术研究项目，并将研究结果以开源的方式公布出来，自然我也成为了<code>forkingdog</code>开源小组的一员。</p>
 
-<p>近期我们的研究项目是<code>FDStackView</code>，现如今已经完成了<code>Alpha</code>版本的开发工作，并将其开源在了<code>Github</code>上，<a href="https://github.com/forkingdog/FDStackView">项目地址</a>。虽然现在已经完成所有的基本功能，但是仍需要在真实的环境中测试试用，欢迎大家将试用之后的问题反馈给我们，提<code>issue</code>给我们，使我们更好的修复和完善<code>FDStackView</code>，以便于更好的方便开发者们使用。</p>
+<p>————————————</p>
 
-<!-- More -->
-
-
-<h2>Introduce</h2>
-
-<p><code>FDStackView</code>究竟是什么呢？在介绍<code>FDStackView</code>之前，首先你需要知道<code>UIStackView</code>是什么？<code>UIStackView</code>是苹果在WWDC上发布<code>iOS9</code>的时候新推出的一个<code>UIKit</code>的视图，现在网上可以搜索到很多关于它的资料，关于介绍，如何使用等。简单来说就是可以使用它来做一些流式布局，开发者只需要将需要的视图丢到<code>UIStackView</code>中，然后设置它的一些属性来展现所需要的布局，因此无需自己再去添加各种约束，所有约束不在由开发者自己去管理，这对于一些还不会使用<code>AutoLayout</code>的开发者来说是一个福音。复杂来说，因为<code>UIStackView</code>是可以嵌套使用的，那么再结合上一些简单的约束，那么就可以完成任何复杂的界面了。想想之前需要各种管理约束，而现在有了它只需要将视图丢给它，改几个属性然后界面就做好了，是不是爽到爆，开发效率又提升一个档次啊。下面提供几个介绍<code>UIStackView</code>的文章，使还不太了解的同学可以了解一下，传送门在此：</p>
-
-<blockquote><p><a href="http://code.tutsplus.com/tutorials/ios-9-getting-started-with-uistackview--cms-24193">iOS 9: Getting Started with UIStackView</a></p>
-
-<p><a href="http://www.cocoachina.com/ios/20150623/12233.html">中文翻译版</a></p>
-
-<p><a href="http://www.appcoda.com/stack-views-intro/">An Introduction to Stack Views in iOS 9 and Xcode 7</a></p>
-
-<p><a href="http://www.cocoachina.com/ios/20150820/13118.html">中文翻译版</a></p></blockquote>
-
-<p>介绍完<code>UIStackView</code>的优势想必大家都已经跃跃欲试了，我自身对于这个控件都是十分的期待，因为在开发中你可以不用去写大段的创建<code>constraints</code>的代码了，如果你使用<code>xib</code>或者<code>storyboard</code>的话，那么在<code>IB</code>中你也不需要去连接各种约束了，这是多么棒的一种体验，而且在<code>Xcode7</code>的<code>IB</code>中右下角往常用来增加约束，修正视图的位置又新增加了一个<code>stack</code>按钮，可以快速的将所选视图加入到<code>UIStackView</code>中，可见苹果也是推荐开发者使用<code>UIStackView</code>的。但是<code>UIStackView</code>是在<code>iOS9</code>才推出的，最低支持的系统也是<code>iOS9</code>，这就蛋疼了，现在能有几个<code>APP</code>是从<code>iOS9</code>开始支持的，如此一来这个控件就成了鸡肋般的存在，再低版本下根本无法使用。自己在业务开发中经常会想这个需求用<code>UIStackView</code>简直就是妙解，而我却还在这里痛苦的连约束……鉴于这个强烈的需求，<code>FDStackView</code>出现了，它就是为了解决<code>UIStackView</code>在低于<code>iOS9</code>的系统下无法使用的问题。在<code>FDStackView</code>之前也已经有了一些类似的开源项目，比如<code>OAStackView</code>和<code>TZStackView</code>，然而他们都不能满足我们的需求，局限性还是比较大的，比如不支持<code>IB</code>，某些功能还没有实现，类名需要使用非<code>UIStackView</code>，在我们看来这些对开发者来说都是不友好的，开发者需要的是一款功能完善，支持<code>IB</code>，使用时完全无感，在<code>Xcode7</code>上直接使用<code>UIStackView</code>即可，接下来的事情交给<code>FDStackView</code>就好，它负责将<code>UIStackView</code>在低于<code>iOS9</code>的系统上运行。需要注意的是如果使用<code>IB</code>的话，那么<code>IB</code>的<code>Builds for</code>属性需要设置为<code>iOS 9.0 and later</code>。如图所示：</p>
-
-<p><img class="<a" src="href="https://raw.githubusercontent.com/forkingdog/FDStackView/master/Snapshots/snapshot0.png">https://raw.githubusercontent.com/forkingdog/FDStackView/master/Snapshots/snapshot0.png</a>"></p>
-
-<h2>Research</h2>
-
-<p>这个技术项目有一大部分的时间，我们都是在做调研工作，首先我们需要把<code>UIStackView</code>玩的很熟练，它的各种属性，各种状态以及他们的组合关系分别是什么样的，其次我们需要解决的问题有：</p>
-
-<ol>
-<li>使用低系统版本的<code>API</code>和控件创建一个和<code>UIStackView</code>一模一样的控件<code>FDStackView</code>;</li>
-<li>在低系统版本运行<code>UIStackView</code>的时候使用我们的<code>FDStackView</code>;</li>
-<li>使<code>FDStackView</code>获得<code>Interface Builder</code>的支持。</li>
-</ol>
-
-
-<p>解决了以上三个问题后，那么这个项目基本上也就算是完成了，第一个是工作量最大的工程，它又可以拆分为以下几个技术点：</p>
-
-<ul>
-<li><code>alignment</code>和<code>distribution</code>的约束如何添加和管理；</li>
-<li><code>spacing</code>和<code>distribution</code>的关系及约束的创建；</li>
-<li>子视图的隐藏显示如何处理；</li>
-<li>子视图的<code>intrinsicContentSize</code>发生变化时如何处理。</li>
-</ul>
-
-
-<p>首先我们假设在第一个难点已经解决的前提下去攻克其他的难点，毕竟有其他开源方案的存在，说明这个不是不可行的。</p>
-
-<p>至于第二个难点，<code>UIStackView</code>在低系统版本编译时会报找不到符号的<code>error</code>，那么解决的思路就是在低系统版本将<code>UIStackView</code>的符号写进去，然后在<code>runtime</code>将符号与我们的<code>FDStackView</code>做关联，从而使低系统版本也能够运行<code>UIStackView</code>，而实际上在起作用的是我们的<code>FDStackView</code>。这里使用到的<code>黑魔法</code>就是汇编语言，网上已经有大神给出了类似的<a href="https://gist.github.com/OliverLetterer/4643294">解决方案</a>，对其进行优化和修改之后应该就能满足我们的需求。</p>
-
-<p>最后一个难点就是使<code>FDStackView</code>获得<code>Interface Builder</code>的支持，因为我们是<code>IB</code>的重度使用者，一个不能在<code>IB</code>上使用的控件一定不是一个好控件。所以一定要让<code>FDStackView</code>能够在<code>IB</code>上使用，有一个方案就是直接使用<code>UIView</code>然后把他的<code>Class</code>指定为<code>FDStackView</code>，将<code>Axis</code>、<code>Alignmen</code>和<code>Distribution</code>等属性通过<code>IBInspectable</code>使其可以在<code>IB</code>中编辑和设置，但是这样一个是<code>IBInspectable</code>在<code>IB</code>中的显示效果很烂，说实话就是不好用，再一个就是用了<code>UIView</code>没有办法像<code>UIStackView</code>那样在<code>IB</code>中可以直接预览布局效果，这就是很差的一种体验了。最好的方案就是在<code>IB</code>中仍然使用<code>UIStackView</code>，使其在<code>IB</code>中有最佳的体验，然后借助上一难点的解决方案，在低系统版本中使用<code>FDStackView</code>代替<code>UIStackView</code>。这样就会带来两个其他问题：</p>
-
-<ol>
-<li><code>IB</code>的构建版本是根据<code>Project</code>的部署版本来的，如果项目不是支持<code>iOS9</code>的话那么会报这样一个<code>error</code>:<code>”UIStackView before iOS 9.0”</code>；</li>
-<li>如何使<code>IB</code>构建出来的<code>FDStackView</code>获得在<code>IB</code>中给<code>UIStackView</code>所设置的各种属性。
-这两个问题，第一个只需要将<code>IB</code>的构建版本设置为<code>iOS9</code>及以后即可，目前来看是没有问题的，但是还不知道其他的控件被<code>IB</code>搞成<code>iOS9</code>的版本，在低系统版本上会不会有问题，这个还需要后续的验证。第二个问题，由于使用<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，因此弄清楚<code>NSCoder</code>的<code>decode</code>过程就能将<code>IB</code>设置的属性赋值给所创建的对象了。</li>
-</ol>
-
-
-<p>解决完以上两个难点，就可以回过头来研究第一个了，就是创建一个和<code>UIStackView</code>一模一样的<code>FDStackView</code>。这里我们对<code>UIStackView</code>进行了详细的研究，包括<code>dump</code>出所有<code>UIStackView</code>的相关私有类，各个类的方法，实例变量等。还需要添加符号断点来跟踪各个方法的调用顺序及各个实例变量的值得变化情况。同时还需要分析各个状态下<code>UIStackView</code>的约束<code>constraints</code>的情况，包括约束的个数，连接的方式，及约束所添加到的视图等。经过以上的各种分析之后，我们又通过在<code>IB</code>中借助<code>UIView</code>手动连接约束的方式，连出每一个<code>UIStackView</code>所对应的状态。经过这一番调查与研究我们已经大概摸清的<code>UIStackView</code>的工作原理与实现方式。</p>
-
-<p>与此同时我们还发现了两个<code>UIStackView</code>的<code>bug</code>，本以为在<code>Xcode7</code>正式发布之后会得到修复，可是遗憾的是从我们开始研究的时候的<code>beta5</code>到后来的<code>beta6</code>、<code>GM</code>和正式版这两个<code>bug</code>依然存在，后面我会介绍一下这两个<code>bug</code>。</p>
-
-<h2>Implementation</h2>
-
-<p>下面介绍一下具体的实现细节，同样还是从第二个点说起，最终起关键作用的代码是这些：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-</span>
-</span><span class='line'><span class="c1">// Runtime injection start.</span>
-</span><span class='line'><span class="c1">// Assemble codes below are based on:</span>
-</span><span class='line'><span class="c1">// &lt;a href=&quot;https://github.com/0xced/NSUUID/blob/master/NSUUID.m&quot;&gt;https://github.com/0xced/NSUUID/blob/master/NSUUID.m&lt;/a&gt;</span>
-</span><span class='line'><span class="c1">// &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">pragma</span> <span class="n">mark</span> <span class="o">-</span> <span class="n">Runtime</span> <span class="n">Injection</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">asm</span><span class="p">(</span>
-</span><span class='line'>      <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;.</span><span class="n">section</span>        <span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">DATA</span><span class="p">,</span><span class="n">__objc_classrefs</span><span class="p">,</span><span class="n">regular</span><span class="p">,</span><span class="n">no_dead_strip</span><span class="err">\</span><span class="n">n</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">TARGET_RT_64_BIT</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          3</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="s">&quot;L_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="s">&quot;.quad           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          2</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="s">&quot;_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="s">&quot;.long           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.weak_reference _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="p">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// Constructors are called after all classes have been loaded.</span>
-</span><span class='line'><span class="o">&lt;</span><span class="k">strong</span><span class="o">&gt;</span><span class="n">attribute</span><span class="o">&lt;/</span><span class="k">strong</span><span class="o">&gt;</span><span class="p">((</span><span class="n">constructor</span><span class="p">))</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">FDStackViewPatchEntry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">static</span> <span class="kt">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
-</span><span class='line'>        <span class="k">@autoreleasepool</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="c1">// &amp;gt;= iOS9.</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">objc_getClass</span><span class="p">(</span><span class="s">&quot;UIStackView&quot;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>            <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kt">Class</span> <span class="o">*</span><span class="n">stackViewClassLocation</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">TARGET_CPU_ARM</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;movw %0, :lower16:(_OBJC_CLASS_UIStackView-(LPC0+4))</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>              <span class="s">&quot;movt %0, :upper16:(_OBJC_CLASS_UIStackView-(LPC0+4))</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>              <span class="s">&quot;LPC0: add %0, pc&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">TARGET_CPU_ARM64</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;adrp %0, L_OBJC_CLASS_UIStackView@PAGE</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>              <span class="s">&quot;add  %0, %0, L_OBJC_CLASS_UIStackView@PAGEOFF&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">TARGET_CPU_X86_64</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;leaq L_OBJC_CLASS_UIStackView(%%rip), %0&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">TARGET_CPU_X86</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="kt">void</span> <span class="o">*</span><span class="n">pc</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'>        <span class="kr">__asm</span><span class="p">(</span><span class="s">&quot;calll L0</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>              <span class="s">&quot;L0: popl %0</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>              <span class="s">&quot;leal _OBJC_CLASS_UIStackView-L0(%0), %1&quot;</span> <span class="o">:</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">pc</span><span class="p">),</span> <span class="s">&quot;=r&quot;</span><span class="p">(</span><span class="n">stackViewClassLocation</span><span class="p">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">error</span> <span class="n">Unsupported</span> <span class="n">CPU</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="k">if</span> <span class="p">(</span><span class="n">stackViewClassLocation</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="o">!*</span><span class="n">stackViewClassLocation</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="kt">Class</span> <span class="k">class</span> <span class="o">=</span> <span class="n">objc_allocateClassPair</span><span class="p">(</span><span class="n">FDStackView</span><span class="p">.</span><span class="k">class</span><span class="p">,</span> <span class="s">&quot;UIStackView&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="n">objc_registerClassPair</span><span class="p">(</span><span class="k">class</span><span class="p">);</span>
-</span><span class='line'>                <span class="o">*</span><span class="n">stackViewClassLocation</span> <span class="o">=</span> <span class="k">class</span><span class="p">;</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>首先说一下<code>__asm</code>:
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Use the asm, _asm, or &lt;strong>asm keyword to place assembly language statements in the middle of your C or C++ source code. Any C++ symbols are replaced by the appropriate assembly language equivalents.
-</span><span class='line'>You can group assembly language statements by beginning the block of statements with the asm keyword, then surrounding the statements with braces ({}).
-</span><span class='line'>Note: The &lt;/strong>asm form is the only one supported by Clang-based C++ compilers.</span></code></pre></td></tr></table></div></figure>
-意思就是说在你的<code>C</code>或<code>C++</code>源代码中放入汇编代码用来替换任何<code>C++</code>的符号。</p>
-
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kr">__asm</span><span class="p">(</span>
-</span><span class='line'>            <span class="cm">/**</span>
-</span><span class='line'><span class="cm">       this is a data section for objc2 class references with the following attributes:</span>
-</span><span class='line'><span class="cm">       * regular: &amp;ldquo;A regular section may contain any kind of data and gets no special processing from the link editor. This is the default section type. Examples of regular sections include program instructions or initialized data.&amp;rdquo;</span>
-</span><span class='line'><span class="cm">       * no_dead_strip: &amp;ldquo;The no_dead_strip section attribute specifies that a particular section must not be dead-stripped.&amp;rdquo;&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">&lt;pre&gt;&lt;code&gt;   Documentation can be found here: https://developer.apple.com/library/mac/#documentation/developertools/Reference/Assembler/040-Assembler_Directives/asm_directives.html</span>
-</span><span class='line'><span class="cm">   */</span>
-</span><span class='line'>  <span class="s">&quot;.section        __DATA,__objc_classrefs,regular,no_dead_strip</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">TARGET_RT_64_BIT</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          3</span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// align the next label to 2^3 bytes = 64 bit for 64 bit platforms</span>
-</span><span class='line'>  <span class="s">&quot;L_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>  <span class="c1">// the L_OBJC_CLASS_UIStackView label will store the _OBJC_CLASS_$_UIStackView label, which is weak referenced (see below)</span>
-</span><span class='line'>  <span class="s">&quot;.quad           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="s">&quot;.align          2</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="s">&quot;_OBJC_CLASS_UIStackView:</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="s">&quot;.long           _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="cm">/**</span>
-</span><span class='line'><span class="cm">   .weak_reference: &quot;The .weak_reference directive causes symbol_name to be a weak undefined symbol present in the output file’s symbol table. This is used by the compiler when referencing a symbol with the weak_import attribute.&quot;</span>
-</span><span class='line'><span class="cm">   */</span>
-</span><span class='line'>  <span class="s">&quot;.weak_reference _OBJC_CLASS_$_UIStackView</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>  <span class="p">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>先来说这一个部分，大神的<a href="https://gist.github.com/OliverLetterer/4643294">解决方案</a>给出了英文注释，尝试着直译了一下：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>这是一个由regular和no_dead_strip属性所标明的objc2类的数据区间。
-</span><span class='line'>regular:一个regular区间一般包含各种类型的数据而且他们不会被连接器做特殊处理。这是默认的区间类型，包括程序指令和初始化数据是regular区间。
-</span><span class='line'>no_dead_strip:一个no_dead_strip区间标识出那些一定不能dead_strip的特殊区间。</span></code></pre></td></tr></table></div></figure>
-发现还不如不译，就直接说一下大概的意思吧。
-第一行是取得符号所在的区间，之后区分<code>64</code>和<code>32</code>位系统，将<code>_OBJC_CLASS_$_UIStackView</code>这个符号与自定的符号做一个<code>weak</code>类型的关联。</p>
-
-<p>接下来就是<code>__attribute__((constructor))</code>这个黑魔法，这个标识的方法会在所有的类<code>load</code>之后，<code>main</code>函数调用之前调用。所以此时<code>FDStackView</code>已经被<code>load</code>了。再之后就是判断<code>runtime</code>是否存在<code>UIStackView</code>，不存在的话就根据不同的系统平台将指向<code>_OBJC_CLASS_$_UIStackView</code>这个符号的指针存储在<code>stackViewClassLocation</code>中，接下来通过<code>runtime</code>创建<code>UIStackView</code>这个类并作为<code>FDStackView</code>的子类，并注册进<code>runtime</code>，最后将<code>UIStackView</code>作为<code>stackViewClassLocation</code>这个指针的值。如此一来在低系统版本中<code>UIStackView</code>就能作为<code>FDStackView</code>的子类使用了。它没有重载任何方法，因此就跟使用直接<code>FDStackView</code>一模一样。</p>
-
-<p>接下来的问题是<code>IB</code>加载出来的<code>UIStackView</code>如何将属性值设置到我们的<code>FDStackView</code>上，这个在前面研究是已经有结论，首先需要将<code>IB</code>的<code>build for</code>做下修改，然后<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，所以所有的信息都在<code>NSCoder</code>这个对象中，<code>NSCoder</code>提供了一系列的<code>decode</code>方法，由于<code>key</code>是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个<code>key</code>。</p>
-
-<p><img class="<a" src="href="http://i3.piimg.com/78279ae5a3ad97b2.jpg">http://i3.piimg.com/78279ae5a3ad97b2.jpg</a>">
-<img class="<a" src="href="http://i3.piimg.com/c1604a785aacbab9.jpg">http://i3.piimg.com/c1604a785aacbab9.jpg</a>"></p>
-
-<p>如此一来就可以直接在<code>FDStackView</code>的<code>initWithCoder:</code>方法中取到值，再将这几个值赋值即可
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="bp">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">decoder</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">initWithCoder</span><span class="p">:</span><span class="n">decoder</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// Attributes of UIStackView in interface builder that archived.</span>
-</span><span class='line'>        <span class="p">[</span><span class="nb">self</span> <span class="nl">commonInitializationWithArrangedSubviews</span><span class="p">:[</span><span class="n">decoder</span> <span class="nl">decodeObjectForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewArrangedSubviews</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;]];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeIntegerForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewAxis</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeIntegerForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewDistribution</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeIntegerForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewAlignment</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeDoubleForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewSpacing</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">baselineRelativeArrangement</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeBoolForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewBaselineRelative</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
-</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">layoutMarginsRelativeArrangement</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoder</span> <span class="nl">decodeBoolForKey</span><span class="p">:@</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">UIStackViewLayoutMarginsRelative</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>最后就是通过系统的<code>API</code>创建<code>constraints</code>来实现<code>FDStackView</code>了，这里涉及的内容比较多，包括几个辅助的私有类，及<code>Alignment</code>和<code>Distribution</code>方向上的约束创建，子视图隐藏，<code>intrinsicContentSize</code>改变如何处理等。这里我们都尽可能的与猜测到的<code>UIStackView</code>的实现保持一致。这些内容将会在后续的另一篇文章中介绍。</p>
-
-<h2>UIStackView Bugs</h2>
-
-<p>现在来说一下我们在调研<code>UIStackView</code>时发现的两个<code>bug</code>，<a href="https://github.com/wtlucky/UIStackViewBugDemo">测试的<code>Demo</code></a>已经放在<code>Github</code>上。</p>
-
-<p>这个测试<code>Demo</code>会借助我们的<code>FDStackView</code>来演示对比出<code>UIStackView</code>的<code>bug</code>，上面是系统原生的<code>UIStackView</code>，下面是我们的<code>FDStackView</code>，两者的参数设置是完全相同的。</p>
-
-<p>先来看第一个，当<code>Distribution</code>设置为<code>UIStackViewDistributionFillProportionally</code>时，并且存在<code>spacing</code>时就会出现问题，如图所示：</p>
-
-<p><img class="<a" src="href="http://i3.piimg.com/22c9f3dc8b429bdd.jpg">http://i3.piimg.com/22c9f3dc8b429bdd.jpg</a>"></p>
-
-<p><code>UIStackViewDistributionFillProportionally</code>这个属性的意思是子视图的宽度会根据他们内容的宽度比例而在<code>UIStackView</code>中占据对应的宽度，即他们的实际的宽度比应该是他们的内容固有宽度（<code>intrinsicContentSize</code>）的比例，<code>Demo</code>中三个<code>Label</code>的固有宽度即汉字的宽度是<code>4:1:2</code>，那么在<code>UIStackView</code>中他们所占据的宽度也应该是<code>4:1:2</code>，这在<code>spacing</code>为<code>0</code>的情况下是ok的。</p>
-
-<p>如果存在<code>spacing</code>的话，那么<code>UIStackView</code>应该先减去子视图之间的<code>spacing</code>，然后再去按比例分布子视图的宽度。这里可以看到<code>UIStackView</code>的布局是烂的了，而<code>FDStackView</code>的布局是ok的。</p>
-
-<p>这里我们通过分析<code>UIStackView</code>身上的<code>constraints</code>大概得出<code>UIStackView</code>出现这个<code>bug</code>的原因是，他们的算法出了问题，他们这一部分的约束是这样添加的，每一个子视图的宽度等于<code>UIStackView</code>的宽度乘上一个比例系数，即<code>AutoLayout</code>计算公式<code>y  = m * x + c</code>中的<code>m</code>系数，<code>c</code>的值一直为<code>0</code>。他们在计算<code>m</code>的时候出了问题，忽略了<code>spacing</code>的存在，也就是在计算中没有计算上<code>spacing</code>的值。</p>
-
-<p>具体拿<code>Demo</code>来看的话，<code>UIStackView</code>的最左边的<code>Label</code>的宽度应该是这样计算的<code>label.width = 4 * UIStackView.width / (4 + 1 + 2)</code>，这是<code>spacing</code>为<code>0</code>时，<code>m</code>的值就是<code>4 / (4 + 1 + 2)</code>，这没有问题 ，但是如果有<code>spacing</code>的话，他们把<code>spacing</code>也作为了分母的一部分，认为<code>spacing</code>也是可以按比例显示宽度的，所以<code>m</code>的值就成为了<code>4 / (4 + 1 + 2 + spacing)</code>（这里的<code>spacing</code>不是<code>UIStackView</code>设置<code>spacing</code>的值，而应该是实际<code>UIStackView</code>中出现的所有<code>spacing</code>的和）。因为<code>spacing</code>被当作分母计算了进去，那么在布局的时候<code>spacing</code>也应该按照计算出的系数乘上<code>UIStackView</code>的宽度来显示，但实际上他们没有这么做，而是把<code>spacing</code>按固定值来显示了，这样就会因为分母加入了<code>spacing</code>导致所有子视图计算出的<code>m</code>偏小，进而显示出来也就会偏小，到了最后一个视图时，由于约束优先级的缘故导致这个宽度的约束不再起作用，从而导致被拉长，出现了上图的效果。</p>
-
-<p>所以这里<code>UIStackView</code>是算法出了问题而显示时又按正确的样式来显示，所以布局就烂了，其实在有<code>spacing</code>的状态下就不应该忽略<code>c</code>的值了，而且<code>spacing</code>也不应该参与到分母中去计算，正确的约束应该是这个样子的<code>label.width = 4 * UIStackView.width / (4 + 1 + 2) - 4 * spacing / (4 + 1 + 2)</code>，这时<code>c</code>就有值了，不再是<code>0</code>而是<code>-4 * spacing / (4 + 1 + 2)</code>。</p>
-
-<p>整体来说<code>UIStackView</code>在处理<code>UIStackViewDistributionFillProportionally</code>这个属性的时候采取的约束添加方式不是最好的，处理起来是比较复杂的，这样处理会出现很多非整数情况，一个是计算复杂，在一个也会丢失精度。所以我们在<code>FDStackView</code>中没有使用这种连接方式，而是使用了另外一种方法，后面的文章会介绍到。</p>
-
-<p>另外一个<code>bug</code>是当<code>Alignment</code>属性设置为<code>UIStackViewAlignmentFill</code>时，当一个最高的子视图隐藏掉了时，<code>UIStackView</code>的高度并没有变化，这时它应该变为第二高的子视图的高度，具体如图所示：</p>
-
-<p><img class="<a" src="href="http://imgchr.com/images/hidingBug.gif">http://imgchr.com/images/hidingBug.gif</a>"></p>
-
-<p>这种情况只有在属性设置为<code>UIStackViewAlignmentFill</code>时才会出现，具体的出现原因我们也有分析出来的结论，但是涉及到<code>Alignment</code>方向上约束添加的问题，这个会在后一篇文章中提到，所以这里就先不做解释，之后在说。我们的<code>FDStackView</code>修复了这个问题，但是在一种情况下也会失去作用就是给这个要隐藏的视图收到添加了一个高优先级的高度约束的情况下，不过一般情况下我们使用<code>UIStackView</code>基本都不会再给子视图添加约束了。</p>
-
-<p>第一篇文章就介绍这么多，后面我会找时间把第二篇文章（Part 2）整理出来。</p>
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   

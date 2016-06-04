@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-05-11T11:52:56+08:00</updated>
+  <updated>2016-06-04T16:54:12+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,165 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[__bridge_retain __bridge_transfer]]></title>
+    <link href="http://blog.wtlucky.com/blog/2016/06/04/bridge-retain-bridge-transfer/"/>
+    <updated>2016-06-04T16:34:46+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2016/06/04/bridge-retain-bridge-transfer</id>
+    <content type="html"><![CDATA[<h3>CF对象与NS对象互转</h3>
+
+<p>在ARC下，如果我们需要操作一些底层的库，有时会用到Core Foundation的对象，简称CF对象，例如Core Graphic、Core Text。在ARC下，这些CF的对象的内存是不会被自动管理的，而是需要我们在它的生命周期结束的时候调用CFRelease()释放它。</p>
+
+<p>CF对象与NS对象之间如何相互转换呢？系统提供了<strong>bridge,</strong>bridge_retained,__bridge_transfer 三个关键字给我们使用。</p>
+
+<!-- More -->
+
+
+<h4>__bridge</h4>
+
+<p>__bridge只是单纯的对象类型的转换，并没有涉及到对象所有权的转移，所以需要把握好对象的生命周期，否则会出项野指针的情况。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">void</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIActivity</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>  <span class="c1">// 出了作用域，obj被释放。</span>
+</span><span class='line'><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">foo</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSObject</span> <span class="n">new</span><span class="p">];</span>  <span class="c1">// 为了切实将释放的内存被占用。</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;class=%@&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="k">__bridge</span> <span class="kt">id</span><span class="p">)</span><span class="n">p</span> <span class="k">class</span><span class="p">]);</span>  <span class="c1">// p为野指针，crash</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://i3.buimg.com/4dab14936f590b88.jpg" alt="image" /></p>
+
+<p>NS对象转为CF对象会出项野指针，逆过来CF转NS对象则有可能会出现内存泄露的问题，具体见下面的<strong>bridge_transfer的介绍。简单来说</strong>bridge就是类型强制转换。</p>
+
+<h4>__bridge_retained</h4>
+
+<p>__bridge_retained用于将NS对象转为CF对象，这其中有所有权的转移，NS对象会被retain一次再交给CF处理，这样即使原始的NS的对象在被ARC自动处理release一次之后，它的retainCount也不会为0，从而不会被销毁。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">void</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIActivity</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">__bridge_retained</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>  <span class="c1">// 出了作用域，obj被释放。p同时也有了所有权’</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">foo</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSObject</span> <span class="n">new</span><span class="p">];</span>  <span class="c1">// 为了切实将释放的内存被占用。</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;class=%@&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="k">__bridge</span> <span class="kt">id</span><span class="p">)</span><span class="n">p</span> <span class="k">class</span><span class="p">]);</span>  <span class="c1">// 正确打印UIActivity</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看一下引用计数的变化</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">foo</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSString</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">((</span><span class="k">__bridge</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">foo</span><span class="p">));</span> <span class="c1">// 1152921504606846975</span>
+</span><span class='line'><span class="n">CFTypeRef</span> <span class="n">rfoo</span> <span class="o">=</span> <span class="p">(</span><span class="n">__bridge_retained</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">foo</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">rfoo</span><span class="p">));</span> <span class="c1">// 1152921504606846975</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到引用计数是一个超级大的整数，这是因为在arc下直接创建的Foundation对象的引用计数都被处理过了，无法看到具体的数值。</p>
+
+<p>这一操作系统给我们提供了一个内联函数来干这件事CFBridgingRetain，</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NS_INLINE</span> <span class="n">CF_RETURNS_RETAINED</span> <span class="n">CFTypeRef</span> <span class="n">__nullable</span> <span class="nf">CFBridgingRetain</span><span class="p">(</span><span class="kt">id</span> <span class="n">__nullable</span> <span class="n">X</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="n">__bridge_retained</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">X</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>__bridge_transfer</h4>
+
+<p>__bridge_transfer用于将CF对象转为NS对象，同样的这其中也有所有权的转移，CF对象会在转换为NS对象后进行一次release操作，即把所有权完全移交给NS对象来处理，看一下引用计数的变化：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CFStringRef</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">CFStringCreateMutable</span><span class="p">(</span><span class="n">kCFAllocatorDefault</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span> <span class="c1">// 1</span>
+</span><span class='line'>
+</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge_transfer</span> <span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">ref</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span>  <span class="c1">// 1</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">((</span><span class="k">__bridge</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">string</span><span class="p">));</span> <span class="c1">// 1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里的对象是由Core Foundation创建的，所以它的引用计数可以被打印出来，可以看到在ARC环境下，string会被声明成strong类型，所以这个对象的retainCount会被加1，但是转换之后仍然为1，即CF对象已经放弃了它的所有权。</p>
+
+<p>如果是__bridge的话</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CFStringRef</span> <span class="n">ref</span> <span class="o">=</span> <span class="n">CFStringCreateMutable</span><span class="p">(</span><span class="n">kCFAllocatorDefault</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span> <span class="c1">// 1</span>
+</span><span class='line'>
+</span><span class='line'><span class="bp">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">ref</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">(</span><span class="n">ref</span><span class="p">));</span>  <span class="c1">// 2</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%lu&quot;</span><span class="p">,</span> <span class="n">CFGetRetainCount</span><span class="p">((</span><span class="k">__bridge</span> <span class="n">CFTypeRef</span><span class="p">)</span><span class="n">string</span><span class="p">));</span> <span class="c1">// 2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>转换之后的引用计数是2，即CF和NS对象同时有着持有权，这样在出了当前的作用域后，ARC会自动给NS对象做release，但是CF对象需要手动调用CFRelease()，如果忘记了的话，那就是内存泄露。</p>
+
+<p>同样，这一操作系统给也我们提供了一个内联函数来干这件事CFBridgingRetain，</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NS_INLINE</span> <span class="kt">id</span> <span class="n">__nullable</span> <span class="nf">CFBridgingRelease</span><span class="p">(</span><span class="n">CFTypeRef</span> <span class="n">CF_CONSUMED</span> <span class="n">__nullable</span> <span class="n">X</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="k">__bridge_transfer</span> <span class="kt">id</span><span class="p">)</span><span class="n">X</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>总结</h3>
+
+<p>这其中的关系可以用下图来直接说明，记住这张图就可以了：</p>
+
+<p><img src="http://i4.buimg.com/bb1f63613160279c.jpg" alt="Image" /></p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Support for IPv6]]></title>
@@ -102,6 +261,10 @@
 <p>Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).</p>
 
 <p>Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.  For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.</p></blockquote>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -175,6 +338,10 @@
 <p>所以要么是<code>method swizzling</code>替换了实现，要么是通过<code>category</code>重写覆盖了原始的系统方法。</p>
 
 <p>所以回到主题上来，SafeKit这种东西还是慎用或者别用的好，一方面把本应该暴露出的问题给隐藏了起来，这会导致开发者过于依赖SafeKit，没有了它，代码的质量将急剧下降。另一方面，如果你的代码还会融入到其他的工程中去的话，例如产品自身是一个SDK，那么使用SafeKit或者runtime Hook了系统方法，那么带来的将是毁灭性的灾难。因为这对使用你SDK的宿主方的开发带来极大的不变。因为这是侵染性的处理方式，不仅仅是在你自己的SDK中SafeKit会起作用，同样的在整个宿主App内都会起作用。如此一来不出问题还好，一旦出了问题，那排查起来简直让人崩溃。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -630,6 +797,10 @@
 <p><img src="http://i3.piimg.com/b9e1b58c1529f278.png" alt="image" /></p>
 
 <p>全文完，转载请注明出处，谢谢阅读。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -1118,6 +1289,10 @@
 <p>现在解释一下<a href="http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">本文章<code>Part 1</code></a>中最后提到的<code>UIStackView</code>当<code>alignment</code>为<code>UIStackViewAlignmentFill</code>时，最高视图隐藏掉，而其余视图没有变成第二个的视图的高度的<code>bug</code>。原因就是在<code>UIStackView</code>的中实现中<code>AlignmentLayoutArrangement</code>是没有管理<code>hiddingDimensionConstraints</code>的，所以当视图被隐藏了后，那个视图被添加了一个宽为<code>0</code>的约束，视觉上看不到了，但是高方向的约束仍然存在，所以仍然会撑开<code>StackView</code>，所以在<code>FDStackView</code>中我们在<code>alignment</code>方向上同时增加了<code>hiddingDimensionConstraints</code>，视图被<code>hidden</code>后，会在高度方向上也给他加上一个高<code>0</code>为的约束，而且这个优先级也很有讲究需要跟它的<code>contentCompressionResistancePriority</code>设为一样，这样才不会在<code>AutoLayout</code>布局系统中当用户人为添加一个高度约束后产生冲突。</p>
 
 <p>写了这么多，才写完第一个技术点的第一部分，内容确实比较多，我写的也比较乱，时间比较紧所以写作时间是间断的，所以思维也是间断跳跃的，还麻烦各位看官多多包涵。本来打算一篇写完的，但是这么长，还是有必要在分一下的，<code>Part 2</code>就到这吧，其余的内容就在<code>Part 3</code>吧。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -1465,6 +1640,10 @@
 <p>这种情况只有在属性设置为<code>UIStackViewAlignmentFill</code>时才会出现，具体的出现原因我们也有分析出来的结论，但是涉及到<code>Alignment</code>方向上约束添加的问题，这个会在后一篇文章中提到，所以这里就先不做解释，之后在说。我们的<code>FDStackView</code>修复了这个问题，但是在一种情况下也会失去作用就是给这个要隐藏的视图收到添加了一个高优先级的高度约束的情况下，不过一般情况下我们使用<code>UIStackView</code>基本都不会再给子视图添加约束了。</p>
 
 <p>第一篇文章就介绍这么多，后面我会找时间把第二篇文章（Part 2）整理出来。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -1525,6 +1704,10 @@
 <p><code>Reveal</code>还能做更NB的事情就是当你手机越狱后，然后你就可以查看任何<code>app</code>的视图层级关系了。就说到这里了，至于接下来怎样大家自己脑补吧。</p>
 
 <p>既然这个工具这么强大，我们还是支持一下作者吧，同为开发者，都知道这行挺不容易的还是支持下正版吧，好消息是Reveal对中国的开发者们有个特惠价格：<code>RMB249</code>就可以拿下了，<a href="http://item.taobao.com/item.htm?spm=a230r.1.14.1.kpBX7S&amp;id=45630069705&amp;ns=1&amp;abbucket=4#detail">购买地址</a>，比半价还优惠，我在知道这个消息后第一时间拿下了它，因为之前的价格确实有点贵，对我来说还是有压力的。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -2106,6 +2289,10 @@
 <p><a href="http://blog.grio.com/2014/11/creating-a-private-cocoapod.html">Creating a Private CocoaPod</a></p>
 
 <p><a href="http://www.objectpartners.com/2014/06/25/developing-private-in-house-libraries-with-cocoapods/">Developing Private In-House Libraries with CocoaPods</a></p></blockquote>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -2200,6 +2387,10 @@
 <p><a href="https://developer.apple.com/library/ios/recipes/xcode_help-IB_adaptive_sizes/_index.html#//apple_ref/doc/uid/TP40014436">Size Classes Design Help</a></p>
 
 <p><a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p></blockquote>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -2337,6 +2528,10 @@
 <blockquote><p><a href="https://blog.compeople.eu/apps/?p=142">Embedding custom-view Nibs in another Nib: Towards the holy grail</a></p>
 
 <p><a href="http://blog.yangmeyer.de/blog/2012/07/09/an-update-on-nested-nib-loading">An Update on Nested Nib Loading</a></p></blockquote>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -6326,274 +6521,6 @@ done
 </span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Create blog use Octopress and GitHub]]></title>
-    <link href="http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github/"/>
-    <updated>2013-02-24T23:02:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github</id>
-    <content type="html"><![CDATA[<h3>介绍</h3>
-
-<p>现下大概每一个搞技术的人都会有一个技术博客，而<a href="http://github.com">GitHub</a>又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明之用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。<a href="http://octopress.org">Octopress</a>就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样<code>A blogging framework for hackers.</code>，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。</p>
-
-<p>这两者一结合就有了我现在的这个blog了，用它来记录和分享我的学习之路上点点滴滴。网络上有很多介绍安装与配置方法的文章，官网的<a href="http://octopress.org/docs">Documentation</a>写的也很好，推荐E文好的直接去官网。我在安装与配置中也遇到了各种问题，不过在<a href="http://google.cn">Google</a>的帮助下都一一解决了，你需要懂一些<code>ruby(jekyll)</code>，并且会使用<code>git</code>命令，还要使用<code>markdown</code>来书写博文，这会让你觉得是在写代码而不是在写博文。不多说了现在记录下我自己安装与配置过程，供新手与日后自己需要时参考。<!-- More --></p>
-
-<p>我主要参考的文章：</p>
-
-<blockquote><p><a href="http://octopress.org/docs">Octopress Documentation</a></p>
-
-<p><a href="http://ishalou.com/blog/2012/10/15/how-to-use-octopress/">http://ishalou.com/blog/2012/10/15/how-to-use-octopress/</a></p>
-
-<p><a href="http://mrzhang.me/blog/blog-equals-github-plus-octopress.html">http://mrzhang.me/blog/blog-equals-github-plus-octopress.html</a></p>
-
-<p><a href="http://rogerdudler.github.com/git-guide/index.zh.html">git 简易指南</a></p></blockquote>
-
-<h3>安装前准备工作</h3>
-
-<ol>
-<li>你需要一个<a href="http://github.com">GitHub</a>的账号，注册不说了，已有的跳过。</li>
-<li>你需要在你的机器上安装并配置<code>git</code>，<a href="https://help.github.com/articles/set-up-git">官方文档</a>说的很清楚，这要用到<code>terminal</code>，也就是命令行，懒的人可以安装可视化工具GitHub，我建议还是使用命令行，以为之后众多操作都是必须使用命令行来完成的，而且这对于hacker们来说也不是什么难事。</li>
-<li>为GitHub创建<code>SSH</code> Keys，<a href="https://help.github.com/articles/generating-ssh-keys">官方文档</a>，这一步很重要，不然之后使用<code>rake deploy</code>命令时会出现如下错误：</li>
-</ol>
-
-
-<figure class='code'><figcaption><span>rake deploy error </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">## Pushing generated _deploy website</span>
-</span><span class='line'>Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>由于我使用GitHub比较早，这个<code>SSH</code> Key早就生成添加到了GitHub上，但是没有使用默认的名字，始终都是Permission denied。直到在GitHub上的文档中爬了很久才找到解决办法，o(╯□╰)o原来是生成的publickey没有添加到<code>SSH</code>中。
-4. 你的机器要有ruby环境，<code>Octopress</code>要求的是ruby-1.9.2，现在<code>ruby</code>最新的版本是ruby-1.9.3。可以使用<code>ruby --version</code>命令来查看。如果没有该命令或者是版本低于1.9.2的话，那么就需要安装与升级<code>ruby</code>。可以使用两种方法<a href="http://octopress.org/docs/setup/rbenv">rbenv</a>和<a href="http://octopress.org/docs/setup/rvm">RVM</a>。具体使用方法请自行查看之，我是用的<code>RVM</code>，在安装中遇到的问题就是我是用的是MAC OX MountainLion（10.8.2）系统，xcode的版本是4.6，没有<code>gcc</code>编译器，用得是<code>LLVM</code>，而ruby-1.9.3-p385在<code>LLVM</code>下编译不通过。最终在Google和<a href="http://stackoverflow.com">stackoverflow</a>帮助下解决之。</p>
-
-<h3>安装Octopress</h3>
-
-<p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入以下命令：</p>
-
-<figure class='code'><figcaption><span>install Octopress </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone git://github.com/imathis/octopress.git geekerprobe      <span class="c"># 从GitHub上clone Octopress到本地 geekerprobe可以随便填，Octopress会被clone到当前目录的geekerprobe目录下</span>
-</span><span class='line'><span class="nb">cd </span>geekerprobe    <span class="c"># 进入该目录，如果你是用的是RVM的话，会寻问你是否信任.rvmrc文件 当然是yes</span>
-</span><span class='line'>gem install bundler   <span class="c"># 下载bundler，有可能提示gem命令未找到，请自行google解决方法</span>
-</span><span class='line'>bundle install    <span class="c">#安装bundle</span>
-</span><span class='line'>rake install   <span class="c">#安装Octopress默认主题</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>到此Octopress在本地已经安装完毕，但是还都是默认配置，而且没有发表博文。但是你可以通过一下命令来生成并预览一下原始的界面：</p>
-
-<figure class='code'><figcaption><span>generate and preview blog </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate    <span class="c">#生成blog，就是根据配置文件，将主题、模板、发表的markdown格式的博文等众多文件生成静态的html文件存放在geekerprobe/public文件夹下</span>
-</span><span class='line'>rake preview   <span class="c">#预览生成的blog，此时ruby会启动一个小型的server</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>接下来打开浏览器访问<a href="http://127.0.0.1:4000">http://127.0.0.1:4000</a>就可以看到页面啦！
-退出预览当然是Ctrl+C了。</p>
-
-<h3>Octopress简单配置</h3>
-
-<p>此时在<code>terminal</code>下使用‘ls’命令查看目录结构为：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>CHANGELOG.markdown  Rakefile        plugins
-</span><span class='line'>Gemfile             _config.yml     public
-</span><span class='line'>Gemfile.lock        config.rb       sass
-</span><span class='line'>README.markdown     config.ru       <span class="nb">source</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>\_config.yml</code>、<code>Rakefile</code>、<code>config.ru</code>和<code>config.rb</code>就是四个配置文件了，我们修改配置主要是在<code>\_config.yml</code>上进行的，其他的三个一般不需要我们去直接管理。<code>\_config.yml</code>的配置分为三个部分：</p>
-
-<ol>
-<li>Main Configs，配置一些博客的基本信息，标题URL什么的；</li>
-<li>Jekyll &amp; Plugins，这里是jekyll和一些官方插件的配置；</li>
-<li>3rd Party Settings，这里是第三方插件配置，我们之后自己添加的插件配置信息建议都放在这个部分中。
-具体说明请看<a href="http://octopress.org/docs/configuring/">官方Document</a>。
-<strong>注意：</strong>每次做完配置文件的修改之后都要使用<code>rake generate</code>来重新生成html来使配置生效，而简单修改页面html则不需要重新生成，在预览状态下直接刷新页面就可以了。</li>
-</ol>
-
-
-<h3>发布博文</h3>
-
-<p>博文有两种一种是post一种是page，具体有什么区别请google之。
-发送博文只需要在当前目录下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;My First Blog&quot;</span><span class="o">]</span>   <span class="c">#发送名为My First Blog的post，会在source/_post目录下按照配置文件生成markdown文件</span>
-</span><span class='line'>rake new_page<span class="o">[</span><span class="s2">&quot;title&quot;</span><span class="o">]</span>   <span class="c">#发送page，会生成在source/下，我还没有使用过具体请看官方文档</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用喜欢的编辑器打开source/_post/yyyy-mm-dd-my-first-blog.markdown进行编辑，书写博文。</p>
-
-<figure class='code'><figcaption><span>yyyy-mm-dd-my-first-blog </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>---
-</span><span class='line'>layout: post
-</span><span class='line'>title: &quot;My First Blog&quot;
-</span><span class='line'>date: 2013-02-23 09:01
-</span><span class='line'>comments: true
-</span><span class='line'>categories:
-</span><span class='line'>---
-</span><span class='line'>
-</span><span class='line'>## Hello octopress! ##
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>开头两个下划线之间的部分是<code>yaml</code>头，用来告诉Jekyll怎么处理你的posts或者是pages，在这里你可以对你的post或者page做一些设置，比如添加作者，category，是否允许评论等。
-在后面就是你自己要写的东西啦，当然是使用<code>markdown</code>来写了，当然它也支持<code>HTML</code>。<code>markdown</code>很简单，还不会的看<a href="http://wowubuntu.com/markdown/#backslash">这里</a>,语法说明。
-写完保存generate preview就可以了。</p>
-
-<h3>部署到GitHub</h3>
-
-<p>现在到了最关键的时候了，就是将Octopress部署到GitHub上去。从<a href="http://octopress.org/docs/deploying/github/">官方文档</a>了解到，部署到GitHub上有两种一种是使用<code>GitHub Pages</code>，这种在访问时使用的url为<code>http://username.github.com</code>，username为注册的GitHub用户名，你需要在GitHub上建立名字为<code>username.github.com</code>的<code>repository</code>。第二种是使用<code>GitHub Project pages (gh-pages)</code>，这种在访问时使用的url为<code>http://username.github.com/reponame</code>,reponame为你在GitHub上建立的<code>repository</code>的名字，这个名字可以随便写，将来生成的静态html会被push到该repo下的<code>gh-pages</code>分支中。
-我个人的理解是GitHub建立了这两种方式，第一种是用来介绍你这个GitHub的，所以每个账号只能有一个，而第二个是用来介绍你的<code>project</code>的，而你可以建立多个repo，所以也就可以有多个blog了，虽然url有点复杂，不过Octopress也提供了绑定自己域名的方法，自己目前还没有域名所以使用的是默认的，这一部分自己没有试验过所以就不贴上来了，具体的查看官方文档。鉴于此我使用了第二种方式来将blog部署到GitHub上。
-步骤：</p>
-
-<ul>
-<li>先到GitHub上创建名为<code>geekerprobe</code>的repo。</li>
-<li>因为使用第二种方法我们要将blog放在<code>username.github.com</code>的子集目录所以我们要在本地将目录也设置为子集目录，不然会出现<em>“Sorry！I can not find /”</em>的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake set_root_dir<span class="o">[</span>/geekerprobe<span class="o">]</span>   <span class="c">#将路径设置为/geekerprobe</span>
-</span><span class='line'>rake set_root_dir<span class="o">[</span>/<span class="o">]</span>   <span class="c">#如果你想恢复到初始目录，则键入此命令</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这条命令会修改<code>\_config.yml</code>、<code>Rakefile</code>和<code>config.rb</code>中的有关路径部分的设置，并将实际文件进行剪切移动操作，以适应路径的改变。而且在本地预览时也要使用子集目录来访问预览<strong><a href="http://127.0.0.1:4000/geekerprobe">http://127.0.0.1:4000/geekerprobe</a></strong>。</p>
-
-<ul>
-<li>接下来就是将blog部署上去了</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake setup_github_pages   <span class="c">#将Octopress部署到GitHub上</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>会提示你输入一个形如<code>git@github.com:username/geekerprobe.git</code>的地址，那么就按照这种形式输入你自己的repo的地址，这个地址可以在GitHub上你的repo的SSH文本框中得到，粘贴过来就好。
-<img src="http://blog.wtlucky.com/images/2013-2-24/repo-ssh.jpg">
-回车确定，等待片刻提示成功就可以了。
-这时查看目录会发现多了一个_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的<code>gh-pages</code>分支。同时你的repo的<code>gh-pages</code>分支在GitHub上也已被创建了。</p>
-
-<ul>
-<li>接下来生成并push博文到GitHub上</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate   <span class="c">#生成</span>
-</span><span class='line'>rake deploy   <span class="c">#push到GitHub上，此时会将/public目录下的文件完全拷贝，粘贴到/_deploy目录下，然后在push</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如果你的GitHub的<code>SSH Key</code>没有设置或者设置错误的话，此时会出现权限不允许的错误。看到成功时就说名部署工作已经完成了，恭喜你赶紧到浏览器访问一下你的<a href="http://wtlucky.github.com/geekerprobe">url</a>试试看吧。</p>
-
-<p>到此基本的工作已经做完了，你的blog已经成功部署到GitHub上了并且可以正常使用了。</p>
-
-<h3>使用发布博文</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_post<span class="o">[]</span>   <span class="c">#创建post，在editer中编辑post</span>
-</span><span class='line'>rake generate     <span class="c">#生成静态html</span>
-</span><span class='line'>rake preview      <span class="c">#本地预览，修改错误，查看效果</span>
-</span><span class='line'>rake deploy       <span class="c">#无误后，push到GitHub上</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>到此，你可以离开此页了，如果还要看其他设置的话，请看下去，我觉得这还是挺有用的，他将你的posts也同样备份到GitHub上，下次在你换了一个环境或者电脑后，就可以直接<code>clone</code>下来或者<code>pull</code>合并，免去博文与各种配置丢失。</p>
-
-<h3>备份Octopress到GitHub</h3>
-
-<p>此处使用的都是<code>git</code>命令，对<code>git</code>命令不熟悉的请看<a href="http://rogerdudler.github.com/git-guide/index.zh.html">这</a>。</p>
-
-<p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录下被排除在<code>git</code>库外的文件以及目录。
-这些我们在<code>clone</code>之前就已经由作者做好了。我们需要做的是：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git remote add origin git@github.com:username/geekerprobe.git   <span class="c">#在远端添加源，origin可以随便写，建议用origin这是默认，后面的路径还是那个</span>
-</span><span class='line'>git branch -m site    <span class="c">#创建一个分支site，这个site也可以随便写。官方文档使用的是master主分支</span>
-</span><span class='line'>git push origin site   <span class="c">#将这个源push到site分支中</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这样你去你的GitHub上就可以看到你的repo又多了一个site分支，并且有了文件也有版本记录。</p>
-
-<p>这里说一下我理解到的<code>git</code>的简单原理，我也是刚刚接触到<code>git</code>之前都是使用<code>subvision</code>的，通过配置这个blog有了一点体会，但是比较浅显，有不对之处欢迎指出。</p>
-
-<p>在一个<code>git</code>库中会有文件记录你所有对库(working dir)中文件的增删改，类似于<code>svn</code>,可以使用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git status
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>来查看当前的所有文件改动。
-之后将显示出来的有改动的文件<code>add</code>到缓冲区(index)，通常我都是</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git add .
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>将所有改动都<code>add</code>到缓冲区，但这只是临时的并没有提交到remote端，也没有被提交到上次提交后的状态下。
-然后就是将缓冲区的内容提交到上次提交的状态(HEAD)下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git commit -m <span class="s2">&quot;something to say&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这些引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git push origin site   <span class="c">#将HEAD push到remote段</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>到此本地的版本已经提交到GitHub。</p>
-
-<h3>Octopress拓展增强</h3>
-
-<p>要想使Octopress拥有更强大的拓展请参考一下文章：</p>
-
-<blockquote><p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">安装主题</a><br />
-<a href="http://yanping.me/cn/blog/2012/01/07/theming-and-customization/">自定义样式</a><br />
-<a href="http://ihavanna.org/Internet/2013-02/add-duoshuo-commemt-system-into-octopress.html">添加多说评论</a><br />
-<a href="http://blog.log4d.com/2012/05/tag-cloud/">添加标签云与category list</a><br /></p></blockquote>
 ]]></content>
   </entry>
   

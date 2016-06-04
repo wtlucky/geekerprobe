@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: forkingdog | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/forkingdog/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-05-11T11:52:56+08:00</updated>
+  <updated>2016-06-04T16:54:12+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -475,6 +475,10 @@
 <p><img src="http://i3.piimg.com/b9e1b58c1529f278.png" alt="image" /></p>
 
 <p>全文完，转载请注明出处，谢谢阅读。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -967,6 +971,10 @@
 <p>现在解释一下<a href="http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">本文章<code>Part 1</code></a>中最后提到的<code>UIStackView</code>当<code>alignment</code>为<code>UIStackViewAlignmentFill</code>时，最高视图隐藏掉，而其余视图没有变成第二个的视图的高度的<code>bug</code>。原因就是在<code>UIStackView</code>的中实现中<code>AlignmentLayoutArrangement</code>是没有管理<code>hiddingDimensionConstraints</code>的，所以当视图被隐藏了后，那个视图被添加了一个宽为<code>0</code>的约束，视觉上看不到了，但是高方向的约束仍然存在，所以仍然会撑开<code>StackView</code>，所以在<code>FDStackView</code>中我们在<code>alignment</code>方向上同时增加了<code>hiddingDimensionConstraints</code>，视图被<code>hidden</code>后，会在高度方向上也给他加上一个高<code>0</code>为的约束，而且这个优先级也很有讲究需要跟它的<code>contentCompressionResistancePriority</code>设为一样，这样才不会在<code>AutoLayout</code>布局系统中当用户人为添加一个高度约束后产生冲突。</p>
 
 <p>写了这么多，才写完第一个技术点的第一部分，内容确实比较多，我写的也比较乱，时间比较紧所以写作时间是间断的，所以思维也是间断跳跃的，还麻烦各位看官多多包涵。本来打算一篇写完的，但是这么长，还是有必要在分一下的，<code>Part 2</code>就到这吧，其余的内容就在<code>Part 3</code>吧。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   
@@ -1379,6 +1387,10 @@
 <p>这种情况只有在属性设置为<code>UIStackViewAlignmentFill</code>时才会出现，具体的出现原因我们也有分析出来的结论，但是涉及到<code>Alignment</code>方向上约束添加的问题，这个会在后一篇文章中提到，所以这里就先不做解释，之后在说。我们的<code>FDStackView</code>修复了这个问题，但是在一种情况下也会失去作用就是给这个要隐藏的视图收到添加了一个高优先级的高度约束的情况下，不过一般情况下我们使用<code>UIStackView</code>基本都不会再给子视图添加约束了。</p>
 
 <p>第一篇文章就介绍这么多，后面我会找时间把第二篇文章（Part 2）整理出来。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 ]]></content>
   </entry>
   

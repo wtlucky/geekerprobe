@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="苹果于2016年5月4日告知开发者应用需要在6月1日前支持IPv6-only,也就是说在 6 月 1 日后发布的新版本是需要支持 IPv6-only。 原文地址：https://developer.apple.com/news/?id=05042016a 首先看下图 其中蓝色部分的高级API， &hellip;">
+  <meta name="description" content="CF对象与NS对象互转 在ARC下，如果我们需要操作一些底层的库，有时会用到Core Foundation的对象，简称CF对象，例如Core Graphic、Core Text。在ARC下，这些CF的对象的内存是不会被自动管理的，而是需要我们在它的生命周期结束的时候调用CFRelease()释放它 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/04/bridge-retain-bridge-transfer/">__bridge_retain __bridge_transfer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-06-04T16:34:46+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2016/06/04/bridge-retain-bridge-transfer/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>CF对象与NS对象互转</h3>
+
+<p>在ARC下，如果我们需要操作一些底层的库，有时会用到Core Foundation的对象，简称CF对象，例如Core Graphic、Core Text。在ARC下，这些CF的对象的内存是不会被自动管理的，而是需要我们在它的生命周期结束的时候调用CFRelease()释放它。</p>
+
+<p>CF对象与NS对象之间如何相互转换呢？系统提供了<strong>bridge,</strong>bridge_retained,__bridge_transfer 三个关键字给我们使用。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/04/bridge-retain-bridge-transfer/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -500,48 +548,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/25/swift-hexadecimal-conversion/">Swift Hexadecimal Conversion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-25T15:11:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2014/07/25/swift-hexadecimal-conversion/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>自己的<code>Blog</code>好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的<code>Blog</code>增添新的血液了。<code>APPLE</code>在<code>WWDC 2014</code>上公布了一门新的编程语言<a href="https://developer.apple.com/swift/">Swift</a>，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进，这是一个集合了N多语言优秀特性于一身的全新语言，它将成为开发<code>iOS</code>和<code>MAC</code>的新的选择。并且据说他将会取代<code>Objective-C</code>，但是我觉得并不是这样，不过这也仅仅是一家之谈，至于会不会这样，我们走着瞧。</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/25/swift-hexadecimal-conversion/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -560,11 +566,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (13)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (14)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/04/bridge-retain-bridge-transfer/">__bridge_retain __bridge_transfer</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/05/09/support-for-ipv6/">Support for IPv6</a>
@@ -580,10 +590,6 @@
     
       <li class="post">
         <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a>
       </li>
     
   </ul>
@@ -665,25 +671,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 113%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
+<a style="font-size: 126%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 127%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 113%" href="/tags/git/">git</a>
 <a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
 <a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
 
   </ul>
 </section>

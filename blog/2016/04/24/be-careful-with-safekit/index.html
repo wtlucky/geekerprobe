@@ -172,6 +172,10 @@
 <p>所以要么是<code>method swizzling</code>替换了实现，要么是通过<code>category</code>重写覆盖了原始的系统方法。</p>
 
 <p>所以回到主题上来，SafeKit这种东西还是慎用或者别用的好，一方面把本应该暴露出的问题给隐藏了起来，这会导致开发者过于依赖SafeKit，没有了它，代码的质量将急剧下降。另一方面，如果你的代码还会融入到其他的工程中去的话，例如产品自身是一个SDK，那么使用SafeKit或者runtime Hook了系统方法，那么带来的将是毁灭性的灾难。因为这对使用你SDK的宿主方的开发带来极大的不变。因为这是侵染性的处理方式，不仅仅是在你自己的SDK中SafeKit会起作用，同样的在整个宿主App内都会起作用。如此一来不出问题还好，一旦出了问题，那排查起来简直让人崩溃。</p>
+
+<p>————————————</p>
+
+<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
 </div>
 
 
@@ -278,7 +282,7 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (13)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (14)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
 <h1>Recent Comments</h1>
@@ -287,6 +291,10 @@
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/04/bridge-retain-bridge-transfer/">__bridge_retain __bridge_transfer</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/05/09/support-for-ipv6/">Support for IPv6</a>
@@ -302,10 +310,6 @@
     
       <li class="post">
         <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/">FDStackView —— Downward Compatible UIStackView (Part 1)</a>
       </li>
     
   </ul>
@@ -387,25 +391,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 127%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 113%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 126%" href="/tags/design/">Design</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 113%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
 
   </ul>
 </section>
