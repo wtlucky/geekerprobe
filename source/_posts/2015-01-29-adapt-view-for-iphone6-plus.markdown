@@ -80,3 +80,7 @@ tags: iOS AutoLayout SizeClasses
 [1]: https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/LayoutandAppearance.html
 [2]: https://developer.apple.com/library/ios/recipes/xcode_help-IB_adaptive_sizes/_index.html#//apple_ref/doc/uid/TP40014436
 [3]: http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus
+
+————————————
+
+![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)

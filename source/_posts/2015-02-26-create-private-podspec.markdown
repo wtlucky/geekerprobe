@@ -363,3 +363,8 @@ wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs$ git push origin master
 [1]: http://guides.cocoapods.org/making/private-cocoapods.html
 [2]: http://blog.grio.com/2014/11/creating-a-private-cocoapod.html
 [3]: http://www.objectpartners.com/2014/06/25/developing-private-in-house-libraries-with-cocoapods/
+
+
+————————————
+
+![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)

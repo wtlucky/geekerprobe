@@ -285,3 +285,7 @@ tags: iOS AutoLayout forkingdog
 ![image](http://i3.piimg.com/b9e1b58c1529f278.png)
 
 全文完，转载请注明出处，谢谢阅读。
+
+————————————
+
+![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)

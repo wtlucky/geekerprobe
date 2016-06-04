@@ -301,3 +301,7 @@ tags: iOS AutoLayout forkingdog
 现在解释一下[本文章`Part 1`](http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/)中最后提到的`UIStackView`当`alignment`为`UIStackViewAlignmentFill`时，最高视图隐藏掉，而其余视图没有变成第二个的视图的高度的`bug`。原因就是在`UIStackView`的中实现中`AlignmentLayoutArrangement`是没有管理`hiddingDimensionConstraints`的，所以当视图被隐藏了后，那个视图被添加了一个宽为`0`的约束，视觉上看不到了，但是高方向的约束仍然存在，所以仍然会撑开`StackView`，所以在`FDStackView`中我们在`alignment`方向上同时增加了`hiddingDimensionConstraints`，视图被`hidden`后，会在高度方向上也给他加上一个高`0`为的约束，而且这个优先级也很有讲究需要跟它的`contentCompressionResistancePriority`设为一样，这样才不会在`AutoLayout`布局系统中当用户人为添加一个高度约束后产生冲突。
 
 写了这么多，才写完第一个技术点的第一部分，内容确实比较多，我写的也比较乱，时间比较紧所以写作时间是间断的，所以思维也是间断跳跃的，还麻烦各位看官多多包涵。本来打算一篇写完的，但是这么长，还是有必要在分一下的，`Part 2`就到这吧，其余的内容就在`Part 3`吧。
+
+————————————
+
+![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
