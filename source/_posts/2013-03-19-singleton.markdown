@@ -21,7 +21,7 @@ tags: iOS block GCD Design
 
 ####单例模式类图####
 
-{% img http://imgchr.com/images/singleton.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114445.png %}
 
 ####单例模式介绍####
 
@@ -50,7 +50,7 @@ tags: iOS block GCD Design
 该方法是苹果的官方文档中写的一种方式，通过覆盖`NSObject`的部分方法实现，使该类无法`alloc`、`retain`、`release`。这是最麻烦的一种方法，也是最不好的一种方法。
 {% codeblock Singleton lang:objc %}
 static Singleton *instance = nil;
- 
+
 + (Singleton *)sharedInstance
 {
     if (instance == nil) {
@@ -58,32 +58,32 @@ static Singleton *instance = nil;
     }
     return instance;
 }
- 
+
 + (id)allocWithZone:(NSZone *)zone
 {
     return [[self sharedInstance] retain];
 }
- 
+
 - (id)copyWithZone:(NSZone *)zone
 {
     return self;
 }
- 
+
 - (id)retain
 {
     return self;
 }
- 
+
 - (NSUInteger)retainCount
 {
     return NSUIntegerMax;  //denotes an object that cannot be released
 }
- 
+
 - (void)release
 {
     //do nothing
 }
- 
+
 - (id)autorelease
 {
     return self;
@@ -131,12 +131,12 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(Singleton);
 + (Singleton *)sharedInstance
 {
     static Singleton *instance = nil;
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[Singleton alloc]init];
     });
-    
+
     return instance;
 }
 {% endcodeblock %}

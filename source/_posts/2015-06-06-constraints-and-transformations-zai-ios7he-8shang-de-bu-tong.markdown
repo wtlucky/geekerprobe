@@ -16,7 +16,7 @@ tags: iOS AutoLayout
 
 先贴张图说明一下问题:
 
-{% img http://i3.piimg.com/1cebfcf0129ca844.png %}
+{% img https://oac67o3cg.qnssl.com/1475115317.png %}
 
 可以看到`iOS7`在使用了`autolayout`之后，进行`transform`变幻之后`view`并没有达到预期效果，而在`iOS8`和和纯`frame`布局的情况下是正常的。
 
@@ -26,11 +26,11 @@ tags: iOS AutoLayout
 
 通过`Reveal`查看可以看到:
 
-{% img http://i3.piimg.com/dc322ed71cc0d21b.png %}
+{% img https://oac67o3cg.qnssl.com/1475115353.png %}
 
 使用`autolayout`的`view`跟他的参照`View`相比只移动了`（-10，-10）`,而且它的布局位置也发生了偏移`（10，10）`，在`iOS8`下查看，会发现布局位置并没有移动，跟参照`View`完全一致
 
-{% img http://i3.piimg.com/9274b80b9704dc37.png %}
+{% img https://oac67o3cg.qnssl.com/1475115374.png %}
 
 由此可以得到的结论就是，在`iOS7`和`8`上使用`autolayout`布局的`view`的`center`属性的位置发生了改变。
 
@@ -62,4 +62,4 @@ PS:
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

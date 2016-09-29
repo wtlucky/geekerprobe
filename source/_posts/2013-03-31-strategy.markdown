@@ -23,7 +23,7 @@ tags: iOS Design
 
 ####策略模式类图####
 
-{% img http://i3.piimg.com/7f2860a7f178473f.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114575.png %}
 
 ####策略模式说明####
 
@@ -33,7 +33,7 @@ tags: iOS Design
   策略、算法家族的抽象，通常为接口，定义每个策略或算法必须具有的方法和属性。
 + ConcreteStrategy具体策略角色
   实现抽象策略中的操作，该类含有具体的算法。
- 
+
 ####策略模式优点####
 
 1. 算法可以自由切换。
@@ -46,7 +46,7 @@ tags: iOS Design
  每一个策略都是一个类，复用的可能性很小，类数量增多。
 2. 所有的策略类都需要对外暴露
  上层模块必须知道有哪些策略，然后才能决定使用哪一个策略，这与`迪米特法则`是相违背的。
- 
+
 ####策略模式的objective-C实现####
 
 {% codeblock Strategy lang:objc %}
@@ -135,19 +135,18 @@ int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
-        
+
         Car *car = [[Car alloc]init];
         Bicycle *bicycle = [[Bicycle alloc]init];
         Train *train = [[Train alloc]init];
         Person *person = [[Person alloc]init];
-        
+
         [person travel:car];
         [person travel:bicycle];
         [person travel:train];
-        
-        
+
+
     }
     return 0;
 }
 {% endcodeblock %}
-

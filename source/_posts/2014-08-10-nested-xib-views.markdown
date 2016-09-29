@@ -15,27 +15,27 @@ tags: iOS
 
 首先我们创建一个`SingleView`的工程，项目使用`StoryBoard`，（使用`Xib`也无所谓，因为有些老的项目可能还没有使用到`StoryBoard`），然后创建一个`CustomView`作为我们的自定义视图。
 
-{% img http://imgchr.com/images/QQ20140810-1.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114657.png %}
 
 有时对于复杂的界面我们可能会拆分出来对它进行单独处理，又有可能它的界面布局很复杂，这时我们就会用`Interface Builder`对它的布局进行处理。这里的`CustomView`就是这样一个视图，所以我们为它创建一个`xib`文件，我们通常的作法就是把`xib`中的`View`的`custom class`更改为我们的`CustomView`。
 
-{% img http://imgchr.com/images/QQ20140810-2.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114680.png %}
 
 接下来对我们的界面进行布局，并连接输出口，编写响应逻辑，这里我放了一个`ImageView`和一个`Label`在这里，并把`View`的背景色设置为浅灰色。
 
-{% img http://imgchr.com/images/QQ20140810-3.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114702.png %}
 
 自定义的`View`制作完成，回到我们`ViewController`的`xib`文件，拖入两个`View`并把他们的`custom class`更改为`CustomView`。
 
-{% img http://imgchr.com/images/QQ20140810-11.jpg %} 
+{% img https://oac67o3cg.qnssl.com/1475114726.png %}
 
 这时，我们算是工作做完了，运行程序，结果悲剧了，怎么不是我们想要的结果，为什么只生成了两个空白的视图，我们视图上的图片和文字哪里去了？
 
-{% img http://imgchr.com/images/QQ20140810-5.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114746.png %}
 
 在`CustomView`中的`awakeFromeNib`方法中增加断点调试发现，在`CustomView`初始化完成后，`ImageView`和`Label`并没有被初始化，他们仍然是`nil`。这就是在嵌套使用`xib`自定义视图时非常容易出现的问题，我们觉得被嵌套的视图能够正常显示出来，但是实际上它并没有被按照我们在`xib`上指定的方式被初始化。
 
-{% img http://imgchr.com/images/QQ20140810-6.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114767.png %}
 
 ##Solution##
 
@@ -51,7 +51,7 @@ tags: iOS
 
 先来介绍第一种方法，很简单，就是找到`xib`文件，生成对象，设置属性，`addsubview`到视图上。
 
-{% img http://imgchr.com/images/QQ20140810-7.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114786.png %}
 
 ###NO 2.###
 
@@ -72,11 +72,11 @@ tags: iOS
 
 此外，还要这里的输出口以及设置`custom class`的位置跟第一种方式有所不同，这里需要取消掉`xib`中`view`的`custom class`，再将跟它连接的图片与文字的输出口取消掉，在这里这个`view`只是被当做一个容器来处理，它跟`Customview`没有直接关系，它将来会被`addSubview`到`CustomView`上，除此之外还要把`xib`的`File's ower`的`custom class`改成`CustomView`，表示这个`xib`文件的持有者是`CustomView`。再把它与图片和文字通过输出口连接起来。
 
-{% img http://imgchr.com/images/QQ20140810-8.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114808.png %}
 
 这个时候在运行程序就看到了我们想要的结果了。^_^
 
-{% img http://imgchr.com/images/QQ20140810-10.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114826.png %}
 
 
 其实想要实现第二种解决方案所要的效果，还有一种方式，它是通过重载`awakeAfterUsingCoder:`方法来实现的，这个方法的返回值会替换掉真正的加载对象，所以在具体的加载`CustomView`的方式又与第一种相同，所以`xib`的输出口连接与`custom class`的设置也与第一种解决方案相同。不过这种方式是更复杂也更难于理解的，不推荐使用，因为上一个方法就能很好的解决这个问题了，这里只是贴出这个方法的代码，有想仔细研究的请参看文章底部的参考文章。
@@ -87,7 +87,7 @@ tags: iOS
     if (isJustAPlaceholder) {
         CustomView* theRealThing = [[self class] getClassObjectFromNib];
 
-        theRealThing.frame = self.frame; 
+        theRealThing.frame = self.frame;
 
         // make compatible with Auto Layout
         self.translatesAutoresizingMaskIntoConstraints = NO;
@@ -114,4 +114,4 @@ tags: iOS
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

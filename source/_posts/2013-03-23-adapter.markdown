@@ -18,7 +18,7 @@ tags: iOS Design
 
 ####适配器模式类图####
 
-{% img http://i3.piimg.com/643d75b493af716d.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114532.png %}
 
 ####适配器模式说明####
 
@@ -28,7 +28,7 @@ tags: iOS Design
  你想把“谁”转换成目标角色，这个“谁”就是源角色，它是已经存在的、运行良好的类或对象。
 + Adapter适配器角色
  适配器模式的核心角色，其他两个角色都是已经存在的角色，而适配器角色是需要新建立的，他的职责非常简单：把源角色转换为目标角色。
- 
+
 ####适配器模式优点####
 
 1. 适配器模式可以让两个没有任何关系的类在一起运行，只要适配器这个角色能够搞定他们就成。
@@ -110,12 +110,12 @@ int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
-        
+
         Adaptee *adaptee = [[Adaptee alloc]init];
         id<Target> object = [[Adapter alloc]initWithAdaptee:adaptee];
-        
+
         [object userExpectInterface];
-        
+
     }
     return 0;
 }

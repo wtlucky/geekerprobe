@@ -31,7 +31,7 @@ do {
 NSLog(@"class=%@", [(__bridge id)p class]);  // p为野指针，crash
 {% endcodeblock %}
 
-![image](http://i3.buimg.com/4dab14936f590b88.jpg)
+![](https://oac67o3cg.qnssl.com/1475116928.png )
 
 NS对象转为CF对象会出项野指针，逆过来CF转NS对象则有可能会出现内存泄露的问题，具体见下面的__bridge_transfer的介绍。简单来说__bridge就是类型强制转换。
 
@@ -80,7 +80,7 @@ __bridge_transfer用于将CF对象转为NS对象，同样的这其中也有所�
 {% codeblock lang:objc %}
 CFStringRef ref = CFStringCreateMutable(kCFAllocatorDefault, 0);
 NSLog(@"%lu", CFGetRetainCount(ref)); // 1
-        
+
 NSString *string = (__bridge_transfer NSString *)ref;
 NSLog(@"%lu", CFGetRetainCount(ref));  // 1
 NSLog(@"%lu", CFGetRetainCount((__bridge CFTypeRef)string)); // 1
@@ -93,7 +93,7 @@ NSLog(@"%lu", CFGetRetainCount((__bridge CFTypeRef)string)); // 1
 {% codeblock lang:objc %}
 CFStringRef ref = CFStringCreateMutable(kCFAllocatorDefault, 0);
 NSLog(@"%lu", CFGetRetainCount(ref)); // 1
-        
+
 NSString *string = (__bridge NSString *)ref;
 NSLog(@"%lu", CFGetRetainCount(ref));  // 2
 NSLog(@"%lu", CFGetRetainCount((__bridge CFTypeRef)string)); // 2
@@ -111,8 +111,8 @@ NS_INLINE id __nullable CFBridgingRelease(CFTypeRef CF_CONSUMED __nullable X) {
 ### 总结
 这其中的关系可以用下图来直接说明，记住这张图就可以了：
 
-![Image](http://i4.buimg.com/bb1f63613160279c.jpg)
+![](https://oac67o3cg.qnssl.com/1475116891.png )
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

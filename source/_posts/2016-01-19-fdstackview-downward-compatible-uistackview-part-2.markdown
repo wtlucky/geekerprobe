@@ -4,7 +4,7 @@ title: "FDStackView —— Downward Compatible UIStackView (Part 2)"
 date: 2016-01-19 14:44:53 +0800
 comments: true
 categories: [iOS development]
-tags: iOS AutoLayout forkingdog 
+tags: iOS AutoLayout forkingdog
 ---
 
 写完了`Part 1`就被接踵而至的新项目和新版本忙的不可开交，转眼间一个季度就已经过去了，而这篇`Part 2`却迟迟还没有出现。实在是抱歉没有及时更新。不过有一个好消息就是`FDStackView`已经被使用在我们自己的项目中，并且我们的项目也已经经过了两个版本的迭代，`FDStackView`可以说还是相当稳定的，并且可以顺利的通过苹果的审核机制，对这方面有顾虑的小伙伴们可以放心大胆的使用了。同时我们也将它的版本号从`1.0-alpha`升级到`1.0`。在此感谢一下各位热心的小伙伴们在`Github`上提出的`issue`,以及着重感谢下[@里脊串](http://weibo.com/ljc1986?is_all=1)对`FDStackView`的重度使用及提出的各种隐晦的`bug`。后续我们将会对性能的优化做出改进，以及对`Layout Margins`的支持。
@@ -91,49 +91,49 @@ tags: iOS AutoLayout forkingdog
 ### `alignment`和`distribution`的约束如何添加和管理
 先给一张图看一下什么是`alignment`和`distribution`以及`Spacing`:
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/uistack_hero_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/uistack_hero_2x_04e50947-5aa0-4403-825b-26ba4c1662bd.png)
 
 
 在介绍实现之前，我先介绍一下`StackView`的各种`alignment`模式都是什么效果的：
 
 - **UIStackViewAlignmentFill**：这种就是填充满整个`StackView`了，用得比较多。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_fill_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_fill_2x_8d71867d-e6cf-4063-b337-17dbc815c16e.png)
 
 
 - **UIStackViewAlignmentLeading**：这种是左对齐。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_leading_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_leading_2x_bd31ee78-682d-4e36-990e-d655505fdc95.png)
 
 
 - **UIStackViewAlignmentTop**：这种是上部对齐。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_top_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_top_2x_bfa21a2d-1678-4b11-aa80-0750a4534bfc.png)
 
 
 - **UIStackViewAlignmentFirstBaseline**：这种是让`arrangedSubviews`按照`firstBaseline`对齐。只能出现在水平的`StackView`中。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_firstbaseline_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_firstbaseline_2x_8b939a0f-5296-45d2-836c-aa05b4432e12.png)
 
 
 - **UIStackViewAlignmentCenter**：这种是居中对齐。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_center_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_center_2x_a34c8513-6f32-4cac-8149-4e4c1d206a3a.png)
 
 
 - **UIStackViewAlignmentTrailing**：这种是右部对齐。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_leading%202_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_leading_2_2x_61cdf9c4-2a5b-4a3e-9c13-b0f1fa6bf348.png)
 
 
 - **UIStackViewAlignmentBottom**：这种是底部对齐。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_bottom_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_bottom_2x_2dc738dd-2d3a-4f7b-baee-aa283fe41e9f.png)
 
 
 - **UIStackViewAlignmentLastBaseline**：这种是让`arrangedSubviews`按照`lastBaseline`对齐。同样只能出现在水平的`StackView`中。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_lastbaseline_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/align_lastbaseline_2x_82af7014-4e27-450d-9115-b058217de073.png)
 
 
 下面介绍实现，首先是`alignment`方向，`alignment`方向的约束主要包括4种
@@ -155,7 +155,7 @@ tags: iOS AutoLayout forkingdog
 - **systemConstraints**：它是由`_UILayoutSpacer`来管理的，它管理了spacer与`arrangedSubviews`之间的约束，因为这些约束的`firstItem`都是spacer自身，所以就不需要使用`NSMapTable`而直接是`NSArray`。另外spacer只有在`alignment`不是`UIStackViewAlignmentFill`的时候才会被创建，所以当`alignment`是`UIStackViewAlignmentFill`时，是没有`systemConstraints的`；
 - **alignmentConstraints**：它管理的是`arrangedSubviews`之间的约束，它包括两组`NSMapTable`，根据`alignment`的不同具体的约束也不同，具体的`NSMapTable`的`key`与`alignment`及`axis`的关系如下表：
 
-![image](http://i8.tietuku.com/0aca68eeda40a027.jpg)
+![](https://oac67o3cg.qnssl.com/1475116676.png )
 
 可以看到除了`UIStackViewAlignmentFill`模式以外，都会有一个`Ambiguity Suppression`的key，这个key对应的`NSMapTable`的就管理了前面提到的那些低优先级防止布局时出现模棱两可状态的约束。此外`Baseline`相关的约束是只有在`axis`为`Horizontal`时才会有的，并且`UIStackViewAlignmentFirstBaseline`和`UIStackViewAlignmentTop`，`UIStackViewAlignmentLastBaseline`和`UIStackViewAlignmentBottom`的key值是相同的。
 
@@ -178,18 +178,18 @@ tags: iOS AutoLayout forkingdog
     if (self.mutableItems.count == 0) {
         return;
     }
-    
+
     if (self.spanningLayoutGuide && self.spanningGuideConstraintsNeedUpdate) {
         [self.canvas removeConstraints:self.spanningLayoutGuide.systemConstraints];
         [self.spanningLayoutGuide.systemConstraints removeAllObjects];
-        
+
         //FDSV-spanning-fit
         NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.spanningLayoutGuide attribute:self.spanningLayoutGuide.isHorizontal ? NSLayoutAttributeWidth : NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0];
         constraint.priority = 51;
         constraint.identifier = @"FDSV-spanning-fit";
         [self.canvas addConstraint:constraint];
         [self.spanningLayoutGuide.systemConstraints addObject:constraint];
-        
+
         //FDSV-spanning-boundary
         [self.mutableItems enumerateObjectsUsingBlock:^(UIView *item, NSUInteger idx, BOOL *stop) {
             NSLayoutConstraint *minConstraint = [NSLayoutConstraint constraintWithItem:self.spanningLayoutGuide attribute:self.minAttributeForCanvasConnections relatedBy:[self layoutRelationForItemConnectionForAttribute:self.minAttributeForCanvasConnections] toItem:item attribute:self.minAttributeForCanvasConnections multiplier:1 constant:0];
@@ -197,7 +197,7 @@ tags: iOS AutoLayout forkingdog
             minConstraint.priority = 999.5;
             [self.canvas addConstraint:minConstraint];
             [self.spanningLayoutGuide.systemConstraints addObject:minConstraint];
-            
+
             NSLayoutConstraint *maxConstraint = [NSLayoutConstraint constraintWithItem:self.spanningLayoutGuide attribute:self.maxAttributeForCanvasConnections relatedBy:[self layoutRelationForItemConnectionForAttribute:self.maxAttributeForCanvasConnections] toItem:item attribute:self.maxAttributeForCanvasConnections multiplier:1 constant:0];
             maxConstraint.identifier = @"FDSV-spanning-boundary";
             maxConstraint.priority = 999.5;
@@ -216,10 +216,10 @@ tags: iOS AutoLayout forkingdog
     if (self.mutableItems.count == 0) {
         return;
     }
-    
+
     [self.canvas removeConstraints:self.canvasConnectionConstraints];
     [self.canvasConnectionConstraints removeAllObjects];
-    
+
     NSArray<NSNumber *> *canvasAttributes = @[@(self.minAttributeForCanvasConnections), @(self.maxAttributeForCanvasConnections)];
     if (self.alignment == UIStackViewAlignmentCenter) {
         canvasAttributes = [canvasAttributes arrayByAddingObject:@(self.centerAttributeForCanvasConnections)];
@@ -230,7 +230,7 @@ tags: iOS AutoLayout forkingdog
         [self.canvas addConstraint:canvasFitConstraint];
         [self.canvasConnectionConstraints addObject:canvasFitConstraint];
     }
-    
+
     [canvasAttributes enumerateObjectsUsingBlock:^(NSNumber *canvasAttribute, NSUInteger idx, BOOL *stop) {
         NSLayoutAttribute attribute = canvasAttribute.integerValue;
         NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:[self viewOrGuideForLocationAttribute:attribute] attribute:attribute relatedBy:[self layoutRelationForCanvasConnectionForAttribute:attribute] toItem:self.canvas attribute:attribute multiplier:1 constant:0];
@@ -253,12 +253,12 @@ tags: iOS AutoLayout forkingdog
     if (self.mutableItems.count == 0) {
         return;
     }
-    
+
     [self.alignmentConstraints setObject:[NSMapTable weakToWeakObjectsMapTable] forKey:self.alignmentConstraintsFirstKey];
     [self.alignmentConstraints setObject:[NSMapTable weakToWeakObjectsMapTable] forKey:self.alignmentConstraintsSecondKey];
     [self.canvas removeConstraints:self.hiddingDimensionConstraints.fd_allObjects];
     [self.hiddingDimensionConstraints removeAllObjects];
-    
+
     UIView *guardView = self.mutableItems.firstObject;
     [self.mutableItems enumerateObjectsUsingBlock:^(UIView *item, NSUInteger idx, BOOL *stop) {
         if (self.alignment != UIStackViewAlignmentFill) {
@@ -296,7 +296,7 @@ tags: iOS AutoLayout forkingdog
 
 如果`alignment`不是`UIStackViewAlignmentFill`模式的话，就会给`arrangedSubview`创建一个`dimensionAttribute`为`0`的低优先级约束，称为`ambiguitySuppressionConstraint`放在上图中`key`为`Ambiguity Suppression`的`NSMapTable`中。
 
-- - - - - - - - - 
+- - - - - - - - -
 
 现在解释一下[本文章`Part 1`](http://blog.wtlucky.com/blog/2015/10/09/fdstackview-downward-compatible-uistackview-part-1/)中最后提到的`UIStackView`当`alignment`为`UIStackViewAlignmentFill`时，最高视图隐藏掉，而其余视图没有变成第二个的视图的高度的`bug`。原因就是在`UIStackView`的中实现中`AlignmentLayoutArrangement`是没有管理`hiddingDimensionConstraints`的，所以当视图被隐藏了后，那个视图被添加了一个宽为`0`的约束，视觉上看不到了，但是高方向的约束仍然存在，所以仍然会撑开`StackView`，所以在`FDStackView`中我们在`alignment`方向上同时增加了`hiddingDimensionConstraints`，视图被`hidden`后，会在高度方向上也给他加上一个高`0`为的约束，而且这个优先级也很有讲究需要跟它的`contentCompressionResistancePriority`设为一样，这样才不会在`AutoLayout`布局系统中当用户人为添加一个高度约束后产生冲突。
 
@@ -304,4 +304,4 @@ tags: iOS AutoLayout forkingdog
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

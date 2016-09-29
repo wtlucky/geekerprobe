@@ -18,7 +18,7 @@ tags: iOS Design
 
 ####观察者模式类图####
 
-{% img http://imgchr.com/images/Observer.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475114496.png %}
 
 ####观察者模式说明####
 
@@ -30,7 +30,7 @@ tags: iOS Design
  定义被观察者自己的业务逻辑，同时定义对哪些事件进行通知。
 + ConcreteObserver具体的观察者
  每个观察者在接收到消息后的处理反应应是不同的，各个观察者有自己的处理逻辑。
- 
+
 ####观察者模式的优点####
 
 1. 观察者和被观察者之间是抽象耦合
@@ -142,23 +142,23 @@ int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
-        
+
         // insert code here...
         Teacher *t = [[Teacher alloc]initWtihName:@"teacher" andTel:@"123456"];
         Student *s1 = [[Student alloc]initWithName:@"Student1"];
         Student *s2 = [[Student alloc]initWithName:@"Student2"];
-        
+
         [t addObserver:s1];
         [t addObserver:s2];
-        
+
         NSLog(@"%@ %@", s1.Ttel, s2.Ttel);
-        
+
         t.tel = @"654321";
-        
+
         [t noticeObservers];
-        
+
         NSLog(@"%@ %@", s1.Ttel, s2.Ttel);
-        
+
     }
     return 0;
 }

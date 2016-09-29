@@ -53,4 +53,4 @@ NSLog(@“%@”, paths); // [@“This”, @“Is”, @“Path”, @“String”]
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

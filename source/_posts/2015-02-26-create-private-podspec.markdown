@@ -247,31 +247,31 @@ Pod::Spec.new do |s|
   #  'PodTestLibrary' => ['Pod/Assets/*.png']
   #}
   #s.public_header_files = 'Pod/Classes/**/*.h'
-  
+
   s.subspec 'NetWorkEngine' do |networkEngine|
       networkEngine.source_files = 'Pod/Classes/NetworkEngine/**/*'
       networkEngine.public_header_files = 'Pod/Classes/NetworkEngine/**/*.h'
       networkEngine.dependency 'AFNetworking', '~> 2.3'
   end
-  
+
   s.subspec 'DataModel' do |dataModel|
       dataModel.source_files = 'Pod/Classes/DataModel/**/*'
       dataModel.public_header_files = 'Pod/Classes/DataModel/**/*.h'
   end
-  
+
   s.subspec 'CommonTools' do |commonTools|
       commonTools.source_files = 'Pod/Classes/CommonTools/**/*'
       commonTools.public_header_files = 'Pod/Classes/CommonTools/**/*.h'
       commonTools.dependency 'OpenUDID', '~> 1.0.0'
   end
-  
+
   s.subspec 'UIKitAddition' do |ui|
       ui.source_files = 'Pod/Classes/UIKitAddition/**/*'
       ui.public_header_files = 'Pod/Classes/UIKitAddition/**/*.h'
       ui.resource = "Pod/Assets/MLSUIKitResource.bundle"
       ui.dependency 'PodTestLibrary/CommonTools'
   end
-  
+
   s.frameworks = 'UIKit'
   #s.dependency 'AFNetworking', '~> 2.3'
   #s.dependency 'OpenUDID', '~> 1.0.0'
@@ -367,4 +367,4 @@ wtlucky@wtluckydeMacBook-Pro:~/.cocoapods/repos/WTSpecs$ git push origin master
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

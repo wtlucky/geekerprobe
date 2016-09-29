@@ -88,14 +88,14 @@ __attribute__((constructor)) static void FDStackViewPatchEntry(void) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         @autoreleasepool {
-            
+
             // >= iOS9.
             if (objc_getClass("UIStackView")) {
                 return;
             }
-            
+
             Class *stackViewClassLocation = NULL;
-            
+
 #if TARGET_CPU_ARM
             __asm("movw %0, :lower16:(_OBJC_CLASS_UIStackView-(LPC0+4))\n"
                   "movt %0, :upper16:(_OBJC_CLASS_UIStackView-(LPC0+4))\n"
@@ -113,7 +113,7 @@ __attribute__((constructor)) static void FDStackViewPatchEntry(void) {
 #else
 #error Unsupported CPU
 #endif
-            
+
             if (stackViewClassLocation && !*stackViewClassLocation) {
                 Class class = objc_allocateClassPair(FDStackView.class, "UIStackView", 0);
                 if (class) {
@@ -140,7 +140,7 @@ __asm(
        this is a data section for objc2 class references with the following attributes:
        * regular: "A regular section may contain any kind of data and gets no special processing from the link editor. This is the default section type. Examples of regular sections include program instructions or initialized data."
        * no_dead_strip: "The no_dead_strip section attribute specifies that a particular section must not be dead-stripped."
-       
+
        Documentation can be found here: https://developer.apple.com/library/mac/#documentation/developertools/Reference/Assembler/040-Assembler_Directives/asm_directives.html
        */
       ".section        __DATA,__objc_classrefs,regular,no_dead_strip\n"
@@ -173,8 +173,8 @@ no_dead_strip:一个no_dead_strip区间标识出那些一定不能dead_strip的�
 
 接下来的问题是`IB`加载出来的`UIStackView`如何将属性值设置到我们的`FDStackView`上，这个在前面研究是已经有结论，首先需要将`IB`的`build for`做下修改，然后`IB`创建的`UIKit`控件都会由`initWithCoder:`进行初始化，所以所有的信息都在`NSCoder`这个对象中，`NSCoder`提供了一系列的`decode`方法，由于`key`是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个`key`。
 
-{% img http://i3.piimg.com/78279ae5a3ad97b2.jpg %}
-{% img http://i3.piimg.com/c1604a785aacbab9.jpg %}
+{% img https://oac67o3cg.qnssl.com/1475116128.png %}
+{% img https://oac67o3cg.qnssl.com/1475116163.png %}
 
 如此一来就可以直接在`FDStackView`的`initWithCoder:`方法中取到值，再将这几个值赋值即可
 {% codeblock lang:objc %}
@@ -228,4 +228,4 @@ no_dead_strip:一个no_dead_strip区间标识出那些一定不能dead_strip的�
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

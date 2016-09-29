@@ -15,27 +15,27 @@ tags: iOS AutoLayout forkingdog
 
 - **UIStackViewDistributionFill**：这种应该是目前最常用的了，它就是将`arrangedSubviews`填充满整个`StackView`，如果设置了spacing，那么这些`arrangedSubviews`之间的间距就是spacing。如果减去所有的spacing，所有的`arrangedSubview`的固有尺寸(`intrinsicContentSize`)不能填满或者超出`StackView`的尺寸，那就会按照`Hugging`或者`CompressionResistance`的优先级来拉伸或压缩一些`arrangedSubview`。如果出现优先级相同的情况，就按排列顺序来拉伸或压缩。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fill_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/distribute_fillroportionally_2x_4a83cd74-be8d-4ef1-adf9-c5252a1bcc65.png)
 
 
 - **UIStackViewDistributionFillEqually**：这种就是`StackView`的尺寸减去所有的spacing之后均分给`arrangedSubviews`，每个`arrangedSubview`的尺寸是相同的。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fillequally_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/distribute_fillequally_2x_5ccda608-869a-48b9-9515-9b6314d091a9.png)
 
 
 - **UIStackViewDistributionFillProportionally**：这种跟FillEqually差不多，只不过这个不是讲尺寸均分给`arrangedSubviews`，而是根据`arrangedSubviews`的`intrinsicContentSize`按比例分配。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fillroportionally_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/distribute_fillroportionally_2x_4a83cd74-be8d-4ef1-adf9-c5252a1bcc65.png)
 
 
 - **UIStackViewDistributionEqualSpacing**：这种是使`arrangedSubview`之间的spacing相等，但是这个spacing是有可能大于`StackView`所设置的spacing，但是绝对不会小于。这个类型的布局可以这样理解，先按所有的`arrangedSubview`的`intrinsicContentSize`布局，然后余下的空间均分为spacing，如果大约`StackView`设置的spacing那这样就OK了，如果小于就按照`StackView`设置的spacing，然后按照`CompressionResistance`的优先级来压缩一个`arrangedSubview`。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_equalspacing_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/distribute_equalspacing_2x_6668568b-a445-402c-94ae-f5e85b0b10bd.png)
 
 
 - **UIStackViewDistributionEqualCentering**：这种是使`arrangedSubview`的中心点之间的距离相等，这样没两个`arrangedSubview`之间的spacing就有可能不是相等的，但是这个spacing仍然是大于等于`StackView`设置的spacing的，不会是小于。这个类型布局仍然是如果`StackView`有多余的空间会均分给`arrangedSubviews`之间的spacing，如果空间不够那就按照`CompressionResistance`的优先级压缩`arrangedSubview`。
 
-![image](https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_equalcentering_2x.png)
+![image](https://docs-assets.developer.apple.com/published/82128953f6/distribute_equalcentering_2x_7089d0d3-f161-452b-ab3e-9885c7b6101e.png)
 
 
 在介绍`distribution`的约束创建和管理的过程中也涉及到了第二个知识点**`spacing`和`distribution`的关系及约束的创建**的内容，所以这两部都在这里介绍了。
@@ -282,10 +282,10 @@ tags: iOS AutoLayout forkingdog
 
 最后在附一张`UIStackView`及`FDStackView`在不同`iOS`系统上加载运行图：
 
-![image](http://i3.piimg.com/b9e1b58c1529f278.png)
+![](https://oac67o3cg.qnssl.com/1475116763.png )
 
 全文完，转载请注明出处，谢谢阅读。
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )

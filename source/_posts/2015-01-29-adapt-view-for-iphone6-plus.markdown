@@ -49,7 +49,7 @@ tags: iOS AutoLayout SizeClasses
         self.titleLabel.font = [UIFont systemFontOfSize:16.0f];
         self.memberNumLabel.font = [UIFont systemFontOfSize:15.0f];
         self.infoLabel.font = [UIFont systemFontOfSize:13.0f];
-        
+
         self.icoTopConstraint.constant = 8.0f;
         self.nameTopConstraint.constant = 33.0f;
         self.memberCountTopConstraint.constant = 7.0f;
@@ -83,4 +83,4 @@ tags: iOS AutoLayout SizeClasses
 
 ————————————
 
-![Image](http://i4.buimg.com/ccadbd99b4316844.jpg)
+![](https://oac67o3cg.qnssl.com/1475114982.png )
