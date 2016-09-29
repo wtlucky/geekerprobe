@@ -341,7 +341,7 @@
 </span><span class='line'><span class="cm">       this is a data section for objc2 class references with the following attributes:</span>
 </span><span class='line'><span class="cm">       * regular: &quot;A regular section may contain any kind of data and gets no special processing from the link editor. This is the default section type. Examples of regular sections include program instructions or initialized data.&quot;</span>
 </span><span class='line'><span class="cm">       * no_dead_strip: &quot;The no_dead_strip section attribute specifies that a particular section must not be dead-stripped.&quot;</span>
-</span><span class='line'><span class="cm">       </span>
+</span><span class='line'>
 </span><span class='line'><span class="cm">       Documentation can be found here: https://developer.apple.com/library/mac/#documentation/developertools/Reference/Assembler/040-Assembler_Directives/asm_directives.html</span>
 </span><span class='line'><span class="cm">       */</span>
 </span><span class='line'>      <span class="s">&quot;.section        __DATA,__objc_classrefs,regular,no_dead_strip</span><span class="se">\n</span><span class="s">&quot;</span>
@@ -379,8 +379,8 @@
 
 <p>接下来的问题是<code>IB</code>加载出来的<code>UIStackView</code>如何将属性值设置到我们的<code>FDStackView</code>上，这个在前面研究是已经有结论，首先需要将<code>IB</code>的<code>build for</code>做下修改，然后<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，所以所有的信息都在<code>NSCoder</code>这个对象中，<code>NSCoder</code>提供了一系列的<code>decode</code>方法，由于<code>key</code>是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个<code>key</code>。</p>
 
-<p><img src="http://i3.piimg.com/78279ae5a3ad97b2.jpg">
-<img src="http://i3.piimg.com/c1604a785aacbab9.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116128.png">
+<img src="https://oac67o3cg.qnssl.com/1475116163.png"></p>
 
 <p>如此一来就可以直接在<code>FDStackView</code>的<code>initWithCoder:</code>方法中取到值，再将这几个值赋值即可</p>
 
@@ -449,7 +449,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 </div>
 
 
@@ -665,25 +665,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
 <a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 126%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 <a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 126%" href="/tags/design/">Design</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 <a style="font-size: 113%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
 
   </ul>
 </section>

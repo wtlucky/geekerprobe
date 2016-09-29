@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-06-04T16:54:12+08:00</updated>
+  <updated>2016-09-29T10:51:01+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -52,7 +52,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="http://i3.buimg.com/4dab14936f590b88.jpg" alt="image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116928.png" alt="" /></p>
 
 <p>NS对象转为CF对象会出项野指针，逆过来CF转NS对象则有可能会出现内存泄露的问题，具体见下面的<strong>bridge_transfer的介绍。简单来说</strong>bridge就是类型强制转换。</p>
 
@@ -164,11 +164,11 @@
 
 <p>这其中的关系可以用下图来直接说明，记住这张图就可以了：</p>
 
-<p><img src="http://i4.buimg.com/bb1f63613160279c.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116891.png" alt="" /></p>
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -215,7 +215,7 @@
 </ul>
 
 
-<p> <img src="http://i2.buimg.com/bf442d424debe2fa.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116800.png" alt="" /></p>
 
 <ul>
 <li>如果强制需要使用IPv4的地址，苹果官方的适配方法给出了解决方式。<a href="https://developer.apple.com/library/ios/documentation/NetworkingInternetWeb/Conceptual/NetworkingOverview/UnderstandingandPreparingfortheIPv6Transition/UnderstandingandPreparingfortheIPv6Transition.html">Use System APIs to Synthesize IPv6 Addresses</a></li>
@@ -226,7 +226,7 @@
 
 <p>测试验证方式就是通过Mac的共享网络共享一个IPv6的无线网，跟已往创建方式不同的是进入共享时需要按住<code>Option</code>键，不然<code>Create NAT64 Network</code>的选项不会出现</p>
 
-<p><img src="http://i4.buimg.com/ae223a48f5345f80.jpg" alt="image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116819.png" alt="" /></p>
 
 <p>然后开启无线共享，使iPhone连接上分享出来的热点即可
 注：需要将iPhone的蜂窝网络数据关掉，以保证只有通过WiFi在连接网络。</p>
@@ -264,7 +264,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -341,7 +341,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -362,35 +362,35 @@
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fill_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/distribute_fillroportionally_2x_4a83cd74-be8d-4ef1-adf9-c5252a1bcc65.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewDistributionFillEqually</strong>：这种就是<code>StackView</code>的尺寸减去所有的spacing之后均分给<code>arrangedSubviews</code>，每个<code>arrangedSubview</code>的尺寸是相同的。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fillequally_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/distribute_fillequally_2x_5ccda608-869a-48b9-9515-9b6314d091a9.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewDistributionFillProportionally</strong>：这种跟FillEqually差不多，只不过这个不是讲尺寸均分给<code>arrangedSubviews</code>，而是根据<code>arrangedSubviews</code>的<code>intrinsicContentSize</code>按比例分配。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_fillroportionally_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/distribute_fillroportionally_2x_4a83cd74-be8d-4ef1-adf9-c5252a1bcc65.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewDistributionEqualSpacing</strong>：这种是使<code>arrangedSubview</code>之间的spacing相等，但是这个spacing是有可能大于<code>StackView</code>所设置的spacing，但是绝对不会小于。这个类型的布局可以这样理解，先按所有的<code>arrangedSubview</code>的<code>intrinsicContentSize</code>布局，然后余下的空间均分为spacing，如果大约<code>StackView</code>设置的spacing那这样就OK了，如果小于就按照<code>StackView</code>设置的spacing，然后按照<code>CompressionResistance</code>的优先级来压缩一个<code>arrangedSubview</code>。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_equalspacing_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/distribute_equalspacing_2x_6668568b-a445-402c-94ae-f5e85b0b10bd.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewDistributionEqualCentering</strong>：这种是使<code>arrangedSubview</code>的中心点之间的距离相等，这样没两个<code>arrangedSubview</code>之间的spacing就有可能不是相等的，但是这个spacing仍然是大于等于<code>StackView</code>设置的spacing的，不会是小于。这个类型布局仍然是如果<code>StackView</code>有多余的空间会均分给<code>arrangedSubviews</code>之间的spacing，如果空间不够那就按照<code>CompressionResistance</code>的优先级压缩<code>arrangedSubview</code>。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/distribute_equalcentering_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/distribute_equalcentering_2x_7089d0d3-f161-452b-ab3e-9885c7b6101e.png" alt="image" /></p>
 
 <p>在介绍<code>distribution</code>的约束创建和管理的过程中也涉及到了第二个知识点<strong><code>spacing</code>和<code>distribution</code>的关系及约束的创建</strong>的内容，所以这两部都在这里介绍了。</p>
 
@@ -794,13 +794,13 @@
 
 <p>最后在附一张<code>UIStackView</code>及<code>FDStackView</code>在不同<code>iOS</code>系统上加载运行图：</p>
 
-<p><img src="http://i3.piimg.com/b9e1b58c1529f278.png" alt="image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116763.png" alt="" /></p>
 
 <p>全文完，转载请注明出处，谢谢阅读。</p>
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -946,7 +946,7 @@
 
 <p>先给一张图看一下什么是<code>alignment</code>和<code>distribution</code>以及<code>Spacing</code>:</p>
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/uistack_hero_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/uistack_hero_2x_04e50947-5aa0-4403-825b-26ba4c1662bd.png" alt="image" /></p>
 
 <p>在介绍实现之前，我先介绍一下<code>StackView</code>的各种<code>alignment</code>模式都是什么效果的：</p>
 
@@ -955,56 +955,56 @@
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_fill_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_fill_2x_8d71867d-e6cf-4063-b337-17dbc815c16e.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentLeading</strong>：这种是左对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_leading_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_leading_2x_bd31ee78-682d-4e36-990e-d655505fdc95.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentTop</strong>：这种是上部对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_top_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_top_2x_bfa21a2d-1678-4b11-aa80-0750a4534bfc.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentFirstBaseline</strong>：这种是让<code>arrangedSubviews</code>按照<code>firstBaseline</code>对齐。只能出现在水平的<code>StackView</code>中。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_firstbaseline_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_firstbaseline_2x_8b939a0f-5296-45d2-836c-aa05b4432e12.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentCenter</strong>：这种是居中对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_center_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_center_2x_a34c8513-6f32-4cac-8149-4e4c1d206a3a.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentTrailing</strong>：这种是右部对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_leading%202_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_leading_2_2x_61cdf9c4-2a5b-4a3e-9c13-b0f1fa6bf348.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentBottom</strong>：这种是底部对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_bottom_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_bottom_2x_2dc738dd-2d3a-4f7b-baee-aa283fe41e9f.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentLastBaseline</strong>：这种是让<code>arrangedSubviews</code>按照<code>lastBaseline</code>对齐。同样只能出现在水平的<code>StackView</code>中。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_lastbaseline_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_lastbaseline_2x_82af7014-4e27-450d-9115-b058217de073.png" alt="image" /></p>
 
 <p>下面介绍实现，首先是<code>alignment</code>方向，<code>alignment</code>方向的约束主要包括4种</p>
 
@@ -1037,7 +1037,7 @@
 </ul>
 
 
-<p><img src="http://i8.tietuku.com/0aca68eeda40a027.jpg" alt="image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116676.png" alt="" /></p>
 
 <p>可以看到除了<code>UIStackViewAlignmentFill</code>模式以外，都会有一个<code>Ambiguity Suppression</code>的key，这个key对应的<code>NSMapTable</code>的就管理了前面提到的那些低优先级防止布局时出现模棱两可状态的约束。此外<code>Baseline</code>相关的约束是只有在<code>axis</code>为<code>Horizontal</code>时才会有的，并且<code>UIStackViewAlignmentFirstBaseline</code>和<code>UIStackViewAlignmentTop</code>，<code>UIStackViewAlignmentLastBaseline</code>和<code>UIStackViewAlignmentBottom</code>的key值是相同的。</p>
 
@@ -1292,7 +1292,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -1535,7 +1535,7 @@
 </span><span class='line'><span class="cm">       this is a data section for objc2 class references with the following attributes:</span>
 </span><span class='line'><span class="cm">       * regular: &quot;A regular section may contain any kind of data and gets no special processing from the link editor. This is the default section type. Examples of regular sections include program instructions or initialized data.&quot;</span>
 </span><span class='line'><span class="cm">       * no_dead_strip: &quot;The no_dead_strip section attribute specifies that a particular section must not be dead-stripped.&quot;</span>
-</span><span class='line'><span class="cm">       </span>
+</span><span class='line'>
 </span><span class='line'><span class="cm">       Documentation can be found here: https://developer.apple.com/library/mac/#documentation/developertools/Reference/Assembler/040-Assembler_Directives/asm_directives.html</span>
 </span><span class='line'><span class="cm">       */</span>
 </span><span class='line'>      <span class="s">&quot;.section        __DATA,__objc_classrefs,regular,no_dead_strip</span><span class="se">\n</span><span class="s">&quot;</span>
@@ -1573,8 +1573,8 @@
 
 <p>接下来的问题是<code>IB</code>加载出来的<code>UIStackView</code>如何将属性值设置到我们的<code>FDStackView</code>上，这个在前面研究是已经有结论，首先需要将<code>IB</code>的<code>build for</code>做下修改，然后<code>IB</code>创建的<code>UIKit</code>控件都会由<code>initWithCoder:</code>进行初始化，所以所有的信息都在<code>NSCoder</code>这个对象中，<code>NSCoder</code>提供了一系列的<code>decode</code>方法，由于<code>key</code>是字符串，所以可以在汇编代码处直接看到，所以通过加符号断点的方式找到这几个<code>key</code>。</p>
 
-<p><img src="http://i3.piimg.com/78279ae5a3ad97b2.jpg">
-<img src="http://i3.piimg.com/c1604a785aacbab9.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116128.png">
+<img src="https://oac67o3cg.qnssl.com/1475116163.png"></p>
 
 <p>如此一来就可以直接在<code>FDStackView</code>的<code>initWithCoder:</code>方法中取到值，再将这几个值赋值即可</p>
 
@@ -1643,7 +1643,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -1660,7 +1660,7 @@
 
 <p>先贴张图说明一下问题:</p>
 
-<p><img src="http://i3.piimg.com/1cebfcf0129ca844.png"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475115317.png"></p>
 
 <p>可以看到<code>iOS7</code>在使用了<code>autolayout</code>之后，进行<code>transform</code>变幻之后<code>view</code>并没有达到预期效果，而在<code>iOS8</code>和和纯<code>frame</code>布局的情况下是正常的。</p>
 
@@ -1670,11 +1670,11 @@
 
 <p>通过<code>Reveal</code>查看可以看到:</p>
 
-<p><img src="http://i3.piimg.com/dc322ed71cc0d21b.png"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475115353.png"></p>
 
 <p>使用<code>autolayout</code>的<code>view</code>跟他的参照<code>View</code>相比只移动了<code>（-10，-10）</code>,而且它的布局位置也发生了偏移<code>（10，10）</code>，在<code>iOS8</code>下查看，会发现布局位置并没有移动，跟参照<code>View</code>完全一致</p>
 
-<p><img src="http://i3.piimg.com/9274b80b9704dc37.png"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475115374.png"></p>
 
 <p>由此可以得到的结论就是，在<code>iOS7</code>和<code>8</code>上使用<code>autolayout</code>布局的<code>view</code>的<code>center</code>属性的位置发生了改变。</p>
 
@@ -1707,7 +1707,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -2103,7 +2103,7 @@
 <span class='line-number'>52</span>
 <span class='line-number'>53</span>
 <span class='line-number'>54</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Pod</span><span class="p">:</span><span class="ss">:Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">name</span>             <span class="o">=</span> <span class="s2">&quot;PodTestLibrary&quot;</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">version</span>          <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
 </span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">summary</span>          <span class="o">=</span> <span class="s2">&quot;Just Testing.&quot;</span>
@@ -2292,7 +2292,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -2350,17 +2350,17 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="n">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="bp">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">fequal</span><span class="p">(</span><span class="n">ScreenWidth</span><span class="p">,</span> <span class="mf">414.0f</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">16.0f</span><span class="p">];</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">memberNumLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">15.0f</span><span class="p">];</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">infoLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nl">systemFontOfSize:</span><span class="mf">13.0f</span><span class="p">];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIFont</span> <span class="nl">systemFontOfSize</span><span class="p">:</span><span class="mf">16.0f</span><span class="p">];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">memberNumLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIFont</span> <span class="nl">systemFontOfSize</span><span class="p">:</span><span class="mf">15.0f</span><span class="p">];</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">infoLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIFont</span> <span class="nl">systemFontOfSize</span><span class="p">:</span><span class="mf">13.0f</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">icoTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">8.0f</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">nameTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">33.0f</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">memberCountTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">7.0f</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">infoTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">10.0f</span><span class="p">;</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">icoTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">8.0f</span><span class="p">;</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">nameTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">33.0f</span><span class="p">;</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">memberCountTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">7.0f</span><span class="p">;</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">infoTopConstraint</span><span class="p">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">10.0f</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -2390,7 +2390,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -2407,27 +2407,27 @@
 
 <p>首先我们创建一个<code>SingleView</code>的工程，项目使用<code>StoryBoard</code>，（使用<code>Xib</code>也无所谓，因为有些老的项目可能还没有使用到<code>StoryBoard</code>），然后创建一个<code>CustomView</code>作为我们的自定义视图。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-1.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114657.png"></p>
 
 <p>有时对于复杂的界面我们可能会拆分出来对它进行单独处理，又有可能它的界面布局很复杂，这时我们就会用<code>Interface Builder</code>对它的布局进行处理。这里的<code>CustomView</code>就是这样一个视图，所以我们为它创建一个<code>xib</code>文件，我们通常的作法就是把<code>xib</code>中的<code>View</code>的<code>custom class</code>更改为我们的<code>CustomView</code>。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-2.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114680.png"></p>
 
 <p>接下来对我们的界面进行布局，并连接输出口，编写响应逻辑，这里我放了一个<code>ImageView</code>和一个<code>Label</code>在这里，并把<code>View</code>的背景色设置为浅灰色。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-3.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114702.png"></p>
 
 <p>自定义的<code>View</code>制作完成，回到我们<code>ViewController</code>的<code>xib</code>文件，拖入两个<code>View</code>并把他们的<code>custom class</code>更改为<code>CustomView</code>。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-11.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114726.png"></p>
 
 <p>这时，我们算是工作做完了，运行程序，结果悲剧了，怎么不是我们想要的结果，为什么只生成了两个空白的视图，我们视图上的图片和文字哪里去了？</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-5.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114746.png"></p>
 
 <p>在<code>CustomView</code>中的<code>awakeFromeNib</code>方法中增加断点调试发现，在<code>CustomView</code>初始化完成后，<code>ImageView</code>和<code>Label</code>并没有被初始化，他们仍然是<code>nil</code>。这就是在嵌套使用<code>xib</code>自定义视图时非常容易出现的问题，我们觉得被嵌套的视图能够正常显示出来，但是实际上它并没有被按照我们在<code>xib</code>上指定的方式被初始化。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-6.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114767.png"></p>
 
 <h2>Solution</h2>
 
@@ -2443,7 +2443,7 @@
 
 <p>先来介绍第一种方法，很简单，就是找到<code>xib</code>文件，生成对象，设置属性，<code>addsubview</code>到视图上。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-7.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114786.png"></p>
 
 <h3>NO 2.</h3>
 
@@ -2474,11 +2474,11 @@
 
 <p>此外，还要这里的输出口以及设置<code>custom class</code>的位置跟第一种方式有所不同，这里需要取消掉<code>xib</code>中<code>view</code>的<code>custom class</code>，再将跟它连接的图片与文字的输出口取消掉，在这里这个<code>view</code>只是被当做一个容器来处理，它跟<code>Customview</code>没有直接关系，它将来会被<code>addSubview</code>到<code>CustomView</code>上，除此之外还要把<code>xib</code>的<code>File's ower</code>的<code>custom class</code>改成<code>CustomView</code>，表示这个<code>xib</code>文件的持有者是<code>CustomView</code>。再把它与图片和文字通过输出口连接起来。</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-8.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114808.png"></p>
 
 <p>这个时候在运行程序就看到了我们想要的结果了。^_^</p>
 
-<p><img src="http://imgchr.com/images/QQ20140810-10.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114826.png"></p>
 
 <p>其实想要实现第二种解决方案所要的效果，还有一种方式，它是通过重载<code>awakeAfterUsingCoder:</code>方法来实现的，这个方法的返回值会替换掉真正的加载对象，所以在具体的加载<code>CustomView</code>的方式又与第一种相同，所以<code>xib</code>的输出口连接与<code>custom class</code>的设置也与第一种解决方案相同。不过这种方式是更复杂也更难于理解的，不推荐使用，因为上一个方法就能很好的解决这个问题了，这里只是贴出这个方法的代码，有想仔细研究的请参看文章底部的参考文章。</p>
 
@@ -2501,24 +2501,24 @@
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span> <span class="nf">awakeAfterUsingCoder:</span><span class="p">(</span><span class="n">NSCoder</span><span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kt">BOOL</span> <span class="n">isJustAPlaceholder</span> <span class="o">=</span> <span class="p">([[</span><span class="n">self</span> <span class="n">subviews</span><span class="p">]</span> <span class="n">count</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span> <span class="nf">awakeAfterUsingCoder:</span><span class="p">(</span><span class="bp">NSCoder</span><span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">BOOL</span> <span class="n">isJustAPlaceholder</span> <span class="o">=</span> <span class="p">([[</span><span class="nb">self</span> <span class="n">subviews</span><span class="p">]</span> <span class="n">count</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">isJustAPlaceholder</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">CustomView</span><span class="o">*</span> <span class="n">theRealThing</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="n">class</span><span class="p">]</span> <span class="n">getClassObjectFromNib</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">CustomView</span><span class="o">*</span> <span class="n">theRealThing</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">self</span> <span class="k">class</span><span class="p">]</span> <span class="n">getClassObjectFromNib</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="n">theRealThing</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">theRealThing</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="c1">// make compatible with Auto Layout</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">theRealThing</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="n">NO</span><span class="p">;</span>
+</span><span class='line'>        <span class="nb">self</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">theRealThing</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="c1">// convince ARC that we&#39;re legit, unnecessary since at least Xcode 4.5</span>
-</span><span class='line'>        <span class="n">CFRelease</span><span class="p">((</span><span class="n">__bridge</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">CFRetain</span><span class="p">((</span><span class="n">__bridge</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">theRealThing</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">CFRelease</span><span class="p">((</span><span class="k">__bridge</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="nb">self</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">CFRetain</span><span class="p">((</span><span class="k">__bridge</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">theRealThing</span><span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="k">return</span> <span class="n">theRealThing</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -2531,7 +2531,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 ]]></content>
   </entry>
   
@@ -3303,7 +3303,7 @@ done
 
 <h4>策略模式类图</h4>
 
-<p><img src="http://i3.piimg.com/7f2860a7f178473f.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114575.png"></p>
 
 <h4>策略模式说明</h4>
 
@@ -3520,24 +3520,22 @@ done
 </span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="n">Car</span> <span class="o">*</span><span class="n">car</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Car</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
 </span><span class='line'>        <span class="n">Bicycle</span> <span class="o">*</span><span class="n">bicycle</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Bicycle</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
 </span><span class='line'>        <span class="n">Train</span> <span class="o">*</span><span class="n">train</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Train</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
 </span><span class='line'>        <span class="n">Person</span> <span class="o">*</span><span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel:</span><span class="n">car</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel:</span><span class="n">bicycle</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel:</span><span class="n">train</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel</span><span class="p">:</span><span class="n">car</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel</span><span class="p">:</span><span class="n">bicycle</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">travel</span><span class="p">:</span><span class="n">train</span><span class="p">];</span>
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
 
 ]]></content>
   </entry>
@@ -3899,7 +3897,7 @@ done
 
 <h4>适配器模式类图</h4>
 
-<p><img src="http://i3.piimg.com/643d75b493af716d.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114532.png"></p>
 
 <h4>适配器模式说明</h4>
 
@@ -4076,10 +4074,10 @@ done
 </span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="n">Adaptee</span> <span class="o">*</span><span class="n">adaptee</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adaptee</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="kt">id</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span> <span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adapter</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithAdaptee:</span><span class="n">adaptee</span><span class="p">];</span>
+</span><span class='line'>        <span class="kt">id</span><span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span> <span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Adapter</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithAdaptee</span><span class="p">:</span><span class="n">adaptee</span><span class="p">];</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="p">[</span><span class="n">object</span> <span class="n">userExpectInterface</span><span class="p">];</span>
 </span><span class='line'>
@@ -4108,7 +4106,7 @@ done
 
 <h4>观察者模式类图</h4>
 
-<p><img src="http://imgchr.com/images/Observer.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114496.png"></p>
 
 <h4>观察者模式说明</h4>
 
@@ -4350,15 +4348,15 @@ done
 </span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="c1">// insert code here...</span>
-</span><span class='line'>        <span class="n">Teacher</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Teacher</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWtihName:</span><span class="s">@&quot;teacher&quot;</span> <span class="nl">andTel:</span><span class="s">@&quot;123456&quot;</span><span class="p">];</span>
-</span><span class='line'>        <span class="n">Student</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithName:</span><span class="s">@&quot;Student1&quot;</span><span class="p">];</span>
-</span><span class='line'>        <span class="n">Student</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithName:</span><span class="s">@&quot;Student2&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Teacher</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Teacher</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWtihName</span><span class="p">:</span><span class="s">@&quot;teacher&quot;</span> <span class="nl">andTel</span><span class="p">:</span><span class="s">@&quot;123456&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Student</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithName</span><span class="p">:</span><span class="s">@&quot;Student1&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">Student</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="nl">initWithName</span><span class="p">:</span><span class="s">@&quot;Student2&quot;</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="p">[</span><span class="n">t</span> <span class="nl">addObserver:</span><span class="n">s1</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">t</span> <span class="nl">addObserver:</span><span class="n">s2</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">t</span> <span class="nl">addObserver</span><span class="p">:</span><span class="n">s1</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">t</span> <span class="nl">addObserver</span><span class="p">:</span><span class="n">s2</span><span class="p">];</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@ %@&quot;</span><span class="p">,</span> <span class="n">s1</span><span class="p">.</span><span class="n">Ttel</span><span class="p">,</span> <span class="n">s2</span><span class="p">.</span><span class="n">Ttel</span><span class="p">);</span>
 </span><span class='line'>
@@ -4398,7 +4396,7 @@ done
 
 <h4>单例模式类图</h4>
 
-<p><img src="http://imgchr.com/images/singleton.jpg"></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114445.png"></p>
 
 <h4>单例模式介绍</h4>
 
@@ -4475,42 +4473,42 @@ done
 <span class='line-number'>39</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">static</span> <span class="n">Singleton</span> <span class="o">*</span><span class="n">instance</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">Singleton</span> <span class="o">*</span><span class="p">)</span><span class="nf">sharedInstance</span>
+</span><span class='line'><span class="p">+</span> <span class="p">(</span><span class="n">Singleton</span> <span class="o">*</span><span class="p">)</span><span class="nf">sharedInstance</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">instance</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">instance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">super</span> <span class="nl">allocWithZone:</span><span class="nb">NULL</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">instance</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">super</span> <span class="nl">allocWithZone</span><span class="p">:</span><span class="nb">NULL</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">instance</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">allocWithZone:</span><span class="p">(</span><span class="n">NSZone</span> <span class="o">*</span><span class="p">)</span><span class="nv">zone</span>
+</span><span class='line'><span class="p">+</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">allocWithZone:</span><span class="p">(</span><span class="n">NSZone</span> <span class="o">*</span><span class="p">)</span><span class="nv">zone</span>
 </span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">[[</span><span class="n">self</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="n">retain</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[[</span><span class="nb">self</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="k">retain</span><span class="p">];</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">copyWithZone:</span><span class="p">(</span><span class="n">NSZone</span> <span class="o">*</span><span class="p">)</span><span class="nv">zone</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">copyWithZone:</span><span class="p">(</span><span class="n">NSZone</span> <span class="o">*</span><span class="p">)</span><span class="nv">zone</span>
 </span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">retain</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">retain</span>
 </span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">retainCount</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="bp">NSUInteger</span><span class="p">)</span><span class="nf">retainCount</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">NSUIntegerMax</span><span class="p">;</span>  <span class="c1">//denotes an object that cannot be released</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">release</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">release</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="c1">//do nothing</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">autorelease</span>
+</span><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">autorelease</span>
 </span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -5313,11 +5311,11 @@ done
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">Singleton</span> <span class="o">*</span><span class="p">)</span><span class="nf">sharedInstance</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">+</span> <span class="p">(</span><span class="n">Singleton</span> <span class="o">*</span><span class="p">)</span><span class="nf">sharedInstance</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="k">static</span> <span class="n">Singleton</span> <span class="o">*</span><span class="n">instance</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
 </span><span class='line'>        <span class="n">instance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Singleton</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
 </span><span class='line'>    <span class="p">});</span>

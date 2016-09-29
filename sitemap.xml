@@ -107,6 +107,21 @@
     <loc>http://blog.wtlucky.com/archives/tags.html</loc>
   </url>
   <url>
+    <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/ios-development/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/design-pattern/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/bash-shell/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/technical-research/</loc>
+  </url>
+  <url>
     <loc>http://blog.wtlucky.com/tags/github/</loc>
   </url>
   <url>
@@ -164,18 +179,9 @@
     <loc>http://blog.wtlucky.com/tags/forkingdog/</loc>
   </url>
   <url>
-    <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>
+    <loc>http://blog.wtlucky.com/posts/2/</loc>
   </url>
   <url>
-    <loc>http://blog.wtlucky.com/blog/categories/ios-development/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/design-pattern/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/bash-shell/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/technical-research/</loc>
+    <loc>http://blog.wtlucky.com/posts/3/</loc>
   </url>
 </urlset>

@@ -244,7 +244,7 @@
 
 <p>先给一张图看一下什么是<code>alignment</code>和<code>distribution</code>以及<code>Spacing</code>:</p>
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/uistack_hero_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/uistack_hero_2x_04e50947-5aa0-4403-825b-26ba4c1662bd.png" alt="image" /></p>
 
 <p>在介绍实现之前，我先介绍一下<code>StackView</code>的各种<code>alignment</code>模式都是什么效果的：</p>
 
@@ -253,56 +253,56 @@
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_fill_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_fill_2x_8d71867d-e6cf-4063-b337-17dbc815c16e.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentLeading</strong>：这种是左对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_leading_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_leading_2x_bd31ee78-682d-4e36-990e-d655505fdc95.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentTop</strong>：这种是上部对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_top_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_top_2x_bfa21a2d-1678-4b11-aa80-0750a4534bfc.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentFirstBaseline</strong>：这种是让<code>arrangedSubviews</code>按照<code>firstBaseline</code>对齐。只能出现在水平的<code>StackView</code>中。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_firstbaseline_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_firstbaseline_2x_8b939a0f-5296-45d2-836c-aa05b4432e12.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentCenter</strong>：这种是居中对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_center_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_center_2x_a34c8513-6f32-4cac-8149-4e4c1d206a3a.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentTrailing</strong>：这种是右部对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_leading%202_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_leading_2_2x_61cdf9c4-2a5b-4a3e-9c13-b0f1fa6bf348.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentBottom</strong>：这种是底部对齐。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_bottom_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_bottom_2x_2dc738dd-2d3a-4f7b-baee-aa283fe41e9f.png" alt="image" /></p>
 
 <ul>
 <li><strong>UIStackViewAlignmentLastBaseline</strong>：这种是让<code>arrangedSubviews</code>按照<code>lastBaseline</code>对齐。同样只能出现在水平的<code>StackView</code>中。</li>
 </ul>
 
 
-<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIStackView_Class_Reference/Art/align_lastbaseline_2x.png" alt="image" /></p>
+<p><img src="https://docs-assets.developer.apple.com/published/82128953f6/align_lastbaseline_2x_82af7014-4e27-450d-9115-b058217de073.png" alt="image" /></p>
 
 <p>下面介绍实现，首先是<code>alignment</code>方向，<code>alignment</code>方向的约束主要包括4种</p>
 
@@ -335,7 +335,7 @@
 </ul>
 
 
-<p><img src="http://i8.tietuku.com/0aca68eeda40a027.jpg" alt="image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475116676.png" alt="" /></p>
 
 <p>可以看到除了<code>UIStackViewAlignmentFill</code>模式以外，都会有一个<code>Ambiguity Suppression</code>的key，这个key对应的<code>NSMapTable</code>的就管理了前面提到的那些低优先级防止布局时出现模棱两可状态的约束。此外<code>Baseline</code>相关的约束是只有在<code>axis</code>为<code>Horizontal</code>时才会有的，并且<code>UIStackViewAlignmentFirstBaseline</code>和<code>UIStackViewAlignmentTop</code>，<code>UIStackViewAlignmentLastBaseline</code>和<code>UIStackViewAlignmentBottom</code>的key值是相同的。</p>
 
@@ -590,7 +590,7 @@
 
 <p>————————————</p>
 
-<p><img src="http://i4.buimg.com/ccadbd99b4316844.jpg" alt="Image" /></p>
+<p><img src="https://oac67o3cg.qnssl.com/1475114982.png" alt="" /></p>
 </div>
 
 
@@ -806,25 +806,25 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
+<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 100%" href="/tags/block/">block</a>
 <a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 126%" href="/tags/design/">Design</a>
-<a style="font-size: 113%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
 <a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
-<a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 126%" href="/tags/design/">Design</a>
+<a style="font-size: 113%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
 
   </ul>
 </section>
