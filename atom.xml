@@ -4,7 +4,7 @@
   <title><![CDATA[GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-09-29T10:51:01+08:00</updated>
+  <updated>2016-10-11T18:29:00+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -12,6 +12,175 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[懒人福利：用脚本来修改Xcode工程]]></title>
+    <link href="http://blog.wtlucky.com/blog/2016/10/10/use-script-to-modify-xcode-project/"/>
+    <updated>2016-10-10T17:59:55+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2016/10/10/use-script-to-modify-xcode-project</id>
+    <content type="html"><![CDATA[<p>懒，基本上是每个程序员同学公有的特性。也就是因为懒才造就了现在众多先进的发明，才让我们的生活省时省力起来。写这篇文章，也是因为自己犯懒，不想总是重复性的干一些固定的工作，所以通过脚本来完成。文章主要介绍了<a href="http://rubygems.org/gems/xcodeproj">Xcodeproj</a>这个<code>Ruby</code>的工具包，为了使用这个工具包我还现学现卖了<code>Ruby</code>这门语言，算是个入门级选手了吧，其实真的没有想象中的那么复杂。
+如果已经是能够熟练使用<code>Xcodeproj</code>的选手，就可以不用继续往下看了。^_^</p>
+
+<!-- More -->
+
+
+<p>先介绍下背景，我们的项目<code>Model</code>层使用了自己的ORM框架，同时也使用了<code>Protocol Buffer</code>，这也就导致了每个版本之间有新增接口，或者接口文档有变化的时候，都需要重新生成对应的<code>Model</code>文件。而这些文件每次都要手动替换<code>Xcode</code>中的现有文件，这其实是一件很枯燥很麻烦的时间，而且非常容易出错，漏掉一个文件或者少替换一个文件都是很棘手的问题。虽然我现在编写了一部分<code>Shell</code>脚本，可以直接将新生成的文件替换到<code>Xcode</code>工程所对应的物理目录中。但是即使如此，还需要对<code>Xcode</code>的工程文件作出处理，增加新文件的引用，如果不增加引用，只是把文件丢到物理目录上的话，<code>Xcode</code>工程并不会索引这个文件。同时像PB那些文件还需要添加<code>-fno-objc-arc</code>这个编译指示符，而这些文件往往有几十个之多，简直要爆炸！(不过还好有搜索批量添加的功能，暂时忍了。。)</p>
+
+<p>后来就想，物理文件通过<code>Shell</code>脚本搞定了，那剩下的这个能不能也通过工具给搞定？有两个思路。</p>
+
+<h2>1. Xcode Extension</h2>
+
+<p>最近比较流行的就是<code>Xcode Extension</code>了，它真的是无所不能，各种各样的插件都已经存在了，我就觉得这个一定行。所以开始着手干，后来发现这个需求其实是太复杂了点儿。</p>
+
+<p>首先<code>Xcode</code>插件的开发需要监测所有Xcode发出的<code>Notifications</code>，然后摘取出自己需要的，并弄清楚各个参数的类型及关系，同时还需要一定的逆向功底，找到对应Xcode控件的实现方法及如何使用，我自己尝试了下，虽然找到了几个关键的notification，但是Xcode文件管理那里各个元素分别对应何种类，着实让我头大了一把。后来随着Xcode8的发布，苹果禁掉了第三方的插件，所以这一条路自然也就走不下去了。</p>
+
+<h2>2. pbxproj文件</h2>
+
+<p>做过多人协作开发的同学都会遇到代码冲突的情况，而所有与工程相关的冲突都会体现在pbxproj这个文件上，这个文件就处在.xcodeproj这个目录中，这个文件其实就是整个Xcode工程的配置文件，所有的文件引用，group关系，build设置都在这里面能够找到。仔细去看他就是一个plist文件也就是一个特殊的xml文件。它的编写有着一定的规律。</p>
+
+<p>所以通过对这个文件的编写也能够达到同样的目的，所以尝试着手搓一下。然而当我真正分析这个文件的时候就发现，随随便便一个工程这个文件就有着动辄上千行文字，而且内部不同数据之间的格式也都不近相同，然后每个数据之前都有一个24位的16进制数字。这个数字的生成还是一个迷之存在，感觉应该是个UUID。</p>
+
+<p>截取部分文件的内容如图所示：
+<img src="https://oac67o3cg.qnssl.com/1476154768.png" alt="" /></p>
+
+<p>最终经过尝试，这个文件处理啊起来也不是十分的容易，不过我在写这篇文章的时候看到一篇研究
+pbxproj文件的文章，讲的十分深入透彻。<a href="http://yulingtianxia.com/blog/2016/09/28/Let-s-Talk-About-project-pbxproj/">Let&rsquo;s Talk About project.pbxproj</a>，对这个文件感兴趣的同学推荐去阅读。</p>
+
+<h3>先人的轮子</h3>
+
+<p>正在上面两种策略发愁的时候，出现了柳暗花明又一村的事情，最近在阅读一篇博客的时候发现了这么一篇文章<a href="http://draveness.me/bei-xcodeproj-keng-de-zhe-ji-tian/">使用代码为 Xcode 工程添加文件</a>，介绍的就是这个一个需求，才知道了又<code>Xcodeproj</code>这样一个前人已经造好的轮子了。后来一想也确实是，CocoaPods能够通过脚本完成项目工程的修改，他们一定已经做好这件事情了。</p>
+
+<p>在发现这个新大陆之后，立马就开始着手准备编写适合自己需求的脚本文件。我在比之前那个作者写起来方便多了，因为现在这个工具有了完善的<a href="http://www.rubydoc.info/gems/xcodeproj">文档支持</a>。这为开发提供了很大的便捷性。</p>
+
+<p>我自己的需求整体上看其实就需要干两件事，因为所有文件事先已经全部移动到物理目录了，所以首先要把Xcode工程中，对应group下的所有文件删掉，然后在创建相应的group，并将文件添加到对应的group中。最后再根据需要添加编译指示的文件，添加编译指示，就完了。</p>
+
+<p>那么首先就是打开工程，找到Target，一般的项目，target的第一个就是我们所需要的主target了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;xcodeproj&#39;</span>
+</span><span class='line'><span class="n">require_relative</span> <span class="s1">&#39;functions&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">project_path</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="s2">&quot;../iphone/Zhidao.xcodeproj&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">project</span> <span class="o">=</span> <span class="no">Xcodeproj</span><span class="o">::</span><span class="no">Project</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+</span><span class='line'><span class="n">target</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">targets</span><span class="o">.</span><span class="n">first</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>拿到target之后，就要找到们所存放相应目录的group，group在<code>Xcodeproj</code>中对应这个类<code>PBXGroup</code>，通过查看文档可以找到他提供了一个<code>find_subpath</code>的方法，会从它自身这个节点根据提供的path依次向下寻找，最后一个参数为如果没有找到，是否创建这个group。拿到这个group之后，根据我自身项目的需要，因为我的group和文件的物理目录是一一对应的，还需要设置一下它的<code>source_tree</code>和<code>path</code>，对应的就是<code>Xcode</code>中的这个内容。</p>
+
+<p><img src="https://oac67o3cg.qnssl.com/1476179089.png" alt="" /></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mapiGroup</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">main_group</span><span class="o">.</span><span class="n">find_subpath</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;Frameworks&#39;</span><span class="p">,</span> <span class="s1">&#39;Libraries&#39;</span><span class="p">,</span> <span class="s1">&#39;ZDNetManager&#39;</span><span class="p">,</span> <span class="s1">&#39;MAPI&#39;</span><span class="p">),</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'><span class="n">mapiGroup</span><span class="o">.</span><span class="n">set_source_tree</span><span class="p">(</span><span class="s1">&#39;&lt;group&gt;&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">mapiGroup</span><span class="o">.</span><span class="n">set_path</span><span class="p">(</span><span class="s1">&#39;MAPI&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>获取到了根group之后，就可以拿到他的children，然后就可以递归找到每一个文件，调用<code>remove_form_project</code>了，但是我在实际编写的过程中，发现一旦对一个文件调用了<code>remove_form_project</code>之后，那这个循环就break了，也就只执行了一次，尝试了各种方法也没找到解决方案，在Github上还找到了有人提过这个<a href="https://github.com/CocoaPods/Xcodeproj/issues/132">issue</a>，但是好像也没有解决。最后通过再次翻查文档，发现还有<code>clear</code>这样一个方法，它会直接清空整个group下的所有元素，非常适合我的需求，不需要我自己去遍历了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="o">!</span><span class="n">mapiGroup</span><span class="o">.</span><span class="n">empty?</span> <span class="k">then</span>
+</span><span class='line'>    <span class="n">mapiGroup</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是使用过之后，还存在问题这仅仅是在<code>Xcode</code>中左侧的<code>Project Navigator</code>中把文件引用删除了，但是对于<code>.m</code>或者资源文件这种需要加入到target中的文件，并不会直接删掉，如此一来在<code>Xcode</code>的<code>Build Phase</code>中就会看到这样的情况。文件丢失。</p>
+
+<p><img src="https://oac67o3cg.qnssl.com/1476179895.png" alt="" /></p>
+
+<p>所以针对这种情况，就需要在clear之前，对这些文件特殊处理，在target中将文件引用删掉。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">removeBuildPhaseFilesRecursively</span><span class="p">(</span><span class="n">aTarget</span><span class="p">,</span> <span class="n">aGroup</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">aGroup</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>      <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">real_path</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="s2">&quot;.m&quot;</span><span class="p">,</span> <span class="s2">&quot;.mm&quot;</span><span class="p">)</span> <span class="k">then</span>
+</span><span class='line'>          <span class="n">aTarget</span><span class="o">.</span><span class="n">source_build_phase</span><span class="o">.</span><span class="n">remove_file_reference</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">elsif</span> <span class="n">file</span><span class="o">.</span><span class="n">real_path</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="s2">&quot;.plist&quot;</span><span class="p">)</span> <span class="k">then</span>
+</span><span class='line'>          <span class="n">aTarget</span><span class="o">.</span><span class="n">resources_build_phase</span><span class="o">.</span><span class="n">remove_file_reference</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">aGroup</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">group</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">removeBuildPhaseFilesRecursively</span><span class="p">(</span><span class="n">aTarget</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接下来是添加新的文件，首先通过<code>find_subpath</code>将所有的group创建出来，然后在将每个group下对应的文件给引用进去就可以了。这里对<code>.m</code>和资源文件还是需要单独处理，因为不光工程要引用他们，target也需要引用他们。所以先向工程添加之后拿到返回的<code>PBXFileReference</code>，在向target对应的<code>build_phase</code>添加即可。虽然target提供了增加一组文件的方法<code>add_file_references</code>，但是这样的添加方式并不能设定编译指示，一个Target的<code>Build rule</code>对应着<code>PBXBuildRule</code>，从文档中没有找到丝毫设置的方法。后来倒是发现再向target的<code>build_phase</code>中添加单个文件的时候可以设置<code>compiler flags</code>。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">addFilesToGroup</span><span class="p">(</span><span class="n">aTarget</span><span class="p">,</span> <span class="n">aGroup</span><span class="p">)</span>
+</span><span class='line'>  <span class="no">Dir</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="n">aGroup</span><span class="o">.</span><span class="n">real_path</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">entry</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">filePath</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">aGroup</span><span class="o">.</span><span class="n">real_path</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+</span><span class='line'>      <span class="c1"># 过滤目录和.DS_Store文件</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">!</span><span class="no">File</span><span class="o">.</span><span class="n">directory?</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">entry</span> <span class="o">!=</span> <span class="s2">&quot;.DS_Store&quot;</span> <span class="k">then</span>
+</span><span class='line'>          <span class="c1"># 向group中增加文件引用</span>
+</span><span class='line'>          <span class="n">fileReference</span> <span class="o">=</span> <span class="n">aGroup</span><span class="o">.</span><span class="n">new_reference</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span>
+</span><span class='line'>          <span class="c1"># 如果不是头文件则继续增加到Build Phase中，PB文件需要加编译标志</span>
+</span><span class='line'>          <span class="k">if</span> <span class="n">filePath</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="s2">&quot;pbobjc.m&quot;</span><span class="p">,</span> <span class="s2">&quot;pbobjc.mm&quot;</span><span class="p">)</span> <span class="k">then</span>
+</span><span class='line'>              <span class="n">aTarget</span><span class="o">.</span><span class="n">add_file_references</span><span class="p">(</span><span class="o">[</span><span class="n">fileReference</span><span class="o">]</span><span class="p">,</span> <span class="s1">&#39;-fno-objc-arc&#39;</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">elsif</span> <span class="n">filePath</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="s2">&quot;.m&quot;</span><span class="p">,</span> <span class="s2">&quot;.mm&quot;</span><span class="p">)</span> <span class="k">then</span>
+</span><span class='line'>              <span class="n">aTarget</span><span class="o">.</span><span class="n">source_build_phase</span><span class="o">.</span><span class="n">add_file_reference</span><span class="p">(</span><span class="n">fileReference</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">elsif</span> <span class="n">filePath</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="s2">&quot;.plist&quot;</span><span class="p">)</span> <span class="k">then</span>
+</span><span class='line'>              <span class="n">aTarget</span><span class="o">.</span><span class="n">resources_build_phase</span><span class="o">.</span><span class="n">add_file_reference</span><span class="p">(</span><span class="n">fileReference</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最后将一切执行完之后，执行一下保存就完事儿了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">project</span><span class="o">.</span><span class="n">save</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这篇文章没有多高深，主要就是介绍一下<code>Xcodeproj</code>这个轮子，有遇到相同类似需求的同学可以参考下，因为介绍这个轮子的资料确实太少了。。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[__bridge_retain __bridge_transfer]]></title>
@@ -6233,290 +6402,6 @@ done
 </span><span class='line'>                                                                                                                                    <span class="nb">puts</span> <span class="n">replacement</span>
 </span><span class='line'>                                                                                                                                    <span class="c1">#print replacement</span>
 </span><span class='line'>                                                                                                                                    <span class="c1">#print input</span>
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[APNS服务器搭建ssl错误问题解决方案]]></title>
-    <link href="http://blog.wtlucky.com/blog/2013/02/27/apns-ssl-error/"/>
-    <updated>2013-02-27T21:37:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2013/02/27/apns-ssl-error</id>
-    <content type="html"><![CDATA[<p>最近再做一个推送项目，需要搭建<code>APNS</code>服务器，再将PHP代码部署到<code>Server</code>上时遇到了如下错误：</p>
-
-<figure class='code'><figcaption><span>APNS ssl error </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: Unable to set local cert chain file `ck.pem'; Check that your cafile/capath settings include details of your certificate and its issuer in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>
-</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: failed to create an SSL handle in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>
-</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: Failed to enable crypto in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>
-</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: unable to connect to ssl://gateway.sandbox.push.apple.com:2195 (Unknown error) in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>Failed to connect: 0</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上网Google之，发现很多人遇到此问题，给出的解决方案照做后错误依然存在。
-最终还是自己解决，从问题本身出发吧，自己当初调试时<code>Server</code>是部署在<code>Mac os</code>上的，而现在却要部署在<code>Windows Server 2008</code>上。所以很可能是两边的配置出了问题，而代码的第24行为：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="nv">$fp</span> <span class="o">=</span> <span class="nx">stream_socket_client</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;ssl://gateway.sandbox.push.apple.com:2195&#39;</span><span class="p">,</span> <span class="nv">$err</span><span class="p">,</span>
-</span><span class='line'>        <span class="nv">$errstr</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="nx">STREAM_CLIENT_CONNECT</span><span class="o">|</span><span class="nx">STREAM_CLIENT_PERSISTENT</span><span class="p">,</span> <span class="nv">$ctx</span><span class="p">);</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>PHP</code>给出的错误大概是说，没有找到证书，无法建立ssl连接。</p>
-
-<!--More -->
-
-
-<p>首先<code>.pem</code>证书已经制作，并且可用。还有就是证书的路径需要放正确</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="nb">stream_context_set_option</span><span class="p">(</span><span class="nv">$ctx</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="s1">&#39;local_cert&#39;</span><span class="p">,</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">localcert</span><span class="p">);</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>确保该函数的最后一个参数所指的路径能正确找到证书。
-经过测试在<code>Mac OS</code>下这样就可以了，但是在<code>Windows</code>下要改成这样：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="nb">stream_context_set_option</span><span class="p">(</span><span class="nv">$ctx</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="s1">&#39;local_cert&#39;</span><span class="p">,</span><span class="nb">dirname</span><span class="p">(</span><span class="k">__FILE__</span><span class="p">)</span> <span class="o">.</span> <span class="s1">&#39;\\&#39;</span> <span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">localcert</span><span class="p">);</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是做了这些，问题仍然不能解决，剩下的问题就是<code>Apache</code>需要开启<code>ssl</code>模块，通过查看<code>Apache</code>的<a href="http://httpd.apache.org/docs/2.2/howto/ssi.html">官方文档</a>得知，使用<code>ssl</code>需要<code>Apache</code>开启三个支持模块分别是：</p>
-
-<ol>
-<li>mod_include</li>
-<li>mod_cgi</li>
-<li>mod_expires</li>
-</ol>
-
-
-<p>接下来打开<code>Apache</code>的配置文件<code>httpd.conf</code>大概50-100行之间模块加载部分，放开这三个模块加载前的注释：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="nb">LoadModule</span> reqtimeout_module libexec/apache2/mod_reqtimeout.so
-</span><span class='line'><span class="nb">LoadModule</span> ext_filter_module libexec/apache2/mod_ext_filter.so
-</span><span class='line'><span class="nb">LoadModule</span> include_module libexec/apache2/mod_include.so          #注释放开
-</span><span class='line'><span class="nb">LoadModule</span> filter_module libexec/apache2/mod_filter.so
-</span><span class='line'><span class="nb">LoadModule</span> substitute_module libexec/apache2/mod_substitute.so
-</span><span class='line'><span class="nb">LoadModule</span> deflate_module libexec/apache2/mod_deflate.so
-</span><span class='line'><span class="nb">LoadModule</span> log_config_module libexec/apache2/mod_log_config.so
-</span><span class='line'><span class="nb">LoadModule</span> log_forensic_module libexec/apache2/mod_log_forensic.so
-</span><span class='line'><span class="nb">LoadModule</span> logio_module libexec/apache2/mod_logio.so
-</span><span class='line'><span class="nb">LoadModule</span> env_module libexec/apache2/mod_env.so
-</span><span class='line'><span class="nb">LoadModule</span> mime_magic_module libexec/apache2/mod_mime_magic.so
-</span><span class='line'><span class="nb">LoadModule</span> cern_meta_module libexec/apache2/mod_cern_meta.so
-</span><span class='line'><span class="nb">LoadModule</span> expires_module libexec/apache2/mod_expires.so         #注释放开
-</span><span class='line'><span class="nb">LoadModule</span> headers_module libexec/apache2/mod_headers.so
-</span><span class='line'><span class="nb">LoadModule</span> ident_module libexec/apache2/mod_ident.so
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>保存，重启<code>Apache</code>，再试，问题已解决。</p>
-
-<p>最后附上推送部分的<code>PHP</code>代码：</p>
-
-<figure class='code'><figcaption><span> (push.php)</span> <a href='http://blog.wtlucky.com/downloads/code/php/push.php'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Push</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$deviceToken</span><span class="p">;</span><span class="c1">//需要在构造时候设置</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//本地证书和密码</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$localcert</span> <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$passphrase</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="cm">/*</span>
-</span><span class='line'><span class="cm">     * 功能：构造函数，设置deviceToken</span>
-</span><span class='line'><span class="cm">    */</span>
-</span><span class='line'>    <span class="k">function</span> <span class="nf">Push</span><span class="p">(</span><span class="nv">$deviceToken</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">deviceToken</span> <span class="o">=</span> <span class="nv">$deviceToken</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="cm">/*</span>
-</span><span class='line'><span class="cm">    功能：生成发送内容并且转化为json格式</span>
-</span><span class='line'><span class="cm">    */</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">private</span> <span class="k">function</span> <span class="nf">createPayload</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span><span class="nv">$type</span><span class="p">,</span><span class="nv">$sound</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// Create the payload body</span>
-</span><span class='line'>        <span class="nv">$body</span><span class="p">[</span><span class="s1">&#39;aps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>            <span class="s1">&#39;alert&#39;</span> <span class="o">=&gt;</span> <span class="nv">$message</span><span class="p">,</span>
-</span><span class='line'>            <span class="s1">&#39;sound&#39;</span> <span class="o">=&gt;</span> <span class="nv">$sound</span><span class="p">,</span>
-</span><span class='line'>            <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span><span class="nv">$type</span>
-</span><span class='line'>        <span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Encode the payload as JSON</span>
-</span><span class='line'>        <span class="nv">$payload</span> <span class="o">=</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$body</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$payload</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// Put your private key&#39;s passphrase here:</span>
-</span><span class='line'>   <span class="k">public</span> <span class="k">function</span>  <span class="nf">pushData</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span><span class="nv">$type</span><span class="p">,</span><span class="nv">$sound</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nv">$ctx</span> <span class="o">=</span> <span class="nb">stream_context_create</span><span class="p">();</span>
-</span><span class='line'>        <span class="nb">stream_context_set_option</span><span class="p">(</span><span class="nv">$ctx</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="s1">&#39;local_cert&#39;</span><span class="p">,</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">localcert</span><span class="p">);</span>
-</span><span class='line'>        <span class="nb">stream_context_set_option</span><span class="p">(</span><span class="nv">$ctx</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="s1">&#39;passphrase&#39;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">passphrase</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Open a connection to the APNS server</span>
-</span><span class='line'>        <span class="c1">//这个为正是的发布地址</span>
-</span><span class='line'>         <span class="c1">//$fp = stream_socket_client(“ssl://gateway.push.apple.com:2195“, $err, $errstr, 60, //STREAM_CLIENT_CONNECT, $ctx);</span>
-</span><span class='line'>        <span class="c1">//这个是沙盒测试地址，发布到appstore后记得修改哦</span>
-</span><span class='line'>        <span class="nv">$fp</span> <span class="o">=</span> <span class="nx">stream_socket_client</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;ssl://gateway.sandbox.push.apple.com:2195&#39;</span><span class="p">,</span> <span class="nv">$err</span><span class="p">,</span>
-</span><span class='line'>        <span class="nv">$errstr</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="nx">STREAM_CLIENT_CONNECT</span><span class="o">|</span><span class="nx">STREAM_CLIENT_PERSISTENT</span><span class="p">,</span> <span class="nv">$ctx</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$fp</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">exit</span><span class="p">(</span><span class="s2">&quot;Failed to connect: </span><span class="si">$err</span><span class="s2"> </span><span class="si">$errstr</span><span class="s2">&quot;</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">echo</span> <span class="s1">&#39;Connected to APNS&#39;</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// 创建消息</span>
-</span><span class='line'>        <span class="nv">$payload</span> <span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">createPayload</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span><span class="nv">$type</span><span class="p">,</span><span class="nv">$sound</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Build the binary notification</span>
-</span><span class='line'>        <span class="nv">$msg</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">.</span> <span class="nb">pack</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="o">.</span> <span class="nb">pack</span><span class="p">(</span><span class="s1">&#39;H*&#39;</span><span class="p">,</span> <span class="nv">$this</span> <span class="o">-&gt;</span><span class="na">deviceToken</span><span class="p">)</span> <span class="o">.</span> <span class="nb">pack</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$payload</span><span class="p">))</span> <span class="o">.</span> <span class="nv">$payload</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Send it to the server</span>
-</span><span class='line'>        <span class="nv">$result</span> <span class="o">=</span> <span class="nb">fwrite</span><span class="p">(</span><span class="nv">$fp</span><span class="p">,</span> <span class="nv">$msg</span><span class="p">,</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$msg</span><span class="p">));</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$result</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">echo</span> <span class="s1">&#39;Message not delivered&#39;</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">else</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">echo</span> <span class="s1">&#39;Message successfully delivered&#39;</span> <span class="o">.</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Close the connection to the server</span>
-</span><span class='line'>        <span class="nb">fclose</span><span class="p">(</span><span class="nv">$fp</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>   <span class="p">}</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
 </span></code></pre></td></tr></table></div></figure>
 
 ]]></content>

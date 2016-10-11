@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://blog.wtlucky.com/blog/2016/10/10/use-script-to-modify-xcode-project/</loc>
+    <lastmod>2016-10-10T17:59:55+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://blog.wtlucky.com/blog/2016/06/04/bridge-retain-bridge-transfer/</loc>
     <lastmod>2016-06-04T16:34:46+08:00</lastmod>
   </url>
@@ -107,21 +111,6 @@
     <loc>http://blog.wtlucky.com/archives/tags.html</loc>
   </url>
   <url>
-    <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/ios-development/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/design-pattern/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/bash-shell/</loc>
-  </url>
-  <url>
-    <loc>http://blog.wtlucky.com/blog/categories/technical-research/</loc>
-  </url>
-  <url>
     <loc>http://blog.wtlucky.com/tags/github/</loc>
   </url>
   <url>
@@ -179,9 +168,21 @@
     <loc>http://blog.wtlucky.com/tags/forkingdog/</loc>
   </url>
   <url>
-    <loc>http://blog.wtlucky.com/posts/2/</loc>
+    <loc>http://blog.wtlucky.com/tags/ruby/</loc>
   </url>
   <url>
-    <loc>http://blog.wtlucky.com/posts/3/</loc>
+    <loc>http://blog.wtlucky.com/blog/categories/octopress/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/ios-development/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/design-pattern/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/bash-shell/</loc>
+  </url>
+  <url>
+    <loc>http://blog.wtlucky.com/blog/categories/technical-research/</loc>
   </url>
 </urlset>

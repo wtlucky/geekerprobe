@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="自己的Blog好久没有更新了，一个是因为这半年里要忙着毕业好多事情，再一个就是工作上也很忙，基本就没有时间来为我的Blog增添新的血液了。APPLE在WWDC 2014上公布了一门新的编程语言Swift，最近可以说是相当火热，而且在语言热度排名上也是突飞猛进， &hellip;">
+  <meta name="description" content="在进行iOS开发的过程中，对于一些复杂的界面，我们可以通过Interface Builder这个Xcode集成的可视化界面编辑工具在完成，这回节省大部分时间以及代码量。它的使用方法这里不做介绍了，这次我要介绍是使用它来实现一个嵌套的自定义视图。解释一下就是，我们使用IB自定义了一个View， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/10/nested-xib-views/">Nested Xib Views - 使用XIB实现嵌套自定义视图</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-10T15:18:00+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2014/08/10/nested-xib-views/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在进行<code>iOS</code>开发的过程中，对于一些复杂的界面，我们可以通过<code>Interface Builder</code>这个<code>Xcode</code>集成的可视化界面编辑工具在完成，这回节省大部分时间以及代码量。它的使用方法这里不做介绍了，这次我要介绍是使用它来实现一个嵌套的自定义视图。解释一下就是，我们使用<code>IB</code>自定义了一个<code>View</code>，然后又在其他的<code>xib</code>文件中使用了这个<code>View</code>，那么这就是所谓的嵌套自定义视图。之所以要介绍它，是因为我自己在使用它的时候遇到了一些问题，一方面写下来做个记录供自己查看，另一方面我相信大家在使用的时候应该也会遇到这样的问题，方便大家。</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/10/nested-xib-views/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -567,87 +609,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/27/apns-ssl-error/">APNS服务器搭建ssl错误问题解决方案</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-27T21:37:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2013/02/27/apns-ssl-error/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近再做一个推送项目，需要搭建<code>APNS</code>服务器，再将PHP代码部署到<code>Server</code>上时遇到了如下错误：</p>
-
-<figure class='code'><figcaption><span>APNS ssl error </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: Unable to set local cert chain file `ck.pem'; Check that your cafile/capath settings include details of your certificate and its issuer in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>
-</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: failed to create an SSL handle in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>
-</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: Failed to enable crypto in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>
-</span><span class='line'>Warning: stream_socket_client() [function.stream-socket-client]: unable to connect to ssl://gateway.sandbox.push.apple.com:2195 (Unknown error) in D:\AppServ\www\push1\push.php on line 24
-</span><span class='line'>Failed to connect: 0</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上网Google之，发现很多人遇到此问题，给出的解决方案照做后错误依然存在。
-最终还是自己解决，从问题本身出发吧，自己当初调试时<code>Server</code>是部署在<code>Mac os</code>上的，而现在却要部署在<code>Windows Server 2008</code>上。所以很可能是两边的配置出了问题，而代码的第24行为：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="nv">$fp</span> <span class="o">=</span> <span class="nx">stream_socket_client</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;ssl://gateway.sandbox.push.apple.com:2195&#39;</span><span class="p">,</span> <span class="nv">$err</span><span class="p">,</span>
-</span><span class='line'>        <span class="nv">$errstr</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="nx">STREAM_CLIENT_CONNECT</span><span class="o">|</span><span class="nx">STREAM_CLIENT_PERSISTENT</span><span class="p">,</span> <span class="nv">$ctx</span><span class="p">);</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>PHP</code>给出的错误大概是说，没有找到证书，无法建立ssl连接。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/27/apns-ssl-error/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="3">&larr; Older</a>
@@ -668,11 +629,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (14)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (15)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/10/10/use-script-to-modify-xcode-project/">懒人福利：用脚本来修改Xcode工程</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/04/bridge-retain-bridge-transfer/">__bridge_retain __bridge_transfer</a>
@@ -688,10 +653,6 @@
     
       <li class="post">
         <a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">FDStackView —— Downward Compatible UIStackView (Part 3)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a>
       </li>
     
   </ul>
@@ -773,25 +734,26 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 100%" href="/tags/block/">block</a>
-<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
-<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 130%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/ruby/">Ruby</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 100%" href="/tags/github/">GitHub</a>
+<a style="font-size: 113%" href="/tags/git/">git</a>
 <a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
 <a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
-<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 126%" href="/tags/design/">Design</a>
-<a style="font-size: 113%" href="/tags/git/">git</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
+<a style="font-size: 113%" href="/tags/xcode/">Xcode</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
 
   </ul>
 </section>

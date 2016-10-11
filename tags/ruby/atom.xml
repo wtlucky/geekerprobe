@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Tag: ruby | GeekerProbe]]></title>
+  <title><![CDATA[Tag: Ruby | GeekerProbe]]></title>
   <link href="http://blog.wtlucky.com/tags/ruby/atom.xml" rel="self"/>
   <link href="http://blog.wtlucky.com/"/>
-  <updated>2016-09-29T10:51:03+08:00</updated>
+  <updated>2016-10-11T18:29:00+08:00</updated>
   <id>http://blog.wtlucky.com/</id>
   <author>
     <name><![CDATA[wtlucky ]]></name>
@@ -14,194 +14,169 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Create blog use Octopress and GitHub]]></title>
-    <link href="http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github/"/>
-    <updated>2013-02-24T23:02:00+08:00</updated>
-    <id>http://blog.wtlucky.com/blog/2013/02/24/create-blog-use-octopress-and-github</id>
-    <content type="html"><![CDATA[<h3>介绍</h3>
+    <title type="html"><![CDATA[懒人福利：用脚本来修改Xcode工程]]></title>
+    <link href="http://blog.wtlucky.com/blog/2016/10/10/use-script-to-modify-xcode-project/"/>
+    <updated>2016-10-10T17:59:55+08:00</updated>
+    <id>http://blog.wtlucky.com/blog/2016/10/10/use-script-to-modify-xcode-project</id>
+    <content type="html"><![CDATA[<p>懒，基本上是每个程序员同学公有的特性。也就是因为懒才造就了现在众多先进的发明，才让我们的生活省时省力起来。写这篇文章，也是因为自己犯懒，不想总是重复性的干一些固定的工作，所以通过脚本来完成。文章主要介绍了<a href="http://rubygems.org/gems/xcodeproj">Xcodeproj</a>这个<code>Ruby</code>的工具包，为了使用这个工具包我还现学现卖了<code>Ruby</code>这门语言，算是个入门级选手了吧，其实真的没有想象中的那么复杂。
+如果已经是能够熟练使用<code>Xcodeproj</code>的选手，就可以不用继续往下看了。^_^</p>
 
-<p>现下大概每一个搞技术的人都会有一个技术博客，而<a href="http://github.com">GitHub</a>又是广大搞程序的人都知道的一个著名代码托管网站，它的优点众多，其中之一就是GitHub Pages，他是用来给当前的project作介绍说明之用的，鉴于此我们可以将自己blog放置上去，代码交由GitHub托管，每次我们只需要发博文上去就好，对我们来说这是一件多么爽快人心的事啊。<a href="http://octopress.org">Octopress</a>就是这样一款framework，它能部署在Github上，而且很方便使用，当把它配置好之后，几条命令就可以将博文发布上去，正如官网介绍的一样<code>A blogging framework for hackers.</code>，像骇客一样的写博客，这很不错我很喜欢，具体的介绍可以去官网看。</p>
-
-<p>这两者一结合就有了我现在的这个blog了，用它来记录和分享我的学习之路上点点滴滴。网络上有很多介绍安装与配置方法的文章，官网的<a href="http://octopress.org/docs">Documentation</a>写的也很好，推荐E文好的直接去官网。我在安装与配置中也遇到了各种问题，不过在<a href="http://google.cn">Google</a>的帮助下都一一解决了，你需要懂一些<code>ruby(jekyll)</code>，并且会使用<code>git</code>命令，还要使用<code>markdown</code>来书写博文，这会让你觉得是在写代码而不是在写博文。不多说了现在记录下我自己安装与配置过程，供新手与日后自己需要时参考。<!-- More --></p>
-
-<p>我主要参考的文章：</p>
-
-<blockquote><p><a href="http://octopress.org/docs">Octopress Documentation</a></p>
-
-<p><a href="http://ishalou.com/blog/2012/10/15/how-to-use-octopress/">http://ishalou.com/blog/2012/10/15/how-to-use-octopress/</a></p>
-
-<p><a href="http://mrzhang.me/blog/blog-equals-github-plus-octopress.html">http://mrzhang.me/blog/blog-equals-github-plus-octopress.html</a></p>
-
-<p><a href="http://rogerdudler.github.com/git-guide/index.zh.html">git 简易指南</a></p></blockquote>
-
-<h3>安装前准备工作</h3>
-
-<ol>
-<li>你需要一个<a href="http://github.com">GitHub</a>的账号，注册不说了，已有的跳过。</li>
-<li>你需要在你的机器上安装并配置<code>git</code>，<a href="https://help.github.com/articles/set-up-git">官方文档</a>说的很清楚，这要用到<code>terminal</code>，也就是命令行，懒的人可以安装可视化工具GitHub，我建议还是使用命令行，以为之后众多操作都是必须使用命令行来完成的，而且这对于hacker们来说也不是什么难事。</li>
-<li>为GitHub创建<code>SSH</code> Keys，<a href="https://help.github.com/articles/generating-ssh-keys">官方文档</a>，这一步很重要，不然之后使用<code>rake deploy</code>命令时会出现如下错误：
-{% codeblock rake deploy error lang:bash %}
-
-<h2>Pushing generated _deploy website</h2>
-
-<p>Permission denied (publickey).
-{% endcodeblock %}
-由于我使用GitHub比较早，这个<code>SSH</code> Key早就生成添加到了GitHub上，但是没有使用默认的名字，始终都是Permission denied。直到在GitHub上的文档中爬了很久才找到解决办法，o(╯□╰)o原来是生成的publickey没有添加到<code>SSH</code>中。</p></li>
-<li>你的机器要有ruby环境，<code>Octopress</code>要求的是ruby-1.9.2，现在<code>ruby</code>最新的版本是ruby-1.9.3。可以使用<code>ruby --version</code>命令来查看。如果没有该命令或者是版本低于1.9.2的话，那么就需要安装与升级<code>ruby</code>。可以使用两种方法<a href="http://octopress.org/docs/setup/rbenv">rbenv</a>和<a href="http://octopress.org/docs/setup/rvm">RVM</a>。具体使用方法请自行查看之，我是用的<code>RVM</code>，在安装中遇到的问题就是我是用的是MAC OX MountainLion（10.8.2）系统，xcode的版本是4.6，没有<code>gcc</code>编译器，用得是<code>LLVM</code>，而ruby-1.9.3-p385在<code>LLVM</code>下编译不通过。最终在Google和<a href="http://stackoverflow.com">stackoverflow</a>帮助下解决之。</li>
-</ol>
+<!-- More -->
 
 
-<h3>安装Octopress</h3>
+<p>先介绍下背景，我们的项目<code>Model</code>层使用了自己的ORM框架，同时也使用了<code>Protocol Buffer</code>，这也就导致了每个版本之间有新增接口，或者接口文档有变化的时候，都需要重新生成对应的<code>Model</code>文件。而这些文件每次都要手动替换<code>Xcode</code>中的现有文件，这其实是一件很枯燥很麻烦的时间，而且非常容易出错，漏掉一个文件或者少替换一个文件都是很棘手的问题。虽然我现在编写了一部分<code>Shell</code>脚本，可以直接将新生成的文件替换到<code>Xcode</code>工程所对应的物理目录中。但是即使如此，还需要对<code>Xcode</code>的工程文件作出处理，增加新文件的引用，如果不增加引用，只是把文件丢到物理目录上的话，<code>Xcode</code>工程并不会索引这个文件。同时像PB那些文件还需要添加<code>-fno-objc-arc</code>这个编译指示符，而这些文件往往有几十个之多，简直要爆炸！(不过还好有搜索批量添加的功能，暂时忍了。。)</p>
 
-<p>在<code>terminal</code>下进入Octopress所要安装目录的上一级目录，敲入以下命令：
-{% codeblock install Octopress lang:bash %}
-git clone git://github.com/imathis/octopress.git geekerprobe      # 从GitHub上clone Octopress到本地 geekerprobe可以随便填，Octopress会被clone到当前目录的geekerprobe目录下
-cd geekerprobe    # 进入该目录，如果你是用的是RVM的话，会寻问你是否信任.rvmrc文件 当然是yes
-gem install bundler   # 下载bundler，有可能提示gem命令未找到，请自行google解决方法
-bundle install    #安装bundle
-rake install   #安装Octopress默认主题
-{% endcodeblock %}
-到此Octopress在本地已经安装完毕，但是还都是默认配置，而且没有发表博文。但是你可以通过一下命令来生成并预览一下原始的界面：
-{% codeblock generate and preview blog lang:bash %}
-rake generate    #生成blog，就是根据配置文件，将主题、模板、发表的markdown格式的博文等众多文件生成静态的html文件存放在geekerprobe/public文件夹下
-rake preview   #预览生成的blog，此时ruby会启动一个小型的server
-{% endcodeblock %}
-接下来打开浏览器访问<a href="http://127.0.0.1:4000">http://127.0.0.1:4000</a>就可以看到页面啦！
-退出预览当然是Ctrl+C了。</p>
+<p>后来就想，物理文件通过<code>Shell</code>脚本搞定了，那剩下的这个能不能也通过工具给搞定？有两个思路。</p>
 
-<h3>Octopress简单配置</h3>
+<h2>1. Xcode Extension</h2>
 
-<p>此时在<code>terminal</code>下使用‘ls’命令查看目录结构为：
-{% codeblock lang:bash %}
-CHANGELOG.markdown  Rakefile        plugins
-Gemfile             _config.yml     public
-Gemfile.lock        config.rb       sass
-README.markdown     config.ru       source
-{% endcodeblock %}
-<code>\_config.yml</code>、<code>Rakefile</code>、<code>config.ru</code>和<code>config.rb</code>就是四个配置文件了，我们修改配置主要是在<code>\_config.yml</code>上进行的，其他的三个一般不需要我们去直接管理。<code>\_config.yml</code>的配置分为三个部分：</p>
+<p>最近比较流行的就是<code>Xcode Extension</code>了，它真的是无所不能，各种各样的插件都已经存在了，我就觉得这个一定行。所以开始着手干，后来发现这个需求其实是太复杂了点儿。</p>
 
-<ol>
-<li>Main Configs，配置一些博客的基本信息，标题URL什么的；</li>
-<li>Jekyll &amp; Plugins，这里是jekyll和一些官方插件的配置；</li>
-<li>3rd Party Settings，这里是第三方插件配置，我们之后自己添加的插件配置信息建议都放在这个部分中。
-具体说明请看<a href="http://octopress.org/docs/configuring/">官方Document</a>。
-<strong>注意：</strong>每次做完配置文件的修改之后都要使用<code>rake generate</code>来重新生成html来使配置生效，而简单修改页面html则不需要重新生成，在预览状态下直接刷新页面就可以了。</li>
-</ol>
+<p>首先<code>Xcode</code>插件的开发需要监测所有Xcode发出的<code>Notifications</code>，然后摘取出自己需要的，并弄清楚各个参数的类型及关系，同时还需要一定的逆向功底，找到对应Xcode控件的实现方法及如何使用，我自己尝试了下，虽然找到了几个关键的notification，但是Xcode文件管理那里各个元素分别对应何种类，着实让我头大了一把。后来随着Xcode8的发布，苹果禁掉了第三方的插件，所以这一条路自然也就走不下去了。</p>
 
+<h2>2. pbxproj文件</h2>
 
-<h3>发布博文</h3>
+<p>做过多人协作开发的同学都会遇到代码冲突的情况，而所有与工程相关的冲突都会体现在pbxproj这个文件上，这个文件就处在.xcodeproj这个目录中，这个文件其实就是整个Xcode工程的配置文件，所有的文件引用，group关系，build设置都在这里面能够找到。仔细去看他就是一个plist文件也就是一个特殊的xml文件。它的编写有着一定的规律。</p>
 
-<p>博文有两种一种是post一种是page，具体有什么区别请google之。
-发送博文只需要在当前目录下：
-{% codeblock lang:bash %}
-rake new_post[&ldquo;My First Blog&rdquo;]   #发送名为My First Blog的post，会在source/_post目录下按照配置文件生成markdown文件
-rake new_page[&ldquo;title&rdquo;]   #发送page，会生成在source/下，我还没有使用过具体请看官方文档
-{% endcodeblock %}
-使用喜欢的编辑器打开source/_post/yyyy-mm-dd-my-first-blog.markdown进行编辑，书写博文。</p>
+<p>所以通过对这个文件的编写也能够达到同样的目的，所以尝试着手搓一下。然而当我真正分析这个文件的时候就发现，随随便便一个工程这个文件就有着动辄上千行文字，而且内部不同数据之间的格式也都不近相同，然后每个数据之前都有一个24位的16进制数字。这个数字的生成还是一个迷之存在，感觉应该是个UUID。</p>
 
-<h2>{% codeblock yyyy-mm-dd-my-first-blog lang:html %}</h2>
+<p>截取部分文件的内容如图所示：
+<img src="https://oac67o3cg.qnssl.com/1476154768.png" alt="" /></p>
 
-<p>layout: post
-title: &ldquo;My First Blog&rdquo;
-date: 2013-02-23 09:01
-comments: true</p>
+<p>最终经过尝试，这个文件处理啊起来也不是十分的容易，不过我在写这篇文章的时候看到一篇研究
+pbxproj文件的文章，讲的十分深入透彻。<a href="http://yulingtianxia.com/blog/2016/09/28/Let-s-Talk-About-project-pbxproj/">Let&rsquo;s Talk About project.pbxproj</a>，对这个文件感兴趣的同学推荐去阅读。</p>
 
-<h2>categories: </h2>
+<h3>先人的轮子</h3>
 
-<h2>Hello octopress!</h2>
+<p>正在上面两种策略发愁的时候，出现了柳暗花明又一村的事情，最近在阅读一篇博客的时候发现了这么一篇文章<a href="http://draveness.me/bei-xcodeproj-keng-de-zhe-ji-tian/">使用代码为 Xcode 工程添加文件</a>，介绍的就是这个一个需求，才知道了又<code>Xcodeproj</code>这样一个前人已经造好的轮子了。后来一想也确实是，CocoaPods能够通过脚本完成项目工程的修改，他们一定已经做好这件事情了。</p>
 
-<p>{% endcodeblock %}
-开头两个下划线之间的部分是<code>yaml</code>头，用来告诉Jekyll怎么处理你的posts或者是pages，在这里你可以对你的post或者page做一些设置，比如添加作者，category，是否允许评论等。
-在后面就是你自己要写的东西啦，当然是使用<code>markdown</code>来写了，当然它也支持<code>HTML</code>。<code>markdown</code>很简单，还不会的看<a href="http://wowubuntu.com/markdown/#backslash">这里</a>,语法说明。
-写完保存generate preview就可以了。</p>
+<p>在发现这个新大陆之后，立马就开始着手准备编写适合自己需求的脚本文件。我在比之前那个作者写起来方便多了，因为现在这个工具有了完善的<a href="http://www.rubydoc.info/gems/xcodeproj">文档支持</a>。这为开发提供了很大的便捷性。</p>
 
-<h3>部署到GitHub</h3>
+<p>我自己的需求整体上看其实就需要干两件事，因为所有文件事先已经全部移动到物理目录了，所以首先要把Xcode工程中，对应group下的所有文件删掉，然后在创建相应的group，并将文件添加到对应的group中。最后再根据需要添加编译指示的文件，添加编译指示，就完了。</p>
 
-<p>现在到了最关键的时候了，就是将Octopress部署到GitHub上去。从<a href="http://octopress.org/docs/deploying/github/">官方文档</a>了解到，部署到GitHub上有两种一种是使用<code>GitHub Pages</code>，这种在访问时使用的url为<code>http://username.github.com</code>，username为注册的GitHub用户名，你需要在GitHub上建立名字为<code>username.github.com</code>的<code>repository</code>。第二种是使用<code>GitHub Project pages (gh-pages)</code>，这种在访问时使用的url为<code>http://username.github.com/reponame</code>,reponame为你在GitHub上建立的<code>repository</code>的名字，这个名字可以随便写，将来生成的静态html会被push到该repo下的<code>gh-pages</code>分支中。
-我个人的理解是GitHub建立了这两种方式，第一种是用来介绍你这个GitHub的，所以每个账号只能有一个，而第二个是用来介绍你的<code>project</code>的，而你可以建立多个repo，所以也就可以有多个blog了，虽然url有点复杂，不过Octopress也提供了绑定自己域名的方法，自己目前还没有域名所以使用的是默认的，这一部分自己没有试验过所以就不贴上来了，具体的查看官方文档。鉴于此我使用了第二种方式来将blog部署到GitHub上。
-步骤：</p>
+<p>那么首先就是打开工程，找到Target，一般的项目，target的第一个就是我们所需要的主target了。</p>
 
-<ul>
-<li>先到GitHub上创建名为<code>geekerprobe</code>的repo。</li>
-<li><p>因为使用第二种方法我们要将blog放在<code>username.github.com</code>的子集目录所以我们要在本地将目录也设置为子集目录，不然会出现<em>“Sorry！I can not find /”</em>的错误，如果使用第一种方法则跳过此步骤，因为默认就是没有子集目录的。
-{% codeblock lang:bash %}
-rake set_root_dir[/geekerprobe]   #将路径设置为/geekerprobe
-rake set_root_dir[/]   #如果你想恢复到初始目录，则键入此命令
-{% endcodeblock %}
-这条命令会修改<code>\_config.yml</code>、<code>Rakefile</code>和<code>config.rb</code>中的有关路径部分的设置，并将实际文件进行剪切移动操作，以适应路径的改变。而且在本地预览时也要使用子集目录来访问预览<strong><a href="http://127.0.0.1:4000/geekerprobe">http://127.0.0.1:4000/geekerprobe</a></strong>。</p></li>
-<li><p>接下来就是将blog部署上去了
-{% codeblock lang:bash %}
-rake setup_github_pages   #将Octopress部署到GitHub上
-{% endcodeblock %}
-会提示你输入一个形如<code>git@github.com:username/geekerprobe.git</code>的地址，那么就按照这种形式输入你自己的repo的地址，这个地址可以在GitHub上你的repo的SSH文本框中得到，粘贴过来就好。
-{% img /images/2013-2-24/repo-ssh.jpg %}
-回车确定，等待片刻提示成功就可以了。
-这时查看目录会发现多了一个_deploy的文件夹，这个文件夹是一个git库，指向了GitHub上你的repo的<code>gh-pages</code>分支。同时你的repo的<code>gh-pages</code>分支在GitHub上也已被创建了。</p></li>
-<li><p>接下来生成并push博文到GitHub上
-{% codeblock lang:bash %}
-rake generate   #生成
-rake deploy   #push到GitHub上，此时会将/public目录下的文件完全拷贝，粘贴到/_deploy目录下，然后在push
-{% endcodeblock %}
-如果你的GitHub的<code>SSH Key</code>没有设置或者设置错误的话，此时会出现权限不允许的错误。看到成功时就说名部署工作已经完成了，恭喜你赶紧到浏览器访问一下你的<a href="http://wtlucky.github.com/geekerprobe">url</a>试试看吧。</p></li>
-</ul>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">xcodeproj</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
+</span><span class='line'><span class="n">require_relative</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">functions</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;project_path = File.join(File.dirname(&lt;strong&gt;FILE&lt;/s</span><span class="n">trong</span><span class="o">&gt;</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">iphone</span><span class="o">/</span><span class="no">Zhidao</span><span class="o">.</span><span class="n">xcodeproj</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span>
+</span><span class='line'><span class="n">project</span> <span class="o">=</span> <span class="no">Xcodeproj</span><span class="o">::</span><span class="no">Project</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+</span><span class='line'><span class="n">target</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">targets</span><span class="o">.</span><span class="n">first</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
+<p>拿到target之后，就要找到们所存放相应目录的group，group在<code>Xcodeproj</code>中对应这个类<code>PBXGroup</code>，通过查看文档可以找到他提供了一个<code>find_subpath</code>的方法，会从它自身这个节点根据提供的path依次向下寻找，最后一个参数为如果没有找到，是否创建这个group。拿到这个group之后，根据我自身项目的需要，因为我的group和文件的物理目录是一一对应的，还需要设置一下它的<code>source_tree</code>和<code>path</code>，对应的就是<code>Xcode</code>中的这个内容。</p>
 
-<p>到此基本的工作已经做完了，你的blog已经成功部署到GitHub上了并且可以正常使用了。</p>
+<p><img src="https://oac67o3cg.qnssl.com/1476179089.png" alt="" /></p>
 
-<h3>使用发布博文</h3>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mapiGroup</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">main_group</span><span class="o">.</span><span class="n">find_subpath</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">Frameworks</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">Libraries</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">ZDNetManager</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">MAPI</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;),</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'><span class="n">mapiGroup</span><span class="o">.</span><span class="n">set_source_tree</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">group</span><span class="o">&gt;&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span><span class='line'><span class="n">mapiGroup</span><span class="o">.</span><span class="n">set_path</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="no">MAPI</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
-<p>{% codeblock lang:bash %}
-rake new_post[]   #创建post，在editer中编辑post
-rake generate     #生成静态html
-rake preview      #本地预览，修改错误，查看效果
-rake deploy       #无误后，push到GitHub上
-{% endcodeblock %}</p>
+<p>获取到了根group之后，就可以拿到他的children，然后就可以递归找到每一个文件，调用<code>remove_form_project</code>了，但是我在实际编写的过程中，发现一旦对一个文件调用了<code>remove_form_project</code>之后，那这个循环就break了，也就只执行了一次，尝试了各种方法也没找到解决方案，在Github上还找到了有人提过这个<a href="https://github.com/CocoaPods/Xcodeproj/issues/132">issue</a>，但是好像也没有解决。最后通过再次翻查文档，发现还有<code>clear</code>这样一个方法，它会直接清空整个group下的所有元素，非常适合我的需求，不需要我自己去遍历了。</p>
 
-<p>到此，你可以离开此页了，如果还要看其他设置的话，请看下去，我觉得这还是挺有用的，他将你的posts也同样备份到GitHub上，下次在你换了一个环境或者电脑后，就可以直接<code>clone</code>下来或者<code>pull</code>合并，免去博文与各种配置丢失。</p>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="o">!</span><span class="n">mapiGroup</span><span class="o">.</span><span class="n">empty?</span> <span class="k">then</span>
+</span><span class='line'>    <span class="n">mapiGroup</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
-<h3>备份Octopress到GitHub</h3>
+<p>但是使用过之后，还存在问题这仅仅是在<code>Xcode</code>中左侧的<code>Project Navigator</code>中把文件引用删除了，但是对于<code>.m</code>或者资源文件这种需要加入到target中的文件，并不会直接删掉，如此一来在<code>Xcode</code>的<code>Build Phase</code>中就会看到这样的情况。文件丢失。</p>
 
-<p>此处使用的都是<code>git</code>命令，对<code>git</code>命令不熟悉的请看<a href="http://rogerdudler.github.com/git-guide/index.zh.html">这</a>。</p>
+<p><img src="https://oac67o3cg.qnssl.com/1476179895.png" alt="" /></p>
 
-<p>首先/geekerprobe这个目录我们是从Octopress的GitHub上<code>clone</code>下来的，所以他本是就是一个<code>git</code>库，可以通过<code>cat .gitignore</code>查看该目录下被排除在<code>git</code>库外的文件以及目录。
-这些我们在<code>clone</code>之前就已经由作者做好了。我们需要做的是：
-{% codeblock lang:bash %}
-git remote add origin git@github.com:username/geekerprobe.git   #在远端添加源，origin可以随便写，建议用origin这是默认，后面的路径还是那个
-git branch -m site    #创建一个分支site，这个site也可以随便写。官方文档使用的是master主分支
-git push origin site   #将这个源push到site分支中
-{% endcodeblock %}
-这样你去你的GitHub上就可以看到你的repo又多了一个site分支，并且有了文件也有版本记录。</p>
+<p>所以针对这种情况，就需要在clear之前，对这些文件特殊处理，在target中将文件引用删掉。</p>
 
-<p>这里说一下我理解到的<code>git</code>的简单原理，我也是刚刚接触到<code>git</code>之前都是使用<code>subvision</code>的，通过配置这个blog有了一点体会，但是比较浅显，有不对之处欢迎指出。</p>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">removeBuildPhaseFilesRecursively</span><span class="p">(</span><span class="n">aTarget</span><span class="p">,</span> <span class="n">aGroup</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">aGroup</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">real_path</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">m</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">mm</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span> <span class="k">then</span>
+</span><span class='line'>            <span class="n">aTarget</span><span class="o">.</span><span class="n">source_build_phase</span><span class="o">.</span><span class="n">remove_file_reference</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">elsif</span> <span class="n">file</span><span class="o">.</span><span class="n">real_path</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">plist</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span> <span class="k">then</span>
+</span><span class='line'>            <span class="n">aTarget</span><span class="o">.</span><span class="n">resources_build_phase</span><span class="o">.</span><span class="n">remove_file_reference</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;aGroup.groups.each do |group|</span>
+</span><span class='line'><span class="sr">    removeBuildPhaseFilesRecursively(aTarget, group)</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;end</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
-<p>在一个<code>git</code>库中会有文件记录你所有对库(working dir)中文件的增删改，类似于<code>svn</code>,可以使用
-{% codeblock lang:bash %}
-git status
-{% endcodeblock %}
-来查看当前的所有文件改动。
-之后将显示出来的有改动的文件<code>add</code>到缓冲区(index)，通常我都是
-{% codeblock lang:bash %}
-git add .
-{% endcodeblock %}
-将所有改动都<code>add</code>到缓冲区，但这只是临时的并没有提交到remote端，也没有被提交到上次提交后的状态下。
-然后就是将缓冲区的内容提交到上次提交的状态(HEAD)下
-{% codeblock lang:bash %}
-git commit -m &ldquo;something to say&rdquo;
-{% endcodeblock %}
-这些引号中的文字就是类似于<code>svn</code>中的版本改动说明了，现在对文件的改动依然没有提交到remote端。接下来
-{% codeblock lang:bash %}
-git push origin site   #将HEAD push到remote段
-{% endcodeblock %}
-到此本地的版本已经提交到GitHub。</p>
+<p>接下来是添加新的文件，首先通过<code>find_subpath</code>将所有的group创建出来，然后在将每个group下对应的文件给引用进去就可以了。这里对<code>.m</code>和资源文件还是需要单独处理，因为不光工程要引用他们，target也需要引用他们。所以先向工程添加之后拿到返回的<code>PBXFileReference</code>，在向target对应的<code>build_phase</code>添加即可。虽然target提供了增加一组文件的方法<code>add_file_references</code>，但是这样的添加方式并不能设定编译指示，一个Target的<code>Build rule</code>对应着<code>PBXBuildRule</code>，从文档中没有找到丝毫设置的方法。后来倒是发现再向target的<code>build_phase</code>中添加单个文件的时候可以设置<code>compiler flags</code>。</p>
 
-<h3>Octopress拓展增强</h3>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">addFilesToGroup</span><span class="p">(</span><span class="n">aTarget</span><span class="p">,</span> <span class="n">aGroup</span><span class="p">)</span>
+</span><span class='line'>    <span class="no">Dir</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="n">aGroup</span><span class="o">.</span><span class="n">real_path</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">entry</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">filePath</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">aGroup</span><span class="o">.</span><span class="n">real_path</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+</span><span class='line'>        <span class="c1"># 过滤目录和.DS_Store文件</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">!</span><span class="no">File</span><span class="o">.</span><span class="n">directory?</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">entry</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">DS_Store</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="k">then</span>
+</span><span class='line'>            <span class="c1"># 向group中增加文件引用</span>
+</span><span class='line'>            <span class="n">fileReference</span> <span class="o">=</span> <span class="n">aGroup</span><span class="o">.</span><span class="n">new_reference</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span>
+</span><span class='line'>            <span class="c1"># 如果不是头文件则继续增加到Build Phase中，PB文件需要加编译标志</span>
+</span><span class='line'>            <span class="k">if</span> <span class="n">filePath</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">pbobjc</span><span class="o">.</span><span class="n">m</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">pbobjc</span><span class="o">.</span><span class="n">mm</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span> <span class="k">then</span>
+</span><span class='line'>                <span class="n">aTarget</span><span class="o">.</span><span class="n">add_file_references</span><span class="p">(</span><span class="o">[</span><span class="n">fileReference</span><span class="o">]</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">-</span><span class="n">fno</span><span class="o">-</span><span class="n">objc</span><span class="o">-</span><span class="n">arc</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span><span class='line'>            <span class="k">elsif</span> <span class="n">filePath</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">m</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">mm</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span> <span class="k">then</span>
+</span><span class='line'>                <span class="n">aTarget</span><span class="o">.</span><span class="n">source_build_phase</span><span class="o">.</span><span class="n">add_file_reference</span><span class="p">(</span><span class="n">fileReference</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">elsif</span> <span class="n">filePath</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">end_with?</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">.</span><span class="n">plist</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span> <span class="k">then</span>
+</span><span class='line'>                <span class="n">aTarget</span><span class="o">.</span><span class="n">resources_build_phase</span><span class="o">.</span><span class="n">add_file_reference</span><span class="p">(</span><span class="n">fileReference</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
-<p>要想使Octopress拥有更强大的拓展请参考一下文章：</p>
+<p>最后将一切执行完之后，执行一下保存就完事儿了。</p>
 
-<blockquote><p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">安装主题</a><br />
-<a href="http://yanping.me/cn/blog/2012/01/07/theming-and-customization/">自定义样式</a><br />
-<a href="http://ihavanna.org/Internet/2013-02/add-duoshuo-commemt-system-into-octopress.html">添加多说评论</a><br />
-<a href="http://blog.log4d.com/2012/05/tag-cloud/">添加标签云与category list</a><br /></p></blockquote>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">project</span><span class="o">.</span><span class="n">save</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>这篇文章没有多高深，主要就是介绍一下<code>Xcodeproj</code>这个轮子，有遇到相同类似需求的同学可以参考下，因为介绍这个轮子的资料确实太少了。。</p>
 ]]></content>
   </entry>
   

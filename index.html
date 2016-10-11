@@ -9,7 +9,7 @@
   <meta name="author" content="wtlucky <chinawtlucky@gmail.com>">
 
   
-  <meta name="description" content="CF对象与NS对象互转 在ARC下，如果我们需要操作一些底层的库，有时会用到Core Foundation的对象，简称CF对象，例如Core Graphic、Core Text。在ARC下，这些CF的对象的内存是不会被自动管理的，而是需要我们在它的生命周期结束的时候调用CFRelease()释放它 &hellip;">
+  <meta name="description" content="懒，基本上是每个程序员同学公有的特性。也就是因为懒才造就了现在众多先进的发明，才让我们的生活省时省力起来。写这篇文章，也是因为自己犯懒，不想总是重复性的干一些固定的工作，所以通过脚本来完成。文章主要介绍了Xcodeproj这个Ruby的工具包，为了使用这个工具包我还现学现卖了Ruby这门语言， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/10/10/use-script-to-modify-xcode-project/">懒人福利：用脚本来修改Xcode工程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-10-10T17:59:55+08:00" pubdate data-updated="true"></time>
+        
+        
+      | <a href="/blog/2016/10/10/use-script-to-modify-xcode-project/#comments">Comments</a>
+     
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>懒，基本上是每个程序员同学公有的特性。也就是因为懒才造就了现在众多先进的发明，才让我们的生活省时省力起来。写这篇文章，也是因为自己犯懒，不想总是重复性的干一些固定的工作，所以通过脚本来完成。文章主要介绍了<a href="http://rubygems.org/gems/xcodeproj">Xcodeproj</a>这个<code>Ruby</code>的工具包，为了使用这个工具包我还现学现卖了<code>Ruby</code>这门语言，算是个入门级选手了吧，其实真的没有想象中的那么复杂。
+如果已经是能够熟练使用<code>Xcodeproj</code>的选手，就可以不用继续往下看了。^_^</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/10/10/use-script-to-modify-xcode-project/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -506,48 +551,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/08/10/nested-xib-views/">Nested Xib Views - 使用XIB实现嵌套自定义视图</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-08-10T15:18:00+08:00" pubdate data-updated="true"></time>
-        
-        
-      | <a href="/blog/2014/08/10/nested-xib-views/#comments">Comments</a>
-     
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在进行<code>iOS</code>开发的过程中，对于一些复杂的界面，我们可以通过<code>Interface Builder</code>这个<code>Xcode</code>集成的可视化界面编辑工具在完成，这回节省大部分时间以及代码量。它的使用方法这里不做介绍了，这次我要介绍是使用它来实现一个嵌套的自定义视图。解释一下就是，我们使用<code>IB</code>自定义了一个<code>View</code>，然后又在其他的<code>xib</code>文件中使用了这个<code>View</code>，那么这就是所谓的嵌套自定义视图。之所以要介绍它，是因为我自己在使用它的时候遇到了一些问题，一方面写下来做个记录供自己查看，另一方面我相信大家在使用的时候应该也会遇到这样的问题，方便大家。</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/08/10/nested-xib-views/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -566,11 +569,15 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (14)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/bash-shell'>bash shell (1)</a></li><li><a href='/blog/categories/design-pattern'>design pattern (4)</a></li><li><a href='/blog/categories/ios-development'>ios development (15)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/technical-research'>technical research (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/10/10/use-script-to-modify-xcode-project/">懒人福利：用脚本来修改Xcode工程</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/04/bridge-retain-bridge-transfer/">__bridge_retain __bridge_transfer</a>
@@ -586,10 +593,6 @@
     
       <li class="post">
         <a href="/blog/2016/02/04/fdstackview-downward-compatible-uistackview-part-3/">FDStackView —— Downward Compatible UIStackView (Part 3)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/19/fdstackview-downward-compatible-uistackview-part-2/">FDStackView —— Downward Compatible UIStackView (Part 2)</a>
       </li>
     
   </ul>
@@ -671,25 +674,26 @@
 <section>
   <h1>Tags</h1>
   <ul class="tag-cloud">
-<a style="font-size: 131%" href="/tags/autolayout/">AutoLayout</a>
-<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
-<a style="font-size: 100%" href="/tags/apns/">APNS</a>
 <a style="font-size: 100%" href="/tags/swift/">Swift</a>
-<a style="font-size: 100%" href="/tags/shell/">shell</a>
-<a style="font-size: 100%" href="/tags/apache/">Apache</a>
-<a style="font-size: 155%" href="/tags/ios/">iOS</a>
-<a style="font-size: 100%" href="/tags/lua/">Lua</a>
-<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
-<a style="font-size: 100%" href="/tags/xcode/">Xcode</a>
-<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
-<a style="font-size: 113%" href="/tags/git/">git</a>
-<a style="font-size: 100%" href="/tags/php/">PHP</a>
-<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
+<a style="font-size: 113%" href="/tags/xcode/">Xcode</a>
 <a style="font-size: 100%" href="/tags/github/">GitHub</a>
-<a style="font-size: 126%" href="/tags/design/">Design</a>
 <a style="font-size: 100%" href="/tags/octopress/">Octopress</a>
+<a style="font-size: 100%" href="/tags/apache/">Apache</a>
+<a style="font-size: 100%" href="/tags/cocoapods/">Cocoapods</a>
+<a style="font-size: 100%" href="/tags/php/">PHP</a>
+<a style="font-size: 126%" href="/tags/design/">Design</a>
+<a style="font-size: 100%" href="/tags/shell/">shell</a>
 <a style="font-size: 100%" href="/tags/block/">block</a>
+<a style="font-size: 100%" href="/tags/apns/">APNS</a>
+<a style="font-size: 100%" href="/tags/ruby/">ruby</a>
+<a style="font-size: 130%" href="/tags/autolayout/">AutoLayout</a>
+<a style="font-size: 100%" href="/tags/lua/">Lua</a>
+<a style="font-size: 155%" href="/tags/ios/">iOS</a>
 <a style="font-size: 100%" href="/tags/gcd/">GCD</a>
+<a style="font-size: 113%" href="/tags/git/">git</a>
+<a style="font-size: 100%" href="/tags/ruby/">Ruby</a>
+<a style="font-size: 100%" href="/tags/sizeclasses/">SizeClasses</a>
+<a style="font-size: 121%" href="/tags/forkingdog/">forkingdog</a>
 
   </ul>
 </section>
